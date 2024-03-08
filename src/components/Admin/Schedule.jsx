@@ -80,7 +80,6 @@ export default function Schedule() {
                             ))}
                         </select>
                         <button className='p-2 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' type="button" onClick={() => navigate('add')}>เพิ่ม</button>
-                        <button className='p-2 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' type="button" onClick={() => navigate('delete')}>เพิ่ม</button>
                     </div>
                     {getSchedule.length !== 0 ?
                         <table className='table table-xs text-black my-1'>

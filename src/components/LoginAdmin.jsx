@@ -1,7 +1,6 @@
 
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/UseAuth"
-import { Slide } from 'react-slideshow-image'
 import Swal from "sweetalert2";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -42,9 +41,9 @@ export default function LoginAdmin() {
     const hdlSubmit = async e => {
         try {
             e.preventDefault()
-            const rs = await axios.post('http://localhost:8000/auth/adminLogin', input);
+            const rs = await axios.post('http://10.90.0.20:8000/auth/adminLogin', input);
             localStorage.setItem('token', rs.data.token);
-            const rs1 = await axios.get('http://localhost:8000/auth/me', {
+            const rs1 = await axios.get('http://10.90.0.20:8000/auth/me', {
                 headers: { Authorization: `Bearer ${rs.data.token}` }
             });
             if (rs1.data !== "") {
@@ -70,14 +69,6 @@ export default function LoginAdmin() {
     const hdlChange = e => {
         setInput(prv => ({ ...prv, [e.target.name]: e.target.value }))
     };
-
-    const proprietes = {
-        duration: 5000,
-        transitionDuration: 500,
-        infinite: true,
-        indicators: true,
-        arrows: true
-    }
 
     return (
         <div data-theme="light" className="bg-[url('https://a.cdn-hotels.com/gdcs/production122/d1368/1ecd1184-2b25-4fa6-877c-320dc8a0f1e5.jpg?impolicy=fcrop&w=1600&h=1066&q=medium')] flex justify-center h-[100vh] items-center bg-cover bg-center">

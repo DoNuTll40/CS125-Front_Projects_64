@@ -64,7 +64,7 @@ export default function Header() {
                     </div>
                     : <div className='w-[200px]'></div>
                 }
-                <h1 className='text-sm flex items-center font-bold text-white h-[46.4px] m-[4px] px-[16px] md:text-2xl'>{user.user_role === "ADMIN" ? "BACK ADMIN" : " Codecamp Academy"}</h1>
+                <h1 className='text-sm flex items-center font-bold text-white h-[46.4px] m-[4px] px-[16px] md:text-2xl'>{user.user_role === "ADMIN" ? "ระบบตารางเรียน (ผู้ดูแล)" : "ระบบตารางเรียน"}</h1>
                 <div className="dropdown dropdown-end w-[200px] flex justify-end">
                     <div className='flex items-center'>
                         <p className='text-lg font-bold text-white'>{user.user_role === "USER" ? "น้อง" : user.user_role === "TEACHER" ? "ครู" : "คุณ"} {user.user_nickname}</p>

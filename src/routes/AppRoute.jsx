@@ -22,6 +22,9 @@ import Subjects from '../components/Admin/Subjects';
 import AddSubject from '../components/Admin/AddSubject';
 import AddRoom from '../components/Admin/AddRoom';
 import AddBuild from '../components/Admin/AddBuild';
+import TeacherSchedule from '../components/Teacher/TeacherSchedule';
+import TeacherBuild from '../components/Teacher/Build';
+import Printlist from '../components/Print-list';
 
 const guestRouter = createBrowserRouter([
     {
@@ -84,10 +87,20 @@ const teacherRouter = createBrowserRouter([
         children: [
             { index: true, element: <WelcomeT /> },
             { path: 'teacher', element: <WelcomeT /> },
-            { path: 'build', element: <Build /> },
-            { path: 'teacher-table', element: <p>Test Table</p> },
+            { path: 'teachers', element: <Teacher /> },
+            { path: 'build', element: <TeacherBuild /> },
+            { path: 'teacher-table', element: <TeacherSchedule /> },
             { path: 'report', element: <p>Test Report</p> },
-            { path: 'profile', element: <Profile /> }
+            { path: 'profile', element: <Profile /> },
+        ]
+    },
+    {
+        path: '/print',
+        element: <>
+            <Outlet />
+        </>,
+        children: [
+            { index: true, element: <Printlist /> }
         ]
     },
     {
@@ -126,7 +139,7 @@ const adminRouter = createBrowserRouter([
             { path: 'teachers', element: <Teacher /> },
             { path: 'report', element: <p>Test Report</p> },
             { path: 'schedule', element: <Schedule /> },
-            { path: 'schedule/*', element: <AddSchedule /> },
+            { path: 'schedule/add', element: <AddSchedule /> },
             { path: 'profile', element: <Profile /> },
             { path: 'subject', element: <Subjects /> },
             { path: 'subject/add', element: <AddSubject /> },

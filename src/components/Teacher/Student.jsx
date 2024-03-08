@@ -48,7 +48,7 @@ export default function Student() {
                     {student.length !== 0 ?
                         <table className='table text-black'>
                             <thead className='text-center'>
-                                <tr>
+                                <tr className=''>
                                     <th>No</th>
                                     <th>FirstName</th>
                                     <th>LastName</th>

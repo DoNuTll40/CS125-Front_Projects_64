@@ -12,7 +12,7 @@ export default function TableStudent() {
     document.title = "Schedule"
     const getTable = async () => {
       let token = localStorage.getItem('token');
-      const rs = await axios.get('http://localhost:8000/user/table', {
+      const rs = await axios.get('http://10.90.0.20:8000/user/table', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -23,7 +23,7 @@ export default function TableStudent() {
     if (cView.length === 0) {
       const getTableById = async () => {
         let token = localStorage.getItem('token');
-        const rs = await axios.get(`http://localhost:8000/user/table/1`, {
+        const rs = await axios.get(`http://10.90.0.20:8000/user/table/1`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -37,7 +37,7 @@ export default function TableStudent() {
   const hdlClick = (id) => {
     const getTable = async () => {
       let token = localStorage.getItem('token');
-      const rs = await axios.get(`http://localhost:8000/user/table/${id}`, {
+      const rs = await axios.get(`http://10.90.0.20:8000/user/table/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

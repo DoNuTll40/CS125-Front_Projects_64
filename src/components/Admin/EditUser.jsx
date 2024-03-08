@@ -1,3 +1,4 @@
+
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
@@ -57,7 +58,7 @@ export default function EditUser() {
                 }
             })
             console.log(rs.data)
-            if(rs.status === 200){
+            if (rs.status === 200) {
                 alert("แก้ไขข้อมูลสำเร็จ")
                 navigate(-1)
             }
@@ -71,20 +72,33 @@ export default function EditUser() {
     };
 
     return (
-        <div data-theme="light" className="max-w-[53rem] h-[24rem] text-black mx-auto mt-5 pt-5 pb-2 select-none rounded-2xl px-5 bg-white shadow-lg">
-            <p className="text-center">แก้ไขผู้ใช้งาน</p>
-            <button className="bg-gray-200 px-2 py-1 rounded-md my-2 active:scale-95" onClick={() => {setLock(!lock); setInput(getUser) }}>{lock ? "แก้ไข" : "ยกเลิก"}</button>
+        <div data-theme="light" className="max-w-[53rem] text-black mx-auto mt-5 mb-5 pt-5 pb-2 select-none rounded-2xl px-5 bg-white shadow-lg">
+            <p className="text-[19px] text-center font-extrabold">แก้ไขผู้ใช้งาน</p>
+            <div className="flex justify-between">
+                <button className="bg-gray-200 px-2 py-1 rounded-md my-2 active:scale-95" onClick={ () => navigate(-1)}>ย้อนกลับ</button>
+                <button className="bg-gray-200 px-2 py-1 rounded-md my-2 active:scale-95" onClick={ () => { setLock(!lock); setInput(getUser) } }>{lock ? "แก้ไข" : "ยกเลิก"}</button>
+            </div>
             <form action="" className="" onSubmit={hdlSubmit}>
-                <label>ชื่อ <input className="bg-white" type="text" name="user_firstname" disabled={lock} value={input.user_firstname} onChange={hdlChange} /></label>
-                <label>นามสกุล <input className="bg-white" type="text" name="user_lastname" disabled={lock} value={input.user_lastname} onChange={hdlChange} /></label>
-                <label>ชื่อเล่น <input className="bg-white" type="text" name="user_nickname" disabled={lock} value={input.user_nickname} onChange={hdlChange} /></label>
-                <label>อีเมล์ <input className="bg-white" type="text" name="user_email" disabled={lock} value={input.user_email} onChange={hdlChange} /></label>
-                <label> เบอร์โทร<input className="bg-white" type="text" name="user_phone" disabled={lock} value={input.user_phone} onChange={hdlChange} /></label>
-                <label>ที่อยู่ <input className="bg-white" type="text" name="user_address" disabled={lock} value={input.user_address} onChange={hdlChange} /></label>
-                <label>รหัสบัตรประชาชน <input className="bg-white" type="text" name="user_identity" disabled={lock} value={input.user_identity} onChange={hdlChange} /></label>
-                <label>วันเกิด <input className="bg-white" type="date" name="user_brithday" disabled={lock} value={formatBirthday} onChange={hdlChange} /></label>
-                {!lock ? <button className="bg-gray-200 px-2 py-1 rounded-md my-2 active:scale-95">บันทึก</button> : ""}
-            </form> 
+                <div className="flex gap-4 mb-4 font-bold">
+                    <div className="flex flex-col w-1/3 gap-2">
+                        <label className="drop-shadow-md">ชื่อจริง <input className={`w-full px-2 py-2 h-10 input border-2 rounded-lg transition ease-in-out ${!lock ? "bg-[#FF90BC] text-white hover:font-bold focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white focus:font-bold" : "" }`} type="text" name="user_firstname" disabled={lock} value={input.user_firstname} onChange={hdlChange} /></label>
+                        <label className="drop-shadow-md">นามสกุล <input className={`w-full px-2 py-2 h-10 input border-2 rounded-lg transition ease-in-out ${!lock ? "bg-[#FF90BC] text-white hover:font-bold focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white focus:font-bold" : "" }`} type="text" name="user_lastname" disabled={lock} value={input.user_lastname} onChange={hdlChange} /></label>
+                        <label className="drop-shadow-md">ชื่อเล่น <input className={`w-full px-2 py-2 h-10 input border-2 rounded-lg transition ease-in-out ${!lock ? "bg-[#FF90BC] text-white hover:font-bold focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white focus:font-bold" : "" }`} type="text" name="user_nickname" disabled={lock} value={input.user_nickname} onChange={hdlChange} /></label>
+                        <label className="drop-shadow-md">รหัสบัตรประชาชน <input className={`w-full px-2 py-2 h-10 input border-2 rounded-lg transition ease-in-out ${!lock ? "bg-[#FF90BC] text-white hover:font-bold focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white focus:font-bold" : "" }`} type="text" name="user_identity" disabled={lock} value={input.user_identity} onChange={hdlChange} /></label>
+                        <label className="text-[13px] mt-7"><b>หมายเหตุ </b>ระบบยังไม่สามารถแก้ไข username และ password ได้ในขนะนี้</label>
+                    </div>
+                    <div className="flex flex-col w-1/3 gap-2">
+                        <label className="drop-shadow-md">วันเกิด <input className={`w-full px-2 py-2 h-10 input border-2 rounded-lg transition ease-in-out ${!lock ? "bg-[#FF90BC] text-white hover:font-bold focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white focus:font-bold" : "" }`} type="date" name="user_brithday" disabled={lock} value={formatBirthday} onChange={hdlChange} /></label>
+                        <label className="drop-shadow-md">อีเมล์ <input className={`w-full px-2 py-2 h-10 input border-2 rounded-lg transition ease-in-out ${!lock ? "bg-[#FF90BC] text-white hover:font-bold focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white focus:font-bold" : "" }`} type="text" name="user_email" disabled={lock} value={input.user_email} onChange={hdlChange} /></label>
+                        <label className="drop-shadow-md">เบอร์โทร <input className={`w-full px-2 py-2 h-10 input border-2 rounded-lg transition ease-in-out ${!lock ? "bg-[#FF90BC] text-white hover:font-bold focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white focus:font-bold" : "" }`} type="text" name="user_phone" disabled={lock} value={input.user_phone} onChange={hdlChange} /></label>
+                        <label className="drop-shadow-md">ที่อยู่ <textarea className={`w-full px-2 py-2 h-28 input resize-none border-2 rounded-lg transition ease-in-out ${!lock ? "bg-[#FF90BC] text-white hover:font-bold focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white focus:font-bold" : "" }`} type="text" name="user_address" disabled={lock} value={input.user_address} onChange={hdlChange} /></label>
+                    </div>
+                    <div className="flex flex-col w-1/3 items-center">
+                        <img className="max-w-[200px] max-h-[200px] shadow-md rounded-lg mt-2 pointer-events-none" src={getUser.user_image} alt="Profile" />
+                    </div>
+                </div>
+                {!lock ? <button id="save" className="bg-gray-200 px-2 py-1 w-full rounded-md my-1 mb-4 active:scale-95">บันทึก</button> : ""}
+            </form>
         </div>
     )
 }

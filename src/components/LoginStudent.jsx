@@ -24,9 +24,9 @@ export default function LoginStudent() {
             if (input.username === "" || input.password === "") {
                 alert("please enter your fill")
             } else {
-                const rs = await axios.post('http://localhost:8000/auth/login', input);
+                const rs = await axios.post('http://10.90.0.20:8000/auth/login', input);
                 localStorage.setItem('token', rs.data.token);
-                const rs1 = await axios.get('http://localhost:8000/auth/me', {
+                const rs1 = await axios.get('http://10.90.0.20:8000/auth/me', {
                     headers: { Authorization: `Bearer ${rs.data.token}` }
                 });
                 if (rs1.data !== "") {
@@ -76,7 +76,7 @@ export default function LoginStudent() {
                         <form className="flex flex-col" onSubmit={hdlSubmit}>
                             <div className="flex flex-col gap-2">
                                 <img className='mx-auto rounded-full w-[120px] h-[120px]' src='https://picsum.photos/id/125/600' />
-                                <h1 className="text-2xl text-center font-bold text-white drop-shadow-[2px_2px_1.5px_rgba(0,0,0,0.25)]">Login Student</h1>
+                                <h1 className="text-2xl text-center font-extrabold text-white drop-shadow-[2px_2px_1.5px_rgba(0,0,0,0.25)]">Login</h1>
                                 <label className='text-white font-semibold'>Username</label>
                                 <input className={`h-[2.5rem] border-2 rounded-full px-5 focus:outline-[#6096B4] ${input.username === "" ? "border-[#FF90BC]" : "border-[#6096B4]"}`}
                                     type="text"
@@ -99,7 +99,10 @@ export default function LoginStudent() {
                                 </label>
                             </div>
                             <div className="flex justify-between mt-3">
-                                <Link to="/teacher" className='font-semibold text-white'>Teacher</Link>
+                                <div className="flex gap-4">
+                                    <Link to="/teacher" className='font-semibold text-white'>Teacher</Link>
+                                    <Link className='font-semibold text-white'>Admin</Link>
+                                </div>
                                 <input type="submit" className="bg-white font-semibold px-8 scale-100 active:scale-95 hover:bg-green-700 hover:text-white rounded-full" value="Login" />
                             </div>
                         </form>

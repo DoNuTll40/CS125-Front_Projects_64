@@ -5,13 +5,13 @@ import axios from "axios";
 export default function DashBoard() {
 
     const { user } = useAuth();
-    const [ allUser, setAllUser ] = useState([]);
-    const [ allSub, setAllSub ] = useState([]);
+    const [allUser, setAllUser] = useState([]);
+    const [allSub, setAllSub] = useState([]);
 
-    useEffect( () => {
+    useEffect(() => {
         const getAll = async () => {
             let token = localStorage.getItem('token')
-            const rs = await axios.get('http://localhost:8000/admin/users', {
+            const rs = await axios.get('http://10.90.0.20:8000/admin/users', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -22,7 +22,7 @@ export default function DashBoard() {
 
         const getSub = async () => {
             let token = localStorage.getItem('token');
-            const rs = await axios.get('http://localhost:8000/admin/subject', {
+            const rs = await axios.get('http://10.90.0.20:8000/admin/subject', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -30,7 +30,7 @@ export default function DashBoard() {
             setAllSub(rs.data.sub);
         }
         getSub();
-    }, [] )
+    }, [])
 
     return (
         <div>
