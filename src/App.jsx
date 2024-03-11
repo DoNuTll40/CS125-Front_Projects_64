@@ -15,7 +15,7 @@ function App() {
   }
 
   return (
-    <div data-theme="dark">
+    <div>
       <AppRoute />
     </div>
   )

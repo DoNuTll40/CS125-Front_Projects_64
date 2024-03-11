@@ -32,6 +32,9 @@ export default function DashBoard() {
         getSub();
     }, [])
 
+    const numberOFuser = (allUser.filter(users => users.user_role === "USER").length / allUser.filter(users => users.user_role !== "ADMIN").length) * 100
+    const numberOFteacher = (allUser.filter(users => users.user_role === "TEACHER").length / allUser.filter(users => users.user_role !== "ADMIN").length) * 100
+
     return (
         <div>
             <div className='max-w-[80rem] mx-auto mt-16 select-none'>
@@ -56,12 +59,14 @@ export default function DashBoard() {
                                 <h2 className='text-2xl font-bold'>
                                     {allUser.filter(users => users.user_role === "USER").length} <label>คน</label>
                                 </h2>
+                                <h1 className="text-[12px] font-bold mt-1">คิดเป็น {(numberOFuser).toFixed(2)}% ของผู้ใช้ทั้งหมด</h1>
                             </div>
                         </div>
                         <div className='w-[135px] h-[129px] p-3 bg-[#6096B4] rounded-xl flex justify-center items-center tooltip' data-tip={`จำนวนครูทั้งหมด ${allUser.filter(user => user.user_role === "TEACHER").length} คน`}>
                             <div>
                                 <h1 className='text-1xl font-bold' >จำนวนครูทั้งหมด</h1>
                                 <h2 className='text-2xl font-bold'>{allUser.filter(user => user.user_role === "TEACHER").length} <label>คน</label></h2>
+                                <h1 className="text-[12px] font-bold mt-1">คิดเป็น {(numberOFteacher).toFixed(2)}% ของผู้ใช้ทั้งหมด</h1>
                             </div>
                         </div>
                         <div className='w-[135px] h-[129px] p-3 bg-[#6096B4] rounded-xl flex justify-center items-center tooltip' data-tip={`จำนวนวิชาทั้งหมด ${allSub.length} วิชา `}>

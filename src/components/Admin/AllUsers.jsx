@@ -17,6 +17,7 @@ export default function AllUsers() {
         user_password: "",
         confirmPassword: "",
         user_role: "",
+        user_nameprefix: "",
         user_firstname: "",
         user_lastname: "",
         user_nickname: "",
@@ -70,7 +71,7 @@ export default function AllUsers() {
             try {
                 const file = fileInput.current?.files[0];
                 const formData = new FormData();
-                
+
                 Object.entries(input).forEach(([key, value]) => {
                     formData.append(key, value);
                 });
@@ -87,6 +88,7 @@ export default function AllUsers() {
                 });
                 if (rs.status === 200) {
                     alert("Create user success")
+                    hdlCloseModal()
                     setRefreshTable(prevState => !prevState);
                 }
                 console.log(rs)
@@ -115,6 +117,7 @@ export default function AllUsers() {
             user_password: "",
             confirmPassword: "",
             user_role: "",
+            user_nameprefix: "",
             user_firstname: "",
             user_lastname: "",
             user_nickname: "",
@@ -134,6 +137,7 @@ export default function AllUsers() {
             user_password: "",
             confirmPassword: "",
             user_role: "",
+            user_nameprefix: "",
             user_firstname: "",
             user_lastname: "",
             user_nickname: "",
@@ -216,11 +220,21 @@ export default function AllUsers() {
                     }
                     <dialog id="my_modal_3" className="modal">
                         <div data-theme="dark" className="modal-box">
-                            <button className="absolute right-2 top-2" onClick={hdlCloseModal}><FontAwesomeIcon icon={faXmark} /></button>
-                            <form className='flex flex-col font-semibold' onSubmit={hdlSubmit} >
-
+                            <button className="absolute right-2 top-2" onClick={hdlCloseModal}><FontAwesomeIcon icon={faXmark}/></button>
+                            <form className='flex flex-col font-semibold' onSubmit={hdlSubmit}>
                                 <h3 className="font-bold text-lg mt-5 text-center relative z-30 bg-gray-700 w-1/2 rounded-md mx-auto">เพิ่มข้อมูล</h3>
-                                <hr className='relative bottom-3 mt-0 ' />
+                                <hr className='relative bottom-3 mt-0' />
+                                <div className='flex flex-col w-full mt-2 gap-1'>
+                                    <p>เลือกคำนำหน้าชื่อ</p>
+                                    <select className='w-full px-4 py-1 rounded-md' name="user_nameprefix" id="" onChange={hdlChange}>
+                                        <option hidden>เลือก</option>
+                                        <option value="เด็กชาย">เด็กชาย</option>
+                                        <option value="เด็กหญิง">เด็กหญิง</option>
+                                        <option value="นาย">นาย</option>
+                                        <option value="นางสาว">นางสาว</option>
+                                        <option value="นาง">นาง</option>
+                                    </select>
+                                </div>
                                 <div className='flex w-full gap-3 mt-2'>
                                     <div className='flex flex-col'>
                                         <p>ชื่อ</p>
@@ -310,7 +324,7 @@ export default function AllUsers() {
                                         {selectedFile && (
                                             <>
                                                 <img src={URL.createObjectURL(selectedFile)} alt="Selected Image" accept="image/*" className='mx-auto my-2 rounded-lg border-4 border-white max-h-[250px] pointer-events-none' />
-                                                <button className='w-full text-md my-2 rounded-full py-1 bg-gray-700 ' onClick={ (e) => setSelectedFile(null)}>ลบภาพตัวอย่าง</button>
+                                                <button className='w-full text-md my-2 rounded-full py-1 bg-gray-700 ' onClick={(e) => setSelectedFile(null)}>ลบภาพตัวอย่าง</button>
                                             </>
 
                                         )}

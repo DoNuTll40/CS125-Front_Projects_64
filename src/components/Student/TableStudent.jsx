@@ -82,7 +82,7 @@ export default function TableStudent() {
               const scheduleItem = schedule.find(el => el.sched_day === "จันทร์" && el.sched_time === time);
               const shouldRemoveBreak = time === "พัก" && schedule.some(el => el.sched_day === "จันทร์" && el.sched_time === "10:30-11:30" && el.sched_count === 2);
               const shouldRemoveBreak2 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "จันทร์" && el.sched_time === "13:30-14:30" && el.sched_count === 2);
-              if (shouldRemoveBreak || shouldRemoveBreak2) return null; // ตรวจสอบ sched_time และ sched_count เพื่อตัดคำว่า "พัก" ออก
+              if (shouldRemoveBreak || shouldRemoveBreak2) return null;
               return (
                 <td key={index} className='rounded-lg border-2 border-[#FF90BC] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
                   {scheduleItem && (
@@ -102,7 +102,7 @@ export default function TableStudent() {
               const scheduleItem = schedule.find(el => el.sched_day === "อังคาร" && el.sched_time === time);
               const shouldRemoveBreak = time === "พัก" && schedule.some(el => el.sched_day === "อังคาร" && el.sched_time === "10:30-11:30" && el.sched_count === 2);
               const shouldRemoveBreak2 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "อังคาร" && el.sched_time === "13:30-14:30" && el.sched_count === 2);
-              if (shouldRemoveBreak || shouldRemoveBreak2) return null; // ตรวจสอบ sched_time และ sched_count เพื่อตัดคำว่า "พัก" ออก
+              if (shouldRemoveBreak || shouldRemoveBreak2) return null;
               return (
                 <td key={index} className='rounded-lg border-2 border-[#FF90BC] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
                   {scheduleItem && (
@@ -122,7 +122,7 @@ export default function TableStudent() {
               const scheduleItem = schedule.find(el => el.sched_day === "พุธ" && el.sched_time === time);
               const shouldRemoveBreak = time === "พัก" && schedule.some(el => el.sched_day === "พุธ" && el.sched_time === "10:30-11:30" && el.sched_count === 2);
               const shouldRemoveBreak2 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "พุธ" && el.sched_time === "13:30-14:30" && el.sched_count === 2);
-              if (shouldRemoveBreak || shouldRemoveBreak2) return null; // ตรวจสอบ sched_time และ sched_count เพื่อตัดคำว่า "พัก" ออก
+              if (shouldRemoveBreak || shouldRemoveBreak2) return null;
               return (
                 <td key={index} className='rounded-lg border-2 border-[#FF90BC] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
                   {scheduleItem && (
@@ -142,7 +142,7 @@ export default function TableStudent() {
               const scheduleItem = schedule.find(el => el.sched_day === "พฤหัสบดี" && el.sched_time === time);
               const shouldRemoveBreak = time === "พัก" && schedule.some(el => el.sched_day === "พฤหัสบดี" && el.sched_time === "10:30-11:30" && el.sched_count === 2);
               const shouldRemoveBreak2 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "พฤหัสบดี" && el.sched_time === "13:30-14:30" && el.sched_count === 2);
-              if (shouldRemoveBreak || shouldRemoveBreak2) return null; // ตรวจสอบ sched_time และ sched_count เพื่อตัดคำว่า "พัก" ออก
+              if (shouldRemoveBreak || shouldRemoveBreak2) return null;
               return (
                 <td key={index} className='rounded-lg border-2 border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
                   {scheduleItem && (
@@ -162,7 +162,7 @@ export default function TableStudent() {
               const scheduleItem = schedule.find(el => el.sched_day === "ศุกร์" && el.sched_time === time);
               const shouldRemoveBreak = time === "พัก" && schedule.some(el => el.sched_day === "ศุกร์" && el.sched_time === "10:30-11:30" && el.sched_count === 2);
               const shouldRemoveBreak2 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "ศุกร์" && el.sched_time === "13:30-14:30" && el.sched_count === 2);
-              if (shouldRemoveBreak || shouldRemoveBreak2) return null; // ตรวจสอบ sched_time และ sched_count เพื่อตัดคำว่า "พัก" ออก
+              if (shouldRemoveBreak || shouldRemoveBreak2) return null;
               return (
                 <td key={index} className='rounded-lg border-2 border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
                   {scheduleItem && (

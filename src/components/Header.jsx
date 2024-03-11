@@ -39,7 +39,8 @@ export default function Header() {
     const tablePath = /^\/schedule\//;
     const roomPath = /^\/room\//;
     const buildPath = /^\/build\//;
-    const acText = location === "/profile" ? "โปรไฟล์" : location === "/teacher" ? "หน้าหลัก" : regex.test(location) ? "แก้ไขผู้ใช้งาน" : tablePath.test(location) ? "เพิ่มตารางเรียน" : roomPath.test(location) ? "เพิ่มห้อง" : buildPath.test(location) ? "เพิ่มอาคาร" : liNav.find(link => link.to === location)?.text;
+    const subPath = /^\/subject\//;
+    const acText = location === "/profile" ? "โปรไฟล์" : location === "/teacher" ? "หน้าหลัก" : regex.test(location) ? "แก้ไขผู้ใช้งาน" : tablePath.test(location) ? "เพิ่มตารางเรียน" : roomPath.test(location) ? "เพิ่มห้อง" : buildPath.test(location) ? "เพิ่มอาคาร" : subPath.test(location) ? "เพิ่มวิชา" : liNav.find(link => link.to === location)?.text;
 
     useEffect(() => {
         const id = user.user_id
