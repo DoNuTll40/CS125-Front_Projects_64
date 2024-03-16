@@ -4,6 +4,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd, faEdit, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import InputMask from 'react-input-mask'
 
 export default function AllUsers() {
 
@@ -64,6 +65,11 @@ export default function AllUsers() {
 
     const hdlSubmit = async (e) => {
         e.preventDefault();
+
+        const checkPhone = /^\d{10}$/;
+        if (!checkPhone.test(input.user_phone)) {
+            return alert("โปรดป้อนหมายเลขโทรศัพท์ที่ถูกต้อง");
+        }
 
         if (Object.values(input).some(value => value !== "user_image" && input[value] === "")) {
             alert("Please enter input");
@@ -191,6 +197,7 @@ export default function AllUsers() {
                             <thead className='text-center'>
                                 <tr className='text-sm text-black'>
                                     <th>ลำดับ</th>
+                                    <th>คำนำหน้า</th>
                                     <th>ชื่อ</th>
                                     <th>นามสกุล</th>
                                     <th>ชื่อเล่น</th>
@@ -204,6 +211,7 @@ export default function AllUsers() {
                                 {student.filter(user => user.user_role !== "ADMIN").map((user, number) => (
                                     <tr className='hover:bg-[#FF90BC] hover:text-white transition ease-in-out' key={user.user_id}>
                                         <td className="text-[14px] rounded-l-full">{number + 1}</td>
+                                        <td className="text-[14px]">{user.user_nameprefix}</td>
                                         <td className="text-[14px]">{user.user_firstname}</td>
                                         <td className="text-[14px]">{user.user_lastname}</td>
                                         <td className="text-[14px]">{user.user_nickname}</td>
@@ -220,7 +228,7 @@ export default function AllUsers() {
                     }
                     <dialog id="my_modal_3" className="modal">
                         <div data-theme="dark" className="modal-box">
-                            <button className="absolute right-2 top-2" onClick={hdlCloseModal}><FontAwesomeIcon icon={faXmark}/></button>
+                            <button className="absolute right-2 top-2" onClick={hdlCloseModal}><FontAwesomeIcon icon={faXmark} /></button>
                             <form className='flex flex-col font-semibold' onSubmit={hdlSubmit}>
                                 <h3 className="font-bold text-lg mt-5 text-center relative z-30 bg-gray-700 w-1/2 rounded-md mx-auto">เพิ่มข้อมูล</h3>
                                 <hr className='relative bottom-3 mt-0' />
@@ -267,8 +275,9 @@ export default function AllUsers() {
                                     </div>
                                     <div className='flex flex-col w-full'>
                                         <p>รหัสบัตรประชาชน</p>
-                                        <input className='w-full px-4 py-1 rounded-md'
-                                            type="text"
+                                        <InputMask className='w-full px-4 py-1 rounded-md'
+                                            mask="9-9999-99999-99-9"
+                                            placeholder='X-XXXX-XXXXX-XX-X'
                                             name='user_identity'
                                             value={input.user_identity}
                                             onChange={hdlChange}
@@ -290,12 +299,17 @@ export default function AllUsers() {
                                     onChange={hdlChange}
                                 />
                                 <p>เบอร์โทร</p>
-                                <input className='w-full px-4 py-1 rounded-md'
-                                    type="text"
+                                <InputMask
+                                    className='w-full px-4 py-1 rounded-md'
+                                    placeholder='XXX-XXX-XXXX'
+                                    mask="999-999-9999"
                                     name='user_phone'
                                     value={input.user_phone}
                                     onChange={hdlChange}
                                 />
+                                {/* <input className='w-full px-4 py-1 rounded-md'
+                                    type="text"
+                                /> */}
                                 <p>ที่อยู่</p>
                                 <textarea className='w-full px-4 py-1 rounded-md' name="user_address" value={input.user_address} onChange={hdlChange} cols="5" rows="2"></textarea>
                                 <div className='flex w-full gap-3'>

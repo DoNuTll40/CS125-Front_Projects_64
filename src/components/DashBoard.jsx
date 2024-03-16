@@ -4,7 +4,7 @@ import axios from "axios";
 
 export default function DashBoard() {
 
-    const { user } = useAuth();
+    const { user, time } = useAuth();
     const [allUser, setAllUser] = useState([]);
     const [allSub, setAllSub] = useState([]);
 
@@ -35,11 +35,24 @@ export default function DashBoard() {
     const numberOFuser = (allUser.filter(users => users.user_role === "USER").length / allUser.filter(users => users.user_role !== "ADMIN").length) * 100
     const numberOFteacher = (allUser.filter(users => users.user_role === "TEACHER").length / allUser.filter(users => users.user_role !== "ADMIN").length) * 100
 
+    const thaiDays = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+    const thaiMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+
+    const time2 = new Date();
+
+    const dayOfWeek = thaiDays[time2.getDay()];
+    const dayOfMonth = time2.getDate();
+    const month = thaiMonths[time2.getMonth()];
+    const year = time2.getFullYear() + 543;
+
+    const thaiDate = `วัน${dayOfWeek}ที่ ${dayOfMonth} เดือน ${month} พ.ศ. ${year} เวลา ${time.length !== 0 ? new Date(time).toLocaleTimeString('th-TH') : new Date().toLocaleTimeString('th-TH')} น.`;
+
     return (
         <div>
             <div className='max-w-[80rem] mx-auto mt-16 select-none'>
                 <div className='bg-white p-3 rounded-2xl max-w-[53rem] mx-auto'>
-                    <div className='my-3 text-center flex flex-col gap-3'>
+                    <p className="text-end px-2 font-extrabold text-base-200">{thaiDate}</p>
+                    <div className='my-3 text-center flex flex-col gap-3 text-base-200'>
                         <h1 className='text-2xl font-bold'>สวัสดีคุณ {user.user_firstname} {user.user_lastname}</h1>
                         <h2 className='text-1xl font-bold'>ยินดีต้อนรับเข้าสู่ระบบของเรา</h2>
                     </div>

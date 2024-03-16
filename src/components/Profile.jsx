@@ -1,9 +1,10 @@
 
 import React, { useEffect, useRef } from 'react'
 import useAuth from '../hooks/UseAuth'
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import InputMask from 'react-input-mask'
 
 export default function Profile() {
 
@@ -76,10 +77,10 @@ export default function Profile() {
                         <p><b>นามสกุล :</b> {user.user_lastname}</p>
                         <p><b>ชื่อเล่น :</b> {user.user_nickname}</p>
                         <p><b>อีเมล์ :</b> {user.user_email}</p>
-                        <p><b>เบอร์โทร :</b> {user.user_phone}</p>
+                        <p><b>เบอร์โทร :</b> <InputMask className='bg-transparent pointer-events-none' mask="999-999-XXXX" value={user.user_phone}/></p>
                         <p><b>ที่อยู่ :</b> {user.user_address}</p>
                         <p><b>วันเกิด :</b> {fBrithDay}</p>
-                        <p><b>รหัสบัตรประชาชน :</b> {user.user_identity}</p>
+                        <p className=' select-none'><b>รหัสบัตรประชาชน :</b> <InputMask className='bg-transparent pointer-events-none' mask="9-9999-XXXXX-99-9" maskChar={null} value={`${user.user_identity.substring(0, 6)}${user.user_identity.substring(13, 17)}`}/></p>
                         <p><b>ชั้นเรียน :</b> {user.class.class_name === "ADMIN" ? "ไม่พบห้อง" : user.class.class_name}</p>
                     </div>
                     <div className="flex-grow">
@@ -88,7 +89,7 @@ export default function Profile() {
                         {user.user_role !== "USER" && (
                             <>
                                 <input type="file" accept="image/*" style={{ display: "none" }} onChange={hdlEditProfile} ref={fileInput} />
-                                <p className='text-[11px] font-bold text-blue-900 text-center ml-[5rem] hover:cursor-pointer scale-100 active:scale-95 ease-in-out transition underline' onClick={() => fileInput.current.click()}>เปลี่ยนโปรไฟล์</p>
+                                <p className='text-[11px] font-bold text-blue-900 text-center ml-[3.1rem] hover:cursor-pointer scale-100 active:scale-95 ease-in-out transition underline' onClick={() => fileInput.current.click()}>เปลี่ยนโปรไฟล์</p>
                             </>
                         )}
                     </div>
@@ -98,7 +99,6 @@ export default function Profile() {
                     <p>&copy; CS125 Nuttawoot Chawna SNRU | CodeCamp Academy 01</p>
                 </div>
             </div>
-            {/* <a href="#" onClick={goBack}>Back</a> */}
             <p className='hover:cursor-pointer' onClick={ () => navigate(-1) }>Back</p>
         </div>
     )

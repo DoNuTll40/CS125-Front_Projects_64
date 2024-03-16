@@ -25,6 +25,8 @@ import AddBuild from '../components/Admin/AddBuild';
 import TeacherSchedule from '../components/Teacher/TeacherSchedule';
 import TeacherBuild from '../components/Teacher/Build';
 import Printlist from '../components/Print-list';
+import TableTeacher from '../components/Teacher/TableTeacher';
+import Report from '../components/Report';
 
 const guestRouter = createBrowserRouter([
     {
@@ -90,8 +92,18 @@ const teacherRouter = createBrowserRouter([
             { path: 'teachers', element: <Teacher /> },
             { path: 'build', element: <TeacherBuild /> },
             { path: 'teacher-table', element: <TeacherSchedule /> },
-            { path: 'report', element: <p>Test Report</p> },
+            { path: 'report', element: <Report /> },
             { path: 'profile', element: <Profile /> },
+        ]
+    },
+    {
+        path: 'teacher-schedule',
+        element: <>
+            <Header />
+            <Outlet />
+        </>,
+        children: [
+            { index: true, element: <TableTeacher /> }
         ]
     },
     {
@@ -137,7 +149,7 @@ const adminRouter = createBrowserRouter([
             { path: 'users', element: <AllUsers /> },
             { path: 'users/edit/:id', element: <EditUser /> },
             { path: 'teachers', element: <Teacher /> },
-            { path: 'report', element: <p>Test Report</p> },
+            { path: 'report', element: <Report /> },
             { path: 'schedule', element: <Schedule /> },
             { path: 'schedule/add', element: <AddSchedule /> },
             { path: 'profile', element: <Profile /> },

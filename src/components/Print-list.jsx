@@ -22,8 +22,6 @@ export default function Printlist() {
 
     document.title = "ปริ้นรายชื่อนักเรียน ชั้น " + classRoom
 
-    const filename = `รายชื่อนักเรียน_ชั้น${classRoom}.pdf`;
-
     const gender = fullStudent.filter(el => el.user_nameprefix === "เด็กชาย" || el.user_nameprefix === "นาย").length
     const woman = fullStudent.filter(el => el.user_nameprefix === "เด็กหญิง" || el.user_nameprefix === "นางสาว" || el.user_nameprefix === "นาง").length
     const emptyRows = new Array(5).fill({});
@@ -31,7 +29,7 @@ export default function Printlist() {
 
     return (
         <PDFViewer style={{ width: '100%', height: '800px' }}>
-            <Document>
+            <Document title={`ใบรายชื่อนักเรียนชั้น ${classRoom}`} producer='FB : Nuttawut_Chawna' author='โรงเรียน มัธยมรังศรีวิทยาแบ่งปัน สังกัดสํานักงานเขตพื้นที่การมัธยมศึกษา เขตที่ 3'>
                 <Page size="A4" style={styles.page}>
                     <Text style={styles.title}>ใบรายชื่อนักเรียนชั้น {classRoom} ประจำภาคเรียนที่ ... ปีการศึกษา ....</Text>
                     <Text style={styles.titleSecond}>โรงเรียน มัธยมรังศรีวิทยาแบ่งปัน สังกัดสํานักงานเขตพื้นที่การมัธยมศึกษา เขตที่ 3 </Text>

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function EditUser() {
 
     const navigate = useNavigate();
-
+    
     const [getUser, setGetUser] = useState([]);
     const [lock, setLock] = useState(true);
     const userId = location.pathname.split('/')[3]
@@ -94,7 +94,7 @@ export default function EditUser() {
                         <label className="drop-shadow-md">ที่อยู่ <textarea className={`w-full px-2 py-2 h-28 input resize-none border-2 rounded-lg transition ease-in-out ${!lock ? "bg-[#FF90BC] text-white hover:font-bold focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white focus:font-bold" : "" }`} type="text" name="user_address" disabled={lock} value={input.user_address} onChange={hdlChange} /></label>
                     </div>
                     <div className="flex flex-col w-1/3 items-center">
-                        <img className="max-w-[200px] max-h-[200px] shadow-md rounded-lg mt-2 pointer-events-none" src={getUser.user_image} alt="Profile" />
+                        <img className="max-w-[200px] max-h-[200px] skeleton shadow-md rounded-lg mt-2 pointer-events-none" src={getUser.user_image} alt="Profile" />
                     </div>
                 </div>
                 {!lock ? <button id="save" className="bg-gray-200 px-2 py-1 w-full rounded-md my-1 mb-4 active:scale-95">บันทึก</button> : ""}

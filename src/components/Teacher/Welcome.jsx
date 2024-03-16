@@ -12,7 +12,7 @@ export default function Student() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = 'Home';
+        document.title = `Home`;
         const getUser = async () => {
             let token = localStorage.getItem('token')
             const rs = await axios.get('http://localhost:8000/admin/users', {
@@ -30,6 +30,8 @@ export default function Student() {
         navigate('/print');
     }
 
+    console.log(student)
+
     return (
         <>
             <div className='max-w-[80rem] mx-auto mt-3 select-none'>
@@ -37,7 +39,11 @@ export default function Student() {
                     {student.length !== 0 ?
                         <div>
                             <div className='flex justify-end'>
-                                <button className='font-semibold shadow-md bg-transparent text-[#6096B4] py-1.5 px-4 rounded-full mb-3 scale-100 transition ease-in-out border-2 border-[#6096B4] active:scale-95 active:bg-[#FF90BC] active:border-[#FF90BC] active:text-white active:font-bold hover:font-bold hover:bg-[#FF90BC] hover:border-[#FF90BC] hover:text-white' onClick={hdlPrint} > <FontAwesomeIcon icon={faPrint} /> ปริ้นรายชื่อ</button>
+                                {student.filter(users => users.class_id === user.class_id && users.user_role === "USER").length === 0 ?
+                                    <button className='font-semibold shadow-md bg-transparent text-[#6096B4] py-1.5 px-4 rounded-full mb-3 scale-100 transition ease-in-out border-2 border-[#6096B4] active:scale-95 active:bg-[#FF90BC] active:border-[#FF90BC] active:text-white active:font-bold hover:font-bold hover:bg-[#FF90BC] hover:border-[#FF90BC] hover:text-white disabled:opacity-40' disabled onClick={hdlPrint} > <FontAwesomeIcon icon={faPrint} /> ปริ้นรายชื่อ</button>
+                                    :
+                                    <button className='font-semibold shadow-md bg-transparent text-[#6096B4] py-1.5 px-4 rounded-full mb-3 scale-100 transition ease-in-out border-2 border-[#6096B4] active:scale-95 active:bg-[#FF90BC] active:border-[#FF90BC] active:text-white active:font-bold hover:font-bold hover:bg-[#FF90BC] hover:border-[#FF90BC] hover:text-white' onClick={hdlPrint} > <FontAwesomeIcon icon={faPrint} /> ปริ้นรายชื่อ</button>
+                                }
                             </div>
                             <table className='table table-xs text-black'>
                                 <thead className='text-center'>

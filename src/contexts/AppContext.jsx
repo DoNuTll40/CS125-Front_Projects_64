@@ -7,9 +7,11 @@ const AuthContext = createContext();
 
 function AuthContextProvider(props) {
 
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [ user, setUser ] = useState(null);
+    const [ loading, setLoading ] = useState(true);
     const [ fullStudent, setFullStudent ] = useState([])
+    const [ fullSchedule, setFullSchedule ] = useState([])
+    const [time, setTime] = useState([]);
 
     useEffect(() => {
 
@@ -36,6 +38,12 @@ function AuthContextProvider(props) {
             };
         };
         run();
+
+        const timer = setInterval(() => {
+            setTime(new Date().getTime());
+        }, 1000);
+
+        return () => clearInterval(timer);
     }, []);
 
     const logout = () => {
@@ -53,7 +61,7 @@ function AuthContextProvider(props) {
     };
 
     return (
-        <AuthContext.Provider value={{ user, setUser, loading, logout, setLoading, fullStudent, setFullStudent }}>
+        <AuthContext.Provider value={{ user, setUser, loading, logout, setLoading, fullStudent, setFullStudent, fullSchedule, setFullSchedule, time }}>
             {props.children}
         </AuthContext.Provider>
     )
