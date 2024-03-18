@@ -16,6 +16,6 @@
     border-spacing: 20px;
 }
 
-html::-webkit-scrollbar {
+*::-webkit-scrollbar {
   display: none;
 }

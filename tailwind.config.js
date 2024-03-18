@@ -10,6 +10,11 @@ export default {
         kanit: ["Kanit", "sans-serif"],
       },
     },
+    screens: {
+      'mobile': '426px',
+      'sm': '475px',
+      'md': '685px',
+    },
   },
   plugins: [require("daisyui")],
 };

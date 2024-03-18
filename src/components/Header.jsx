@@ -63,20 +63,20 @@ export default function Header() {
         <div data-theme="light" className='bg-gradient-to-r from-[#FF90BC] to-[#6096B4] h-[58px] select-none fixed top-0 w-screen z-50'>
             <div className='max-w-[80rem] mx-auto flex justify-between items-center'>
                 {user.user_role !== "USER" ?
-                    <div className="dropdown w-[200px]">
-                        <summary tabIndex={0} role='button' className="m-1 btn">{acText}</summary>
-                        <ul className="p-2 shadow mt-2 menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                    <div className="dropdown w-[170px] mobile:w-[200px]">
+                        <summary tabIndex={0} role='button' className="m-1 btn px-2 mobile:px-4">{acText}</summary>
+                        <ul className="p-2 shadow mt-2 menu dropdown-content z-[1] bg-base-100 rounded-box w-36 mobile:w-52">
                             {liNav.map((el, number) => (
                                 <li key={number + 1} className={`${acText === el.text ? "bg-pink-500 text-white font-bold" : ""} rounded-md`}><Link to={el.to} onClick={() => location.reload()}>{el.text}</Link></li>
                             ))}
                         </ul>
                     </div>
-                    : <div className='w-[200px]'></div>
+                    : <div className='w-[170px] mobile:w-[200px]'></div>
                 }
-                <h1 className='text-sm flex items-center font-bold text-white h-[46.4px] m-[4px] px-[16px] md:text-2xl'>{user.user_role === "ADMIN" ? "ระบบตารางเรียน (ผู้ดูแล)" : "ระบบตารางเรียน"}</h1>
-                <div className="dropdown dropdown-end w-[200px] flex justify-end">
+                <h1 className='text-sm flex items-center justify-center text-center font-bold text-white h-[46.4px] m-[4px] px-[16px] md:text-2xl'>{user.user_role === "ADMIN" ? "ระบบตารางเรียน (ผู้ดูแล)" : "ระบบตารางเรียน"}</h1>
+                <div className="dropdown dropdown-end w-[170px] mobile:w-[200px] flex justify-end">
                     <div className='flex items-center'>
-                        <p className='text-lg font-bold text-white'>{user.user_role === "USER" ? "น้อง" : user.user_role === "TEACHER" ? "ครู" : "คุณ"} {user.user_nickname}</p>
+                        <p className='hidden md:block sm:text-lg font-bold text-white'>{user.user_role === "USER" ? "น้อง" : user.user_role === "TEACHER" ? "ครู" : "คุณ"} {user.user_nickname}</p>
                     </div>
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar mx-2 mr-4">
                         <div className="w-10 rounded-full shadow-md pointer-events-none">

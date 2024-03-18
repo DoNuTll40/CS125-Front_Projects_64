@@ -226,9 +226,9 @@ export default function AllUsers() {
                         </table>
                         : <p className='text-2xl font-semibold underline'>ไม่พบข้อมูล</p>
                     }
-                    <dialog id="my_modal_3" className="modal">
+                    <dialog id="my_modal_3" className="modal scroll">
                         <div data-theme="dark" className="modal-box">
-                            <button className="absolute right-2 top-2" onClick={hdlCloseModal}><FontAwesomeIcon icon={faXmark} /></button>
+                            <button className="absolute right-4 top-2" onClick={hdlCloseModal}><FontAwesomeIcon icon={faXmark} /></button>
                             <form className='flex flex-col font-semibold' onSubmit={hdlSubmit}>
                                 <h3 className="font-bold text-lg mt-5 text-center relative z-30 bg-gray-700 w-1/2 rounded-md mx-auto">เพิ่มข้อมูล</h3>
                                 <hr className='relative bottom-3 mt-0' />
