@@ -1,7 +1,7 @@
 
-import axios from 'axios';
 import { useEffect, createContext, useState } from 'react';
 import Swal from 'sweetalert2';
+import axiosPath from '../configs/axios-path';
 
 const AuthContext = createContext();
 
@@ -25,7 +25,7 @@ function AuthContextProvider(props) {
                     return
                 }
 
-                const rs = await axios.get("http://localhost:8000/auth/me", {
+                const rs = await axiosPath.get("/auth/me", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 

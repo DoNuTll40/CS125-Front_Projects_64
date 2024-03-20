@@ -1,6 +1,6 @@
 
 import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import axiosPath from "../../configs/axios-path";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd, faEdit, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +38,7 @@ export default function AllUsers() {
         document.title = 'Admin : Student';
         const getUser = async () => {
             let token = localStorage.getItem('token')
-            const rs = await axios.get('http://localhost:8000/admin/users', {
+            const rs = await axiosPath.get('/admin/users', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -48,7 +48,7 @@ export default function AllUsers() {
 
         const getClass = async () => {
             let token = localStorage.getItem('token')
-            const rs = await axios.get('http://localhost:8000/admin/class', {
+            const rs = await axiosPath.get('/admin/class', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -89,7 +89,7 @@ export default function AllUsers() {
                 formData.set('user_brithday', new Date(input.user_brithday).toISOString());
 
                 const token = localStorage.getItem('token')
-                const rs = await axios.post('http://localhost:8000/admin/users', formData, {
+                const rs = await axiosPath.post('/admin/users', formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 if (rs.status === 200) {
@@ -167,7 +167,7 @@ export default function AllUsers() {
             try {
                 const deleteUser = async () => {
                     let token = localStorage.getItem('token')
-                    const rs = await axios.delete(`http://localhost:8000/admin/users/${id}`, {
+                    const rs = await axiosPath.delete(`/admin/users/${id}`, {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }

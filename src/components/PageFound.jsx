@@ -1,9 +1,8 @@
-import { icon } from "@fortawesome/fontawesome-svg-core";
+
 import { faAnglesLeft, faBackward, faBackwardStep, faBan, faCircleExclamation, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom"
 import useAuth from "../hooks/UseAuth";
-import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 
 export default function PageFound() {
 

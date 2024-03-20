@@ -1,5 +1,5 @@
 
-import axios from "axios"
+import axiosPath from "../../configs/axios-path";
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
@@ -37,7 +37,7 @@ export default function EditUser() {
     useEffect(() => {
         const getUserById = async () => {
             let token = localStorage.getItem('token')
-            const rs = await axios.get(`http://localhost:8000/admin/users/${userId}`, {
+            const rs = await axiosPath.get(`/admin/users/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -55,7 +55,7 @@ export default function EditUser() {
 
         try {
             let token = localStorage.getItem('token')
-            const rs = await axios.patch(`http://localhost:8000/admin/users/${userId}`, output, {
+            const rs = await axiosPath.patch(`/admin/users/${userId}`, output, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -117,7 +117,7 @@ export default function EditUser() {
                     try {
                         setLoading(true)
                         let token = localStorage.getItem('token')
-                        const rs = await axios.patch(`http://localhost:8000/admin/profile/${userId}`, formData, {
+                        const rs = await axios.patch(`/admin/profile/${userId}`, formData, {
                             headers: {
                                 Authorization: `Bearer ${token}`
                             }

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/UseAuth"
 import Swal from "sweetalert2";
-import axios from "axios";
+import axiosPath from "../configs/axios-path";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginAdmin() {
@@ -41,9 +41,9 @@ export default function LoginAdmin() {
     const hdlSubmit = async e => {
         try {
             e.preventDefault()
-            const rs = await axios.post('http://10.90.0.20:8000/auth/adminLogin', input);
+            const rs = await axiosPath.post('/auth/adminLogin', input);
             localStorage.setItem('token', rs.data.token);
-            const rs1 = await axios.get('http://10.90.0.20:8000/auth/me', {
+            const rs1 = await axiosPath.get('/auth/me', {
                 headers: { Authorization: `Bearer ${rs.data.token}` }
             });
             if (rs1.data !== "") {

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react'
-import axios from 'axios';
+import axiosPath from "../../configs/axios-path";
 import { useReactToPrint } from 'react-to-print';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPrint } from '@fortawesome/free-solid-svg-icons';
@@ -12,13 +12,12 @@ export default function TableStudent() {
   const { user } = useAuth();
   const [schedule, setSchedule] = useState([]);
   const [cView, setCView] = useState([])
-  const sched_count = 2;
 
   useEffect(() => {
     document.title = "Schedule"
     const getTable = async () => {
       let token = localStorage.getItem('token');
-      const rs = await axios.get('http://10.90.0.20:8000/user/table', {
+      const rs = await axiosPath.get('/user/table', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -29,7 +28,7 @@ export default function TableStudent() {
     if (cView.length === 0) {
       const getTableById = async () => {
         let token = localStorage.getItem('token');
-        const rs = await axios.get(`http://10.90.0.20:8000/user/table/1`, {
+        const rs = await axiosPath.get(`/user/table/1`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -43,7 +42,7 @@ export default function TableStudent() {
   const hdlClick = (id) => {
     const getTable = async () => {
       let token = localStorage.getItem('token');
-      const rs = await axios.get(`http://10.90.0.20:8000/user/table/${id}`, {
+      const rs = await axiosPath.get(`/user/table/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

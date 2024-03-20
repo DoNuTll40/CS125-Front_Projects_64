@@ -1,5 +1,5 @@
 
-import axios from 'axios';
+import axiosPath from "../../configs/axios-path";
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -23,7 +23,7 @@ export default function AddSchedule() {
     const getClassRoom = async () => {
       try {
         let token = localStorage.getItem('token')
-        const rs = await axios.get(`http://localhost:8000/admin/class`, {
+        const rs = await axiosPath.get(`/admin/class`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -38,7 +38,7 @@ export default function AddSchedule() {
     const getSubject = async () => {
       try {
         let token = localStorage.getItem('token')
-        const rs = await axios.get(`http://localhost:8000/admin/subject`, {
+        const rs = await axiosPath.get(`/admin/subject`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -52,7 +52,7 @@ export default function AddSchedule() {
 
     const getUser = async () => {
       let token = localStorage.getItem('token')
-      const rs = await axios.get('http://localhost:8000/admin/users', {
+      const rs = await axiosPath.get('/admin/users', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -77,7 +77,7 @@ export default function AddSchedule() {
     }
     try {
       let token = localStorage.getItem('token');
-      const rs = await axios.post('http://localhost:8000/admin/schedule', input, {
+      const rs = await axiosPath.post('/admin/schedule', input, {
         headers: {
           Authorization: `Bearer ${token}`
         }

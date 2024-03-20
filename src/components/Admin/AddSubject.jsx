@@ -1,5 +1,5 @@
 
-import axios from 'axios';
+import axiosPath from "../../configs/axios-path";
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -20,7 +20,7 @@ export default function AddSubject() {
     const getRoom = async () => {
       try {
         let token = localStorage.getItem('token')
-        const rs = await axios.get(`http://localhost:8000/admin/rooms`, {
+        const rs = await axiosPath.get(`/admin/rooms`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -36,7 +36,7 @@ export default function AddSubject() {
     const getMajor = async () => {
       try {
         let token = localStorage.getItem('token')
-        const rs = await axios.get(`http://localhost:8000/admin/major`, {
+        const rs = await axiosPath.get(`/admin/major`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -61,7 +61,7 @@ export default function AddSubject() {
     }
     try {
       let token = localStorage.getItem('token');
-      const rs = await axios.post('http://localhost:8000/admin/subject', input, {
+      const rs = await axiosPath.post('/admin/subject', input, {
         headers: {
           Authorization: `Bearer ${token}`
         }

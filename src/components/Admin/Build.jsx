@@ -1,8 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import useAuth from '../../hooks/UseAuth'
-import Header from '../Header'
-import axios from 'axios';
+import axiosPath from "../../configs/axios-path";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +16,7 @@ export default function Build() {
 
         const getBuild = async () => {
             let token = localStorage.getItem('token')
-            const rs = await axios.get('http://localhost:8000/admin/builds', {
+            const rs = await axiosPath.get('/admin/builds', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -33,7 +31,7 @@ export default function Build() {
         try {
             if (confirm("คุณต้องการลบข้อมูลหรือไม่")) {
                 let token = localStorage.getItem('token')
-                const rs = await axios.delete(`http://localhost:8000/admin/builds/${id}`, {
+                const rs = await axiosPath.delete(`/admin/builds/${id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

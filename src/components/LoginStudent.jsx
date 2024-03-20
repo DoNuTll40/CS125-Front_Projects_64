@@ -1,9 +1,10 @@
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useAuth from "../hooks/UseAuth"
 import Swal from "sweetalert2";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import axiosPath from '../configs/axios-path';
 
 export default function LoginStudent() {
 
@@ -24,9 +25,9 @@ export default function LoginStudent() {
             if (input.username === "" || input.password === "") {
                 alert("please enter your fill")
             } else {
-                const rs = await axios.post('http://10.90.0.20:8000/auth/login', input);
+                const rs = await axiosPath.post('/auth/login', input);
                 localStorage.setItem('token', rs.data.token);
-                const rs1 = await axios.get('http://10.90.0.20:8000/auth/me', {
+                const rs1 = await axiosPath.get('/auth/me', {
                     headers: { Authorization: `Bearer ${rs.data.token}` }
                 });
                 if (rs1.data !== "") {

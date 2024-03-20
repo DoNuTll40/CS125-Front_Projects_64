@@ -1,6 +1,6 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
+import axiosPath from "../../configs/axios-path";
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 
@@ -18,7 +18,7 @@ export default function Schedule() {
         const getClassRoom = async () => {
             try {
                 let token = localStorage.getItem('token')
-                const rs = await axios.get(`http://localhost:8000/admin/class`, {
+                const rs = await axiosPath.get(`/admin/class`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -34,7 +34,7 @@ export default function Schedule() {
             try {
                 let classId = input.class_id
                 let token = localStorage.getItem('token')
-                const rs = await axios.get(`http://localhost:8000/admin/schedule/${classId}`, {
+                const rs = await axiosPath.get(`/admin/schedule/${classId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -57,7 +57,7 @@ export default function Schedule() {
         // alert(id)
         if (confirm('คุณต้องการลบหรือไม่')) {
             let token = localStorage.getItem('token');
-            const rs = await axios.delete(`http://localhost:8000/admin/schedule/${id}`, {
+            const rs = await axiosPath.delete(`/admin/schedule/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

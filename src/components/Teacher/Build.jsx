@@ -1,24 +1,17 @@
 
 import { useEffect, useState } from 'react';
-import useAuth from '../../hooks/UseAuth'
-import Header from '../Header'
-import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
+import axiosPath from "../../configs/axios-path";
 
 export default function TeacherBuild() {
 
     const [builds, setBuild] = useState([])
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         document.title = 'SCHOOL NAME - Builds';
 
         const getBuild = async () => {
             let token = localStorage.getItem('token')
-            const rs = await axios.get('http://localhost:8000/admin/builds', {
+            const rs = await axiosPath.get('/admin/builds', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -33,7 +26,7 @@ export default function TeacherBuild() {
         try {
             if (confirm("คุณต้องการลบข้อมูลหรือไม่")) {
                 let token = localStorage.getItem('token')
-                const rs = await axios.delete(`http://localhost:8000/admin/builds/${id}`, {
+                const rs = await axios.delete(`/admin/builds/${id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

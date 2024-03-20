@@ -2,7 +2,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../hooks/UseAuth';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosPath from "../configs/axios-path";
 
 export default function Header() {
 
@@ -53,7 +53,7 @@ export default function Header() {
     useEffect(() => {
         const id = user.user_id
         const getUserBid = async () => {
-            const rs = await axios.get(`http://localhost:8000/header/user/${id}`)
+            const rs = await axiosPath.get(`/header/user/${id}`)
             setProfile(rs.data.getUserBid);
         }
         getUserBid();

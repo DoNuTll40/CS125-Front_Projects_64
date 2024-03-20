@@ -1,6 +1,6 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
+import axiosPath from "../../configs/axios-path";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +13,7 @@ export default function Subjects() {
 
     useEffect(() => {
         const useSubjects = async () => {
-            const rs = await axios.get('http://localhost:8000/admin/subject', {
+            const rs = await axiosPath.get('/admin/subject', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -30,7 +30,7 @@ export default function Subjects() {
     const hdlDelete = async (id) => {
         if (confirm(`คุณต้องการลบใช้หรือไม่`)) {
             try {
-                const rs = await axios.delete(`http://localhost:8000/admin/subject/${id}`, {
+                const rs = await axiosPath.delete(`/admin/subject/${id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

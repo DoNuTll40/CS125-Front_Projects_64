@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosPath from "../../configs/axios-path";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ export default function Rooms() {
 
         const getRoom = async () => {
             let token = localStorage.getItem('token')
-            const rs = await axios.get('http://localhost:8000/admin/rooms', {
+            const rs = await axiosPath.get('/admin/rooms', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -29,7 +29,7 @@ export default function Rooms() {
 
         const getBuild = async () => {
             let token = localStorage.getItem('token')
-            const rs = await axios.get('http://localhost:8000/admin/builds', {
+            const rs = await axiosPath.get('/admin/builds', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -46,7 +46,7 @@ export default function Rooms() {
         if (confirm("คุณต้องการลบข้อมูลใช่หรือไม่")) {
             try {
                 let token = localStorage.getItem('token')
-                const rs = await axios.delete(`http://localhost:8000/admin/rooms/${id}`, {
+                const rs = await axiosPath.delete(`/admin/rooms/${id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

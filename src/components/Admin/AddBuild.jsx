@@ -1,4 +1,5 @@
-import axios from "axios";
+
+import axiosPath from "../../configs/axios-path";
 import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom";
 
@@ -35,7 +36,7 @@ export default function AddBuild() {
                 formData.append('imageBuild', file);
             }
             const token = localStorage.getItem('token')
-            const rs = await axios.post('http://localhost:8000/admin/builds', formData, {
+            const rs = await axiosPath.post('/admin/builds', formData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

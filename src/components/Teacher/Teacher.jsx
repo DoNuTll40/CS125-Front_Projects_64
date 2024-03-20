@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosPath from "../../configs/axios-path";
 
 export default function Teacher() {
 
@@ -11,7 +11,7 @@ export default function Teacher() {
 
         const getUser = async () => {
             let token = localStorage.getItem('token')
-            const rs = await axios.get('http://localhost:8000/admin/users', {
+            const rs = await axiosPath.get('/admin/users', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

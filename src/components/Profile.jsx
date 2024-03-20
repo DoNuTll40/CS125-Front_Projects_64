@@ -3,8 +3,8 @@ import React, { useEffect, useRef } from 'react'
 import useAuth from '../hooks/UseAuth'
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import axios from 'axios';
 import InputMask from 'react-input-mask'
+import axiosPath from '../configs/axios-path';
 
 export default function Profile() {
 
@@ -44,7 +44,7 @@ export default function Profile() {
                     try {
                         setLoading(true)
                         let token = localStorage.getItem('token')
-                        const rs = await axios.patch('http://localhost:8000/admin/profile', formData, {
+                        const rs = await axiosPath.patch('/admin/profile', formData, {
                             headers: {
                                 Authorization: `Bearer ${token}`
                             }
@@ -73,14 +73,15 @@ export default function Profile() {
             <div className='flex flex-col mt-3'>
                 <div className='flex mb-3'>
                     <div className="flex-grow flex flex-col gap-1 drop-shadow-lg">
-                        <p><b>ชื่อ :</b> {user.user_firstname}</p>
-                        <p><b>นามสกุล :</b> {user.user_lastname}</p>
+                        <div>
+                            <p><b>ชื่อ :</b>{user.user_nameprefix} {user.user_firstname} {user.user_lastname}</p>
+                        </div>
                         <p><b>ชื่อเล่น :</b> {user.user_nickname}</p>
                         <p><b>อีเมล์ :</b> {user.user_email}</p>
-                        <p><b>เบอร์โทร :</b> <InputMask className='bg-transparent pointer-events-none' mask="999-999-XXXX" value={user.user_phone}/></p>
+                        <p><b>เบอร์โทร :</b> <InputMask className='bg-transparent pointer-events-none' mask="999-999-XXXX" value={user.user_phone} /></p>
                         <p><b>ที่อยู่ :</b> {user.user_address}</p>
                         <p><b>วันเกิด :</b> {fBrithDay}</p>
-                        <p className=' select-none'><b>รหัสบัตรประชาชน :</b> <InputMask className='bg-transparent pointer-events-none' mask="9-9999-XXXXX-99-9" maskChar={null} value={`${user.user_identity.substring(0, 6)}${user.user_identity.substring(13, 17)}`}/></p>
+                        <p className=' select-none'><b>รหัสบัตรประชาชน :</b> <InputMask className='bg-transparent pointer-events-none' mask="9-9999-XXXXX-99-9" maskChar={null} value={`${user.user_identity.substring(0, 6)}${user.user_identity.substring(13, 17)}`} /></p>
                         <p><b>ชั้นเรียน :</b> {user.class.class_name === "ADMIN" ? "ไม่พบห้อง" : user.class.class_name}</p>
                     </div>
                     <div className="flex-grow">
@@ -99,7 +100,7 @@ export default function Profile() {
                     <p>&copy; CS125 Nuttawoot Chawna SNRU | CodeCamp Academy 01</p>
                 </div>
             </div>
-            <p className='hover:cursor-pointer' onClick={ () => navigate(-1) }>Back</p>
+            <p className='hover:cursor-pointer' onClick={() => navigate(-1)}>Back</p>
         </div>
     )
 }

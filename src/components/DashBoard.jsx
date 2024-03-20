@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/UseAuth"
-import axios from "axios";
+import axiosPath from "../configs/axios-path";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { faCalendarMinus } from "@fortawesome/free-regular-svg-icons";
 
 export default function DashBoard() {
@@ -14,7 +13,7 @@ export default function DashBoard() {
     useEffect(() => {
         const getAll = async () => {
             let token = localStorage.getItem('token')
-            const rs = await axios.get('http://10.90.0.20:8000/admin/users', {
+            const rs = await axiosPath.get('/admin/users', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -25,7 +24,7 @@ export default function DashBoard() {
 
         const getSub = async () => {
             let token = localStorage.getItem('token');
-            const rs = await axios.get('http://10.90.0.20:8000/admin/subject', {
+            const rs = await axiosPath.get('/admin/subject', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

@@ -1,9 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import useAuth from '../../hooks/UseAuth'
-import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import axiosPath from "../../configs/axios-path";
 
 export default function Student() {
     const { user } = useAuth();
@@ -13,7 +11,7 @@ export default function Student() {
         document.title = 'Home';
         const getUser = async () => {
             let token = localStorage.getItem('token')
-            const rs = await axios.get('http://localhost:8000/admin/users', {
+            const rs = await axiosPath.get('/admin/users', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react'
-import axios from 'axios';
+import axiosPath from "../../configs/axios-path";
 import { useReactToPrint } from 'react-to-print';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faPrint } from '@fortawesome/free-solid-svg-icons';
@@ -18,7 +18,7 @@ export default function TableTeacher() {
     document.title = "Teacher | Schedule"
     const getTable = async () => {
       let token = localStorage.getItem('token');
-      const rs = await axios.get('http://localhost:8000/admin/teacher/schedule', {
+      const rs = await axiosPath.get('/admin/teacher/schedule', {
         headers: {
           Authorization: `Bearer ${token}`
         }
