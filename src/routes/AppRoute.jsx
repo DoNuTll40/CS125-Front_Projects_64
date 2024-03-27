@@ -27,6 +27,7 @@ import TeacherBuild from '../components/Teacher/Build';
 import Printlist from '../components/Print-list';
 import TableTeacher from '../components/Teacher/TableTeacher';
 import Report from '../components/Report';
+import ScrollProgress from '../components/ScrollProgress';
 
 const guestRouter = createBrowserRouter([
     {

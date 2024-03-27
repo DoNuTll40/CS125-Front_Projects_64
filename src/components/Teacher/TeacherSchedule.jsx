@@ -14,10 +14,10 @@ export default function TeacherSchedule() {
     const [frame, setFrame] = useState(false)
 
     const navigate = useNavigate();
-
+    
     let token = localStorage.getItem('token')
-
     useEffect(() => {
+
         const getSchedule = async () => {
             const rs = await axiosPath.get(`/admin/teacher/schedule`, {
                 headers: {
@@ -42,7 +42,7 @@ export default function TeacherSchedule() {
     const sortedSchedules = schedule.sort(sortByDay);
 
     const hdlGrip = () => {
-        if(grip === true){
+        if (grip === true) {
             setFrame(true)
             setGrip(false)
         }
@@ -51,13 +51,17 @@ export default function TeacherSchedule() {
     }
 
     const hdlFrame = () => {
-        if(frame === true){
+        if (frame === true) {
             setGrip(true)
             setFrame(false)
         }
         setFrame(true)
         setGrip(false)
-    }   
+    }
+
+    const thaiDays = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+    const time = new Date();
+    const dayOfWeek = thaiDays[time.getDay()];
 
     return (
         <div className='max-w-[80rem] mx-auto mt-3 select-none'>
@@ -104,24 +108,24 @@ export default function TeacherSchedule() {
                 <p className="text-center font-extrabold text-black  w-3/4 mx-auto text-lg relative">ตารางสอนของอาจารย์</p>
                 <p className="text-center text-black mb-4 mx-auto text-[16px] relative"><b>คำอธิบาย</b> เวลาที่แสดงจะเป็นการแสดงเวลาแค่ช่วงคาบแรกที่สอน</p>
                 <div className='flex justify-end'>
-                    <button className='flex items-center gap-1 hover:gap-2 active:gap-2 font-semibold shadow-md bg-transparent text-[#6096B4] py-1.5 px-4 rounded-full mb-3 scale-100 transition ease-in-out border-2 border-[#6096B4] active:scale-95 active:bg-[#FF90BC] active:border-[#FF90BC] active:text-white active:font-bold hover:font-bold hover:bg-[#FF90BC] hover:border-[#FF90BC] hover:text-white' onClick={hdlPrint}><FontAwesomeIcon icon={faTable} /> ดูรายการสอน</button>
+                    <button className='flex items-center gap-1 hover:gap-2 active:gap-2 font-semibold shadow-md bg-transparent text-[#6096B4] py-1.5 px-4 rounded-full mb-3 scale-100 transition ease-in-out border-2 border-[#6096B4] active:scale-95 active:bg-[#FF90BC] active:border-[#FF90BC] active:text-white active:font-bold hover:font-bold hover:bg-[#FF90BC] hover:border-[#FF90BC] hover:text-white disabled:opacity-30' onClick={hdlPrint} disabled><FontAwesomeIcon icon={faTable} /> ไม่รองรับขนาดหน้าจอ</button>
                 </div>
                 <div className="flex justify-between mb-4 text-white overflow-hidden bg-[#6096B4] w-20 h-7 rounded-full transition ease-in-out shadow-inner drop-shadow-sm">
-                    <button className={`transition ease-in-out ${grip? "bg-[#FF90BC] px-3.5 shadow-inner border-r-2 border-white" : "px-3"}`} onClick={ () => hdlGrip()}><FontAwesomeIcon icon={faGrip}/></button>
-                    <button className={`transition ease-in-out ${frame? "bg-[#FF90BC] px-3.5 shadow-inner border-l-2 border-white" : "px-3"}`} onClick={ () => hdlFrame()}><FontAwesomeIcon icon={faGripLines}/></button>
+                    <button className={`transition ease-in-out ${grip ? "bg-[#FF90BC] px-3.5 shadow-inner border-r-2 border-white" : "px-3"}`} onClick={() => hdlGrip()}><FontAwesomeIcon icon={faGrip} /></button>
+                    <button className={`transition ease-in-out ${frame ? "bg-[#FF90BC] px-3.5 shadow-inner border-l-2 border-white" : "px-3"}`} onClick={() => hdlFrame()}><FontAwesomeIcon icon={faGripLines} /></button>
                 </div>
                 {/* {console.log(schedule)} */}
                 <div className={`gap-3 flex transition ease-in-out ${grip ? "flex-row flex-wrap" : "flex-col"} justify-around w-full`}>
                     {sortedSchedules.map((el, number) => (
-                        <div key={number} className={`bg-[#FF90BC] sk transition ease-in-out ${grip ? "w-[48%]" : "w-full"} text-white rounded-lg px-3 py-2 relative text-sm font-semibold shadow-lg border-2 border-[#6096B4]`}>
-                            <p className="absolute top-[-12px] left-[-11px] bg-[#6096B4] px-2.5 py-1 rounded-full shadow-md">{number + 1}</p>
+                        <div key={number} className={`bg-[#FF90BC] transition ease-in-out ${grip ? "w-[48%]" : "w-full"} text-white rounded-lg px-3 py-2 relative text-sm font-semibold shadow-lg border-2 ${dayOfWeek === el.sched_day?"border-white":"border-[#6096B4]"}`}>
+                            <p className={`absolute top-[-12px] left-[-11px] ${dayOfWeek === el.sched_day?"bg-[#FF90BC] border border-white":"bg-[#6096B4]"} px-2.5 py-1 rounded-full shadow-md`}>{number + 1}</p>
                             <div className="flex justify-between">
-                                <p>{frame?"วัน":""} {el.sched_day}</p>
-                                <p>{frame?"เวลา":""} {el.sched_time}</p>
+                                <p>{frame ? "วัน" : ""} {el.sched_day}</p>
+                                <p>{frame ? "เวลา" : ""} {el.sched_time}</p>
                             </div>
                             <div className="flex justify-between gap-2">
                                 <div className="text-[15px]">
-                                    <p>{frame?"วิชา":""} {el.subject.sub_name}</p>
+                                    <p>{frame ? "วิชา" : ""} {el.subject.sub_name}</p>
                                     <p>ห้อง {el.class.class_name}</p>
                                 </div>
                                 <div className="text-[13px] text-center bg-[#6096B4] px-2 py-1 rounded-md">

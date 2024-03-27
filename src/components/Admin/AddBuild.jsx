@@ -74,12 +74,12 @@ export default function AddBuild() {
             </form>
             <div className="w-full mt-3">
                 <p>ใส่ภาพถ่ายอาคาร</p>
-                <input className="w-full focus:outline-none bg-gray-50 cursor-pointer mt-1" type="file" ref={fileInput} />
+                <input className="block w-full focus:outline-none py-2 rounded-lg bg-gray-50 cursor-pointer mt-1" type="file" ref={fileInput} />
             </div>
             <div className='flex justify-end gap-1 mt-5 mb-3'>
-                <button className='border-2 border-[#FF609C] w-28 py-1 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' type='submit' onClick={hdlSubmit}>เพิ่มข้อมูล</button>
-                <button className='border-2 border-[#FF609C] w-28 py-1 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' onClick={hdlClear}>ล้างข้อมูล</button>
-                <button className='border-2 border-[#FF609C] w-28 py-1 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' onClick={() => navigate(-1)}>ย้อนกลับ</button>
+                <button className='border-2 border-[#FF609C] w-1/4 md:w-28 py-2 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' type='submit' onClick={hdlSubmit}>เพิ่มข้อมูล</button>
+                <button className='border-2 border-[#FF609C] w-1/4 md:w-28 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' onClick={hdlClear}>ล้างข้อมูล</button>
+                <button className='border-2 border-[#FF609C] w-1/4 md:w-28 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' onClick={() => navigate(-1)}>ย้อนกลับ</button>
             </div>
             <hr />
         </div>

@@ -12,6 +12,7 @@ export default function AllUsers() {
     const [useClass, setUseClass] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
     const [refreshTable, setRefreshTable] = useState(false);
+    const [select, setSelect] = useState([])
 
     const [input, setInput] = useState({
         user_username: "",
@@ -57,28 +58,34 @@ export default function AllUsers() {
         }
         getClass();
         getUser();
+
     }, [refreshTable])
 
     const hdlChange = e => {
         setInput(prv => ({ ...prv, [e.target.name]: e.target.value }))
     };
 
+    const hdlChange2 = e => {
+        setSelect(prv => ({ ...prv, [e.target.name]: e.target.value }))
+    }
+
     const hdlSubmit = async (e) => {
         e.preventDefault();
 
-        const checkPhone = /^\d{10}$/;
-        if (!checkPhone.test(input.user_phone)) {
-            return alert("โปรดป้อนหมายเลขโทรศัพท์ที่ถูกต้อง");
-        }
-
-        if (Object.values(input).some(value => value !== "user_image" && input[value] === "")) {
+        // const checkPhone = /^\d{13}$/;
+        // if (!checkPhone.test(input.user_phone)) {
+        //     return alert("โปรดป้อนหมายเลขโทรศัพท์ที่ถูกต้อง");
+        // }
+        
+        const { select, ...data } = input;
+        if (Object.values(data).some(value => value !== "user_image" && data[value] === "")) {
             alert("Please enter input");
         } else {
             try {
                 const file = fileInput.current?.files[0];
                 const formData = new FormData();
 
-                Object.entries(input).forEach(([key, value]) => {
+                Object.entries(data).forEach(([key, value]) => {
                     formData.append(key, value);
                 });
 
@@ -86,7 +93,7 @@ export default function AllUsers() {
                     formData.append('image', file);
                 }
 
-                formData.set('user_brithday', new Date(input.user_brithday).toISOString());
+                formData.set('user_brithday', new Date(data.user_brithday).toISOString());
 
                 const token = localStorage.getItem('token')
                 const rs = await axiosPath.post('/admin/users', formData, {
@@ -185,45 +192,93 @@ export default function AllUsers() {
         }
     }
 
+    const dataNotAdmin = student.filter(el => el.user_role !== "ADMIN")
+    const woman = dataNotAdmin.filter(el => el.user_nameprefix === "เด็กหญิง" || el.user_nameprefix === "นางสาว" || el.user_nameprefix === "นาง")
+    const gender = dataNotAdmin.filter(el => el.user_nameprefix === "เด็กชาย" || el.user_nameprefix === "นาย")
+
     return (
         <>
             {student && <div className='max-w-[80rem] mx-auto mt-3 select-none'>
-                <div className='bg-white p-5 rounded-2xl max-w-[53rem] mt-5 mx-auto overflow-hidden'>
-                    <div className='flex justify-end'>
-                        <button className='px-3 py-2 rounded-full hover:bg-[#FF90BC] hover:text-white transition ease-in-out' onClick={() => document.getElementById('my_modal_3').showModal()} type="button"><FontAwesomeIcon icon={faAdd} /></button>
+                <div className='bg-white px-4 py-3 lg:p-5 rounded-2xl max-w-[53rem] mt-5 mx-auto overflow-hidden'>
+                    <div className='flex justify-between items-center'>
+                        <select className='w-[120px] bg-transparent font-bold focus:outline-none' name="select" id="" onChange={hdlChange2}>
+                            <option value="ADMIN">ทั้งหมด</option>
+                            <option value="TEACHER">นักเรียน</option>
+                            <option value="USER">คุณครู</option>
+                        </select>
+                        <p className='w-[120px] font-bold text-lg'>รายชื่อทั้งหมด</p>
+                        <div className='w-[120px] flex justify-end'>
+                            <button className='px-2.5 py-2 rounded-full hover:bg-[#FF90BC] hover:text-white transition ease-in-out flex items-center' onClick={() => document.getElementById('my_modal_3').showModal()} type="button"><FontAwesomeIcon icon={faAdd} /></button>
+                        </div>
                     </div>
                     {student.length !== 0 ?
-                        <table className='table table-xs text-black'>
-                            <thead className='text-center'>
-                                <tr className='text-sm text-black'>
-                                    <th>ลำดับ</th>
-                                    <th>คำนำหน้า</th>
-                                    <th>ชื่อ</th>
-                                    <th>นามสกุล</th>
-                                    <th>ชื่อเล่น</th>
-                                    <th>เมล</th>
-                                    <th>หน้าที่</th>
-                                    <th>ห้อง</th>
-                                    <th colSpan="2">ตัวเลือก</th>
-                                </tr>
-                            </thead>
-                            <tbody className='text-center'>
-                                {student.filter(user => user.user_role !== "ADMIN").map((user, number) => (
-                                    <tr className='hover:bg-[#FF90BC] hover:text-white transition ease-in-out' key={user.user_id}>
-                                        <td className="text-[14px] rounded-l-full">{number + 1}</td>
-                                        <td className="text-[14px]">{user.user_nameprefix}</td>
-                                        <td className="text-[14px]">{user.user_firstname}</td>
-                                        <td className="text-[14px]">{user.user_lastname}</td>
-                                        <td className="text-[14px]">{user.user_nickname}</td>
-                                        <td className="text-[14px]">{user.user_email}</td>
-                                        <td className="text-[14px]">{user.user_role === "USER" ? "นักเรียน" : "ครู"}</td>
-                                        <td className="text-[14px]">{user.class.class_name}</td>
-                                        <td className='text-end text-[14px] w-10'><button className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => hdlEdit(user.user_id)}><FontAwesomeIcon icon={faEdit} /></button></td>
-                                        <td className="text-[14px] w-10 rounded-r-full"><button className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => { hdlDelete(user.user_id) }}><FontAwesomeIcon icon={faTrash} /></button></td>
+                        <div className='mt-2'>
+                            <table className='table table-xs text-black hidden lg:block'>
+                                <thead className='text-center'>
+                                    <tr className='text-sm text-black'>
+                                        <th>ลำดับ</th>
+                                        <th>คำนำหน้า</th>
+                                        <th>ชื่อ</th>
+                                        <th>นามสกุล</th>
+                                        <th>ชื่อเล่น</th>
+                                        <th>เมล</th>
+                                        <th>หน้าที่</th>
+                                        <th>ห้อง</th>
+                                        <th colSpan="2">ตัวเลือก</th>
                                     </tr>
+                                </thead>
+                                <tbody className='text-center'>
+                                    {student.filter(user => user.user_role !== select.select).map((user, number) => (
+                                        <tr className='hover:bg-[#FF90BC] hover:text-white transition ease-in-out' key={user.user_id}>
+                                            <td className="text-[14px] rounded-l-full">{number + 1}</td>
+                                            <td className="text-[14px]">{user.user_nameprefix}</td>
+                                            <td className="text-[14px]">{user.user_firstname}</td>
+                                            <td className="text-[14px]">{user.user_lastname}</td>
+                                            <td className="text-[14px]">{user.user_nickname}</td>
+                                            <td className="text-[14px]">{user.user_email}</td>
+                                            <td className="text-[14px]">{user.user_role === "USER" ? "นักเรียน" : "ครู"}</td>
+                                            <td className="text-[14px]">{user.class.class_name}</td>
+                                            <td className='text-[14px]'>
+                                                <button className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => hdlEdit(user.user_id)}><FontAwesomeIcon icon={faEdit} /></button>
+                                            </td>
+                                            <td className='text-[14px] rounded-r-full'>
+                                                <button className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => { hdlDelete(user.user_id) }}><FontAwesomeIcon icon={faTrash} /></button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+
+                            {/* responsive */}
+
+                            <div className='block lg:hidden font-medium'>
+                                <div className='flex gap-1 items-center'>
+                                    <span className='w-4 h-4 rounded-full bg-[#6096B4]'></span>
+                                    <label className='font-bold'>ผู้ชาย {gender.filter(el => el.user_role !== select.select).length} คน</label>
+                                </div>
+                                <div className='flex gap-1 items-center'>
+                                    <span className='w-4 h-4 rounded-full bg-[#FF96BC]'></span>
+                                    <label className='font-bold'>ผู้หญิง {woman.filter(el => el.user_role !== select.select).length} คน</label>
+                                </div>
+                                {student.filter(user => user.user_role !== select.select && user.user_role !== "ADMIN").map((user, number) => (
+                                    <div key={number + 1} className={`flex my-3 justify-between h-20 rounded-md text-white ${user.user_nameprefix === "นาย" || user.user_nameprefix === "เด็กชาย" ? "bg-[#6096B4]" : "bg-[#FF90BC]"}`}>
+                                        <div className='flex gap-1 relative pl-2 items-center'>
+                                            <p>{number + 1}</p>
+                                            <div className='border-l-2 border-white px-1'>
+                                                <p className='text-[14px]'>{user.user_nameprefix} {user.user_firstname} {user.user_lastname}</p>
+                                                <p className='text-[14px]'>หน้าที่ {user.user_role === "USER" ? "นักเรียน" : "คุณครู"}</p>
+                                                <p className='text-[14px]'>เบอร์ติดต่อ {user.user_phone}</p>
+                                            </div>
+                                        </div>
+                                        <div className='flex gap-1 relative pr-2 items-center'>
+                                            <td className='text-end text-[14px] w-10'><button className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => hdlEdit(user.user_id)}><FontAwesomeIcon icon={faEdit} /></button></td>
+                                            <td className="text-[14px] w-10 rounded-r-full"><button className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => { hdlDelete(user.user_id) }}><FontAwesomeIcon icon={faTrash} /></button></td>
+                                        </div>
+                                    </div>
                                 ))}
-                            </tbody>
-                        </table>
+                            </div>
+                            
+                        </div>
                         : <p className='text-2xl font-semibold underline'>ไม่พบข้อมูล</p>
                     }
                     <dialog id="my_modal_3" className="modal scroll">
@@ -311,14 +366,14 @@ export default function AllUsers() {
                                     type="text"
                                 /> */}
                                 <p>ที่อยู่</p>
-                                <textarea className='w-full px-4 py-1 rounded-md' name="user_address" value={input.user_address} onChange={hdlChange} cols="5" rows="2"></textarea>
+                                <textarea className='w-full px-4 py-1 rounded-md resize-none' name="user_address" value={input.user_address} onChange={hdlChange} cols="5" rows="2"></textarea>
                                 <div className='flex w-full gap-3'>
                                     <div className='flex flex-col w-full'>
                                         <p>หน้าที่</p>
                                         <select className='w-full px-4 py-1 rounded-md' name="user_role" value={input.user_role} onChange={hdlChange} id="">
                                             <option hidden>เลือกหน้าที่</option>
-                                            <option value="USER">STUDENT</option>
-                                            <option value="TEACHER">TEACHER</option>
+                                            <option value="USER">นักเรียน</option>
+                                            <option value="TEACHER">คุณครู</option>
                                         </select>
                                     </div>
                                     <div className='flex flex-col w-full'>

@@ -12,7 +12,7 @@ export default function Rooms() {
 
     const navigate = useNavigate();
 
-    console.log(rooms)
+    // console.log(rooms)
 
     useEffect(() => {
         document.title = 'SCHOOL NAME - Builds';
@@ -65,32 +65,70 @@ export default function Rooms() {
                     <div className='flex justify-end'>
                         <button className='' onClick={() => navigate('add')} type="button">เพิ่ม</button>
                     </div>
-                    {rooms.length !== 0 ?
-                        <table className='table text-black'>
-                            <thead className='text-center'>
-                                <tr className='text-black'>
-                                    <th>ลำดับ</th>
-                                    <th>ชื่อห้องเรียน</th>
-                                    <th>เลขห้องเรียน</th>
-                                    <th>ชื่ออาคาร</th>
-                                    <th colSpan="2">ตัวเลือก</th>
-                                </tr>
-                            </thead>
-                            <tbody className='text-center'>
-                                {rooms.map((room, number) => (
-                                    <tr key={room.room_id}>
-                                        <td>{number + 1}</td>
-                                        <td>{room.room_name}</td>
-                                        <td>{room.room_number}</td>
-                                        <td>{room.build.build_name}</td>
-                                        <th className='text-end'><button className=''>กำลังพัฒนา..</button></th>
-                                        <td><button className='' onClick={() => hdlDelete(room.room_id)}><FontAwesomeIcon icon={faTrash} /></button></td>
+                    <div className='hidden md:block'>
+                        {rooms.length !== 0 ?
+                            <table className='table text-black'>
+                                <thead className='text-center'>
+                                    <tr className='text-black'>
+                                        <th>ลำดับ</th>
+                                        <th>ชื่อห้องเรียน</th>
+                                        <th>เลขห้องเรียน</th>
+                                        <th>ชื่ออาคาร</th>
+                                        <th colSpan="2">ตัวเลือก</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        : <p className='text-2xl font-semibold underline'>ไม่พบข้อมูล</p>
-                    }
+                                </thead>
+                                <tbody className='text-center'>
+                                    {rooms.map((room, number) => (
+                                        <tr key={room.room_id}>
+                                            <td>{number + 1}</td>
+                                            <td>{room.room_name}</td>
+                                            <td>{room.room_number}</td>
+                                            <td>{room.build.build_name}</td>
+                                            <th className='text-end'><button className=''>กำลังพัฒนา..</button></th>
+                                            <td><button className='' onClick={() => hdlDelete(room.room_id)}><FontAwesomeIcon icon={faTrash} /></button></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            : <p className='text-2xl font-semibold underline'>ไม่พบข้อมูล</p>
+                        }
+                    </div>
+
+                    {/* responsive */}
+
+                    <div className='block md:hidden'>
+                        <p className='text-center font-semibold text-black drop-shadow-[0_3px_2px_rgba(0,0,0,0.5)] mb-1'>รายชื่อห้องที่เรามีในระบบ</p>
+                        <hr />
+                        <div>
+                            {rooms.map((el, index) => (
+                                <div className={`flex gap-2 relative my-2 py-2 border-white border-2 rounded-md shadow-md ${index % 2 === 0 ? "bg-[#6096B4]" : "bg-[#FF90BC]"}`} key={index}>
+                                    <p className='absolute bg-white w-10 rounded-br-lg rounded-tl-md text-end px-2 -top-[0.1rem] -left-[0.1rem] text-black font-extrabold text-sm'>{index + 1}</p>
+                                    <div className='flex px-5 w-full justify-between mt-5 text-white font-bold'>
+                                        <div className='flex justify-between w-full sm:hidden'>
+                                            <div className='text-center'>
+                                                <p className='text-sm'>ชื่อห้อง</p>
+                                                <p>{el.room_name}</p>
+                                            </div>
+                                            <div className='text-center'>
+                                                <p className='text-sm'>หมายเลขห้อง</p>
+                                                <p>{el.room_number}</p>
+                                            </div>
+                                            <div className='text-center'>
+                                                <p className='text-sm'>ชื่ออาคาร</p>
+                                                <p>{el.build.build_name}</p>
+                                            </div>
+                                        </div>
+                                        <div className='hidden sm:flex justify-between w-full'>
+                                            <p>ชื่อห้อง {el.room_name}</p>
+                                            <p>หมายเลขห้อง {el.room_number}</p>
+                                            <p>ชื่ออาคาร {el.build.build_name}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </>

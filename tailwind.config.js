@@ -14,6 +14,7 @@ export default {
       'mobile': '426px',
       'sm': '475px',
       'md': '685px',
+      'lg': '769px',
     },
   },
   plugins: [require("daisyui")],

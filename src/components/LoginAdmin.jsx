@@ -73,8 +73,8 @@ export default function LoginAdmin() {
     return (
         <div data-theme="light" className="bg-[url('https://a.cdn-hotels.com/gdcs/production122/d1368/1ecd1184-2b25-4fa6-877c-320dc8a0f1e5.jpg?impolicy=fcrop&w=1600&h=1066&q=medium')] flex justify-center h-[100vh] items-center bg-cover bg-center">
             <div className="w-full h-full flex flex-col justify-center items-center backdrop-blur-sm">
-                <div className="bg-gradient-to-r from-[#6096B4] to-[#FF90BC] flex gap-4 rounded-lg drop-shadow-[5px_5px_3px_rgba(0,0,0,0.25)] w-[650px] h-[450px]">
-                    <div className="max-w-[470px] max-h-[440px] drop-shadow-[3px_3px_2px_rgba(0,0,0,0.30)]">
+                <div className="bg-gradient-to-r from-[#6096B4] to-[#FF90BC] flex gap-4 rounded-lg drop-shadow-[5px_5px_3px_rgba(0,0,0,0.25)] scale-75 md:scale-100 w-full md:w-[650px] md:h-[450px]">
+                    <div className="max-w-[470px] max-h-[440px] drop-shadow-[3px_3px_2px_rgba(0,0,0,0.30)] hidden md:block">
                         <img className="rounded-b-lg object-cover w-[100%] h-[100%]" src="https://picsum.photos/id/120/1200" type="image/jpeg" />
                     </div>
                     <div className="w-full">

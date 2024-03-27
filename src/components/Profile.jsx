@@ -12,10 +12,11 @@ export default function Profile() {
     const fileInput = useRef(null);
 
     const bDay = new Date(user.user_brithday);
-    const fBrithDay = bDay.toDateString('th-TH')
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const thaiLocale = 'th-TH';
+    const fBrithDay = bDay.toLocaleDateString(thaiLocale, options);
 
     const profile = user.user_image
-    // console.log(profile)
 
     const navigate = useNavigate();
 
@@ -67,14 +68,14 @@ export default function Profile() {
     };
 
     return (
-        <div className='max-w-[40rem] text-black mx-auto mt-16 pt-5 pb-2 select-none rounded-lg px-5 bg-white shadow-lg'>
-            <h1 className='text-2xl font-bold mb-2'>โปรไฟล์</h1>
+        <div className='max-w-[40rem] text-black mx-auto mt-16 pt-2 sm:pt-5 pb-2 select-none rounded-lg px-2 sm:px-5 bg-white shadow-lg'>
+            <h1 className='text-md sm:text-2xl font-bold mb-1 sm:mb-2'>โปรไฟล์</h1>
             <hr />
-            <div className='flex flex-col mt-3'>
+            <div className='flex flex-col mt-1.5 sm:mt-3 text-[12px] sm:text-lg'>
                 <div className='flex mb-3'>
                     <div className="flex-grow flex flex-col gap-1 drop-shadow-lg">
                         <div>
-                            <p><b>ชื่อ :</b>{user.user_nameprefix} {user.user_firstname} {user.user_lastname}</p>
+                            <p><b>ชื่อ :</b> {user.user_nameprefix} {user.user_firstname} {user.user_lastname}</p>
                         </div>
                         <p><b>ชื่อเล่น :</b> {user.user_nickname}</p>
                         <p><b>อีเมล์ :</b> {user.user_email}</p>
@@ -85,22 +86,22 @@ export default function Profile() {
                         <p><b>ชั้นเรียน :</b> {user.class.class_name === "ADMIN" ? "ไม่พบห้อง" : user.class.class_name}</p>
                     </div>
                     <div className="flex-grow">
-                        <img className='rounded-lg border-4 border-white shadow-lg w-[200px] ml-auto pointer-events-none' src={profile} alt="profile" />
-                        <p className='text-end mr-14 mt-3 font-bold'>ภาพโปรไฟล์</p>
+                        <img className='rounded-lg border-2 sm:border-4 border-white shadow-lg max-w-[120px] max-h-[120px] sm:max-w-[200px] sm:max-h-[200px] mx-auto pointer-events-none' src={profile} alt="profile" />
+                        <p className='text-[13px] sm:text-lg text-center mt-1 font-bold'>ภาพโปรไฟล์</p>
                         {user.user_role !== "USER" && (
                             <>
                                 <input type="file" accept="image/*" style={{ display: "none" }} onChange={hdlEditProfile} ref={fileInput} />
-                                <p className='text-[11px] font-bold text-blue-900 text-center ml-[3.1rem] hover:cursor-pointer scale-100 active:scale-95 ease-in-out transition underline' onClick={() => fileInput.current.click()}>เปลี่ยนโปรไฟล์</p>
+                                <p className='text-[9px] sm:text-[11px] font-bold text-blue-900 text-center hover:cursor-pointer scale-100 active:scale-95 ease-in-out transition underline' onClick={() => fileInput.current.click()}>เปลี่ยนโปรไฟล์</p>
                             </>
                         )}
                     </div>
                 </div>
                 <hr />
-                <div className='text-[10px] flex justify-center align-bottom items-end mt-4'>
+                <div className='text-[8px] sm:text-[10px] flex justify-center align-bottom items-end mt-1 sm:mt-4'>
                     <p>&copy; CS125 Nuttawoot Chawna SNRU | CodeCamp Academy 01</p>
                 </div>
             </div>
-            <p className='hover:cursor-pointer' onClick={() => navigate(-1)}>Back</p>
+            <p className='text-sm sm:text-md hover:cursor-pointer' onClick={() => navigate(-1)}>Back</p>
         </div>
     )
 }

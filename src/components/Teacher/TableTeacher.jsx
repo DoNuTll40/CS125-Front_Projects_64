@@ -172,7 +172,7 @@ export default function TableTeacher() {
           </tr>
         </tbody>
       </table>
-      <div className='flex justify-between px-20 mt-[-15px]'>
+      <div className='flex justify-between px-20'>
         <button className='font-semibold shadow-md bg-transparent text-[#6096B4] py-1.5 px-4 rounded-full mb-3 scale-100 transition ease-in-out border-2 border-[#6096B4] active:scale-95 active:bg-[#FF90BC] active:border-[#FF90BC] active:text-white active:font-bold hover:font-bold hover:bg-[#FF90BC] hover:border-[#FF90BC] hover:text-white flex items-center gap-1 hover:gap-2 active:gap-2' onClick={() => navigate(-1)}><FontAwesomeIcon icon={faArrowLeft} /> ย้อนกลับ</button>
         <button className='font-semibold shadow-md bg-transparent text-[#6096B4] py-1.5 px-4 rounded-full mb-3 scale-100 transition ease-in-out border-2 border-[#6096B4] active:scale-95 active:bg-[#FF90BC] active:border-[#FF90BC] active:text-white active:font-bold hover:font-bold hover:bg-[#FF90BC] hover:border-[#FF90BC] hover:text-white' onClick={hdlPrint} ><FontAwesomeIcon icon={faPrint} /> ปริ้นตารางเรียน</button>
       </div>

@@ -3,10 +3,11 @@ import useAuth from "../hooks/UseAuth"
 import axiosPath from "../configs/axios-path";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarMinus } from "@fortawesome/free-regular-svg-icons";
+import TimeRealtime from "./TimeRealtime";
 
 export default function DashBoard() {
 
-    const { user, time } = useAuth();
+    const { user } = useAuth();
     const [allUser, setAllUser] = useState([]);
     const [allSub, setAllSub] = useState([]);
 
@@ -32,22 +33,11 @@ export default function DashBoard() {
             setAllSub(rs.data.sub);
         }
         getSub();
+
     }, [])
 
     const numberOFuser = (allUser.filter(users => users.user_role === "USER").length / allUser.filter(users => users.user_role !== "ADMIN").length) * 100
     const numberOFteacher = (allUser.filter(users => users.user_role === "TEACHER").length / allUser.filter(users => users.user_role !== "ADMIN").length) * 100
-
-    const thaiDays = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
-    const thaiMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
-
-    const time2 = new Date();
-
-    const dayOfWeek = thaiDays[time2.getDay()];
-    const dayOfMonth = time2.getDate();
-    const month = thaiMonths[time2.getMonth()];
-    const year = time2.getFullYear() + 543;
-
-    const thaiDate = `วัน${dayOfWeek}ที่ ${dayOfMonth} เดือน ${month} พ.ศ. ${year} เวลา ${time.length !== 0 ? new Date(time).toLocaleTimeString('th-TH') : new Date().toLocaleTimeString('th-TH')} น.`;
 
     return (
         <div>
@@ -55,7 +45,7 @@ export default function DashBoard() {
                 <div className='bg-white p-3 rounded-2xl max-w-[53rem] mx-auto'>
                     <div className="flex items-center justify-end gap-1 px-2 text-[12px] mobile:text-md font-extrabold text-base-200">
                         <FontAwesomeIcon icon={faCalendarMinus} className="text-lg pb-1" />
-                        <p>{thaiDate}</p>
+                        <TimeRealtime />
                     </div>
                     <div className='my-3 text-center flex flex-col gap-3 text-base-200'>
                         <h1 className='text-2xl font-bold'>สวัสดีคุณ {user.user_firstname} {user.user_lastname}</h1>
