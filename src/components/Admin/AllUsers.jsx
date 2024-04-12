@@ -72,12 +72,20 @@ export default function AllUsers() {
     const hdlSubmit = async (e) => {
         e.preventDefault();
 
-        // const checkPhone = /^\d{13}$/;
-        // if (!checkPhone.test(input.user_phone)) {
-        //     return alert("โปรดป้อนหมายเลขโทรศัพท์ที่ถูกต้อง");
-        // }
+        const checkPhone = input.user_phone.replace(/_/g, '')
+
+        const checkIdent = input.user_identity.replace(/_/g, '')
         
-        const { select, ...data } = input;
+        if (checkIdent.length !== 17) {
+            return alert("โปรดป้อนเลขบัตรประชาชนให้ครบ");
+        }
+
+        if (checkPhone.length !== 12) {
+            return alert("โปรดป้อนหมายเลขโทรศัพท์ให้ครบ");
+        }
+
+        const { select, user_birthday, ...data } = input;
+
         if (Object.values(data).some(value => value !== "user_image" && data[value] === "")) {
             alert("Please enter input");
         } else {
@@ -107,6 +115,7 @@ export default function AllUsers() {
                 console.log(rs)
             } catch (err) {
                 alert(err.message)
+                console.log(err)
             }
         }
     }
@@ -137,7 +146,7 @@ export default function AllUsers() {
             user_email: "",
             user_phone: "",
             user_address: "",
-            user_birthday: "",
+            user_brithday: "",
             user_identity: "",
             class_id: ""
         });
@@ -157,7 +166,7 @@ export default function AllUsers() {
             user_email: "",
             user_phone: "",
             user_address: "",
-            user_birthday: "",
+            user_brithday: "",
             user_identity: "",
             class_id: ""
         });
@@ -208,7 +217,7 @@ export default function AllUsers() {
                         </select>
                         <p className='w-[120px] font-bold text-lg'>รายชื่อทั้งหมด</p>
                         <div className='w-[120px] flex justify-end'>
-                            <button className='px-2.5 py-2 rounded-full hover:bg-[#FF90BC] hover:text-white transition ease-in-out flex items-center' onClick={() => document.getElementById('my_modal_3').showModal()} type="button"><FontAwesomeIcon icon={faAdd} /></button>
+                            <button name='btn-add' className='px-2.5 py-2 rounded-full hover:bg-[#FF90BC] hover:text-white transition ease-in-out flex items-center' onClick={() => document.getElementById('my_modal_3').showModal()} type="button"><FontAwesomeIcon icon={faAdd} /></button>
                         </div>
                     </div>
                     {student.length !== 0 ?
@@ -271,13 +280,13 @@ export default function AllUsers() {
                                             </div>
                                         </div>
                                         <div className='flex gap-1 relative pr-2 items-center'>
-                                            <td className='text-end text-[14px] w-10'><button className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => hdlEdit(user.user_id)}><FontAwesomeIcon icon={faEdit} /></button></td>
-                                            <td className="text-[14px] w-10 rounded-r-full"><button className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => { hdlDelete(user.user_id) }}><FontAwesomeIcon icon={faTrash} /></button></td>
+                                            <td className='text-end text-[14px] w-10'><button name={`btn-edit-${number + 1}`} className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => hdlEdit(user.user_id)}><FontAwesomeIcon icon={faEdit} /></button></td>
+                                            <td className="text-[14px] w-10 rounded-r-full"><button name={`btn-del-${number + 1}`} className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => { hdlDelete(user.user_id) }}><FontAwesomeIcon icon={faTrash} /></button></td>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                            
+
                         </div>
                         : <p className='text-2xl font-semibold underline'>ไม่พบข้อมูล</p>
                     }

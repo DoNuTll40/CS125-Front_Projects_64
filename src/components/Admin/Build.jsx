@@ -26,7 +26,7 @@ export default function Build() {
         }
         getBuild();
 
-    }, [builds])
+    }, [])
 
     const hdlDelete = async (id) => {
         try {

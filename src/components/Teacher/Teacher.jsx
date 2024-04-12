@@ -25,7 +25,7 @@ export default function Teacher() {
 
     return (
         <div className='max-w-[80rem] mx-auto mt-3 select-none'>
-            <div className='bg-white p-5 rounded-2xl max-w-[53rem] mt-5 mx-auto'>
+            <div className='bg-white p-5 rounded-2xl max-w-[53rem] mt-5 mx-auto '>
                 {users.length !== 0 ?
                     <table className='table text-black'>
                         <thead className='text-center'>
@@ -39,7 +39,7 @@ export default function Teacher() {
                                 <th>ห้อง</th>
                             </tr>
                         </thead>
-                        <tbody className='text-center'>
+                        <tbody className='text-center '>
                             {users.filter(user => user.user_role === "TEACHER").map((user, number) => (
                                 <tr className='hover:bg-[#FF90BC] hover:rounded-2xl hover:text-white transition ease-in-out' key={user.user_id}>
                                     <td className="text-[14px] rounded-l-full">{number + 1}</td>

@@ -7,7 +7,7 @@ import ScrollProgress from './ScrollProgress';
 
 export default function Header() {
 
-    const { user, logout } = useAuth();
+    const {user, logout} = useAuth();
     const [profile, setProfile] = useState([])
     const navigate = useNavigate()
 
@@ -23,6 +23,7 @@ export default function Header() {
         { to: "/build", text: "รายชื่ออาคาร" },
         { to: "/room", text: "รายชื่อห้อง" },
         { to: "/schedule", text: "ตารางทั้งหมด" },
+        { to: "/class", text: "ชั้นเรียนทั้งหมด" },
         { to: "/subject", text: "รายวิชาทั้งหมด" },
         { to: "/report", text: "รายงานระบบ" },
 

@@ -4,7 +4,7 @@ import AppRoute from "./routes/AppRoute";
 
 function App() {
 
-  const { loading, theme } = useAuth();
+  const { loading } = useAuth();
 
   if (loading) {
     return (

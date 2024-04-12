@@ -87,20 +87,20 @@ export default function AddSubject() {
   }
 
   return (
-    <div data-theme="light" className="max-w-[53rem] h-[24rem] text-black mx-auto mt-5 pt-5 pb-2 select-none rounded-2xl px-5 bg-white shadow-lg">
+    <div data-theme="light" className="max-w-[53rem] md:h-[24rem] text-black mx-auto mt-5 pt-5 pb-2 select-none rounded-2xl px-5 bg-white shadow-lg">
       <p className="text-xl text-center font-extrabold">เพิ่มตารางเรียน</p>
-      <form className="flex gap-2 mt-2">
+      <form className="flex gap-2 mt-2 flex-col md:flex-row">
         <div>
           <p className='font-bold'>ชื่อวิชา</p>
-          <input className={`w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white`} name="sub_name" type='text' value={input.sub_name} onChange={hdlChange} placeholder='พิมพ์ชื่อวิชา'/>
+          <input className={`w-full md:w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white`} name="sub_name" type='text' value={input.sub_name} onChange={hdlChange} placeholder='พิมพ์ชื่อวิชา'/>
         </div>
         <div>
           <p className='font-bold'>รหัสวิชา</p>
-          <input className={`w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white`} type="text" name="sub_code" onChange={hdlChange} value={input.sub_code} placeholder='พิมพ์รหัสวิชา'/>
+          <input className={`w-full md:w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white`} type="text" name="sub_code" onChange={hdlChange} value={input.sub_code} placeholder='พิมพ์รหัสวิชา'/>
         </div>
         <div>
           <p className='font-bold'>ห้องเรียน</p>
-          <select className={`w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white`} name="room_id" onChange={hdlChange}>
+          <select className={`w-full md:w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white`} name="room_id" onChange={hdlChange}>
             <option value="">เลือกห้อง</option>
             {getRomm.map( (el, number) => (
               <option key={number} value={el.room_id}>{el.room_name}</option>
@@ -109,7 +109,7 @@ export default function AddSubject() {
         </div>
         <div>
           <p className='font-bold'>กลุ่มวิชา</p>
-          <select className={`w-[215px] px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white text-ellipsis`} name="major_id" onChange={hdlChange}>
+          <select className={`w-full md:w-[215px] px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white text-ellipsis`} name="major_id" onChange={hdlChange}>
             <option hidden>เลือกกลุ่มวิชา</option>
               {getMajor.map( (el, number) => (
                 <option key={number} value={el.major_id}>{el.major_name}</option>

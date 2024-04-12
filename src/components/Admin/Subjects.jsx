@@ -21,7 +21,7 @@ export default function Subjects() {
             setGetSubject(rs.data.sub)
         }
         useSubjects();
-    }, [getSubject])
+    }, [])
 
     const hdlAdd = () => {
         navigate('add')

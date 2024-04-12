@@ -25,7 +25,7 @@ export default function Student() {
     return (
         <div className='max-w-[80rem] mx-auto mt-3 select-none'>
             {/* Create Table */}
-            <div className='bg-white p-5 rounded-t-2xl max-w-[53rem] h-screen mt-5 mx-auto'>
+            <div className='bg-white p-5 rounded-2xl max-w-[53rem] mt-5 mx-auto'>
                 {student.filter(users => users.class_id === user.class_id && users.user_role === "USER").length !== 0 ?
                     <table className='table table-xs text-black'>
                         <thead className='text-center'>

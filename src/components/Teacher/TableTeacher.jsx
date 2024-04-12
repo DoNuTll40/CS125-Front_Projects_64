@@ -45,7 +45,7 @@ export default function TableTeacher() {
             <th colSpan={9} className='text-xl'>ตารางการเรียนการสอนของคุณครู {user.user_firstname} {user.user_lastname}</th>
           </tr>
           <tr className='rounded-lg'>
-            <th className='rounded-lg border-2 border-black dark:border-0 dark:bg-slate-600 w-32 text-2xl' rowSpan={2}>วัน</th>
+            <th className='rounded-lg border-2 border-black dark:border-0 dark:bg-slate-600 w-32 text-xl' rowSpan={2}>วัน / เวลา</th>
             <th>1</th>
             <th>2</th>
             <th>3</th>

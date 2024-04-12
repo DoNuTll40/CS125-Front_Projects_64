@@ -40,7 +40,7 @@ export default function Rooms() {
         getBuild();
         getRoom();
 
-    }, [rooms])
+    }, [])
 
     const hdlDelete = async (id) => {
         if (confirm("คุณต้องการลบข้อมูลใช่หรือไม่")) {
@@ -97,7 +97,7 @@ export default function Rooms() {
                     {/* responsive */}
 
                     <div className='block md:hidden'>
-                        <p className='text-center font-semibold text-black drop-shadow-[0_3px_2px_rgba(0,0,0,0.5)] mb-1'>รายชื่อห้องที่เรามีในระบบ</p>
+                        <p className='text-center font-semibold text-black drop-shadow-[0_3px_2px_rgba(0,0,0,0.5)]'>รายชื่อห้องที่เรามีในระบบ</p>
                         <hr />
                         <div>
                             {rooms.map((el, index) => (

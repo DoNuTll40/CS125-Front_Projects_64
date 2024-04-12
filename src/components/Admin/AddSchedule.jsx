@@ -109,21 +109,21 @@ export default function AddSchedule() {
   }
 
   return (
-    <div data-theme="light" className="max-w-[53rem] h-[24rem] text-black mx-auto mt-5 pt-5 pb-2 select-none rounded-2xl px-5 bg-white shadow-lg">
+    <div data-theme="light" className="max-w-[53rem] md:h-[24rem] text-black mx-auto mt-5 pt-5 pb-2 select-none rounded-2xl px-5 bg-white shadow-lg">
       <p className="text-xl text-center font-extrabold">เพิ่มตารางเรียน</p>
-      <form className="flex gap-2 mt-2">
-        <div>
+      <form className="flex gap-2 mt-2 flex-col md:flex-row">
+        <div className="w-full md:w-1/6">
           <p className='font-bold'>ห้องเรียน</p>
-          <select className={`w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white ${input.class_id !== "" ? "border-[#FF609C]" : ""}`} name="class_id" onChange={hdlChange}>
+          <select className={`w-full md:w-30 text-ellipsis px-2 py-2 appearance-none hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white ${input.class_id !== "" ? "border-[#FF609C]" : ""}`} name="class_id" onChange={hdlChange}>
             <option hidden>เลือกห้อง</option>
             {getClass.filter(el => el.class_name !== "ADMIN" && el.class_name !== "ไม่มีห้อง").map((el, index) => (
               <option key={index} value={el.class_id}>{el.class_name}</option>
             ))}
           </select>
         </div>
-        <div>
+        <div className="w-full md:w-1/5">
           <p className='font-bold'>วัน</p>
-          <select className={`w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white ${input.sched_day !== "" ? "border-[#FF609C]" : ""}`} name="sched_day" onChange={hdlChange}>
+          <select className={`w-full md:max-w-30 text-ellipsis appearance-none px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white ${input.sched_day !== "" ? "border-[#FF609C]" : ""}`} name="sched_day" onChange={hdlChange}>
             <option hidden>เลือกวัน</option>
             <option value="จันทร์">วันจันทร์</option>
             <option value="อังคาร">วันอังคาร</option>
@@ -132,9 +132,9 @@ export default function AddSchedule() {
             <option value="ศุกร์">วันศุกร์</option>
           </select>
         </div>
-        <div>
+        <div className="w-full md:w-1/5">
           <p className='font-bold'>เวลา</p>
-          <select className={`w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white ${input.sched_time !== "" ? "border-[#FF609C]" : ""}`} name="sched_time" onChange={hdlChange}>
+          <select className={`w-full text-ellipsis appearance-none md:max-w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white ${input.sched_time !== "" ? "border-[#FF609C]" : ""}`} name="sched_time" onChange={hdlChange}>
             <option hidden>เลือกเวลา</option>
             <option value="08:30-09:30">08:30-09:30</option>
             <option value="09:30-10:30">09:30-10:30</option>
@@ -147,20 +147,20 @@ export default function AddSchedule() {
         </div>
         <div>
           <p className='font-bold'>จำนวนคาบ</p>
-          <input className={`w-20 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white ${input.sched_count !== "" ? "border-[#FF609C]" : ""}`} type="number" name="sched_count" id="" min="1" max="2" placeholder='1 ถึง 2' step="1" onChange={hdlChange} />
+          <input className={`w-full md:w-20 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white ${input.sched_count !== "" ? "border-[#FF609C]" : ""}`} type="number" name="sched_count" id="" min="1" max="2" placeholder='1 ถึง 2' step="1" onChange={hdlChange} />
         </div>
-        <div>
+        <div className="w-full md:w-1/5">
           <p className='font-bold'>เลือกวิชา</p>
-          <select className={`w-[170px] px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white text-ellipsis ${input.sub_id !== "" ? "border-[#FF609C]" : ""}`} name="sub_id" onChange={hdlChange}>
+          <select className={`w-full px-2 py-2 appearance-none hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white text-ellipsis ${input.sub_id !== "" ? "border-[#FF609C]" : ""}`} name="sub_id" onChange={hdlChange}>
             <option hidden>เลือกวิชาที่ต้องการ</option>
             {getSubject.map(el => (
               <option key={el.sub_id} value={el.sub_id}>{el.sub_name}</option>
             ))}
           </select>
         </div>
-        <div>
+        <div className="w-full md:w-1/5">
           <p className='font-bold'>รายชื่ออาจารย์</p>
-          <select className={`w-[170px] px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white text-ellipsis ${input.user_id !== "" ? "border-[#FF609C]" : ""}`} name="user_id" onChange={hdlChange}>
+          <select className={`w-full px-2 py-2 appearance-none hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white text-ellipsis ${input.user_id !== "" ? "border-[#FF609C]" : ""}`} name="user_id" onChange={hdlChange}>
             <option hidden>เลือกอาจารย์</option>
             {users.filter(el => el.user_role !== "USER" && el.user_role !== "ADMIN").map(el => (
               <option key={el.user_id} value={el.user_id}>ครู {el.user_firstname} {el.user_lastname}</option>
@@ -169,9 +169,9 @@ export default function AddSchedule() {
         </div>
       </form>
       <div className='flex justify-end gap-1 mt-5 mb-3'>
-        <button className='border-2 border-[#FF609C] w-28 py-1 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' type='submit' onClick={hdlSubmit}>เพิ่มข้อมูล</button>
-        <button className='border-2 border-[#FF609C] w-28 py-1 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' onClick={hdlReset}>ล้างข้อมูล</button>
-        <button className='border-2 border-[#FF609C] w-28 py-1 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' onClick={() => navigate(-1)}>ย้อนกลับ</button>
+        <button className='border-2 border-[#FF609C] w-1/4 md:w-[16%] py-1 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' type='submit' onClick={hdlSubmit}>เพิ่มข้อมูล</button>
+        <button className='border-2 border-[#FF609C] w-1/4 md:w-[16%] py-1 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' onClick={hdlReset}>ล้างข้อมูล</button>
+        <button className='border-2 border-[#FF609C] w-1/4 md:w-[16%] py-1 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' onClick={() => navigate(-1)}>ย้อนกลับ</button>
       </div>
       <hr />
     </div>

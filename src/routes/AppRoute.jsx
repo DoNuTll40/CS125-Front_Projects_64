@@ -27,7 +27,7 @@ import TeacherBuild from '../components/Teacher/Build';
 import Printlist from '../components/Print-list';
 import TableTeacher from '../components/Teacher/TableTeacher';
 import Report from '../components/Report';
-import ScrollProgress from '../components/ScrollProgress';
+import ClassRooms from '../components/Admin/ClassRooms';
 
 const guestRouter = createBrowserRouter([
     {
@@ -158,6 +158,7 @@ const adminRouter = createBrowserRouter([
             { path: 'subject/add', element: <AddSubject /> },
             { path: 'room/add', element: <AddRoom /> },
             { path: 'build/add', element: <AddBuild /> },
+            { path: 'class', element: <ClassRooms />},
         ]
     },
     {
