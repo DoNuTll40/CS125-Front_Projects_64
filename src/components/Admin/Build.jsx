@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import axiosPath from "../../configs/axios-path";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import e from 'cors';
 
@@ -47,6 +47,10 @@ export default function Build() {
         }
     }
 
+    const hdlEdit = (id) => {
+        navigate(`edit/${id}`)
+    }
+
     return (
         <>
             <div className='max-w-[80rem] mx-auto mt-3 select-none'>
@@ -74,7 +78,7 @@ export default function Build() {
                                             <td>{builds.build_name}</td>
                                             <td>{builds.build_number}</td>
                                             <td><img className='rounded-lg max-w-[200px] mx-auto pointer-events-none' src={builds.build_image} /></td>
-                                            <th className='text-end'><button className=''>กำลังพัฒนา..</button></th>
+                                            <th className='text-end'><button className='' onClick={ () => hdlEdit(builds.build_id)}><FontAwesomeIcon icon={faPenToSquare} /></button></th>
                                             <td><button className='' onClick={() => hdlDelete(builds.build_id)}><FontAwesomeIcon icon={faTrash} /></button></td>
                                         </tr>
                                     ))}
@@ -99,7 +103,8 @@ export default function Build() {
                                         <p>ชื่ออาคาร {el.build_name}</p>
                                         <p>เลขอาคาร {el.build_number}</p>
                                     </div>
-                                    <button className='pr-3' onClick={() => hdlDelete(builds.build_id)}><FontAwesomeIcon icon={faTrash} /></button>
+                                    <button className='pr-3' onClick={() => hdlEdit(el.build_id)}><FontAwesomeIcon icon={faPenToSquare} /></button>
+                                    <button className='pr-3' onClick={() => hdlDelete(el.build_id)}><FontAwesomeIcon icon={faTrash} /></button>
                                 </div>
                             ))}
                         </div>

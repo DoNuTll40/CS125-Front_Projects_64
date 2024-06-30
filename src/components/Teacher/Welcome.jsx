@@ -27,7 +27,7 @@ export default function Student() {
     }, [])
 
     const hdlPrint = () => {
-        navigate('/print');
+        navigate('/teacher/print');
     }
 
     // console.log(student)

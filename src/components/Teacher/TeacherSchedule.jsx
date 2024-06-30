@@ -28,10 +28,11 @@ export default function TeacherSchedule() {
             setFullSchedule(rs.data.getSchedule);
         }
         getSchedule();
+        
     }, [])
 
     const hdlPrint = () => {
-        navigate('/teacher-schedule');
+        navigate('/teacher/teacher-schedule');
     }
 
     function sortByDay(a, b) {

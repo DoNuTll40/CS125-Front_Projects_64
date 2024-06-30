@@ -2,6 +2,7 @@
 import axiosPath from "../../configs/axios-path";
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Select from 'react-select'
 
 export default function AddSubject() {
 
@@ -26,7 +27,6 @@ export default function AddSubject() {
           }
         })
         setGetRoom(rs.data.rooms)
-        // console.log(rs.data)
       } catch (err) {
         alert(err.message)
       }
@@ -42,7 +42,6 @@ export default function AddSubject() {
           }
         })
         setGetMajor(rs.data.major);
-        // console.log(rs.data)
       } catch (err) {
         console.log(err);
       }
@@ -86,9 +85,14 @@ export default function AddSubject() {
     document.querySelector('select[name="major_id"]').selectedIndex = 0;
   }
 
+  const selectMajor = getMajor.map( el => ({
+    value: el.major_id,
+    label: el.major_name
+  }));
+
   return (
     <div data-theme="light" className="max-w-[53rem] md:h-[24rem] text-black mx-auto mt-5 pt-5 pb-2 select-none rounded-2xl px-5 bg-white shadow-lg">
-      <p className="text-xl text-center font-extrabold">เพิ่มตารางเรียน</p>
+      <p className="text-xl text-center font-extrabold">เพิ่มวิชาเรียน</p>
       <form className="flex gap-2 mt-2 flex-col md:flex-row">
         <div>
           <p className='font-bold'>ชื่อวิชา</p>
@@ -109,6 +113,7 @@ export default function AddSubject() {
         </div>
         <div>
           <p className='font-bold'>กลุ่มวิชา</p>
+          {/* <Select className={`w-full md:w-[215px] hover:font-bold focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:text-white text-ellipsis`} name="major_id" onChange={hdlChange} options={selectMajor} /> */}
           <select className={`w-full md:w-[215px] px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white text-ellipsis`} name="major_id" onChange={hdlChange}>
             <option hidden>เลือกกลุ่มวิชา</option>
               {getMajor.map( (el, number) => (

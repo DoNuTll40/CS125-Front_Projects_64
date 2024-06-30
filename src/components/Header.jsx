@@ -4,53 +4,75 @@ import useAuth from '../hooks/UseAuth';
 import { useEffect, useState } from 'react';
 import axiosPath from "../configs/axios-path";
 import ScrollProgress from './ScrollProgress';
+import Swal from 'sweetalert2';
 
 export default function Header() {
 
-    const {user, logout} = useAuth();
+    const { user, logout } = useAuth();
     const [profile, setProfile] = useState([])
     const navigate = useNavigate()
 
     const hdlLogout = () => {
-        logout()
-        navigate('/');
-    }
+        Swal.fire({
+            text: "Logout complete",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+            width: '500px'
+        }).then(() => {
+            navigate('/');
+            logout();
+        });
+    }    
 
     const liNav = user.user_role === "ADMIN" ? [
-        { to: "/", text: "หน้าหลัก" },
-        { to: "/users", text: "ผู้ใช้งานทั้งหมด" },
-        { to: "/teachers", text: "รายชื่ออาจารย์" },
-        { to: "/build", text: "รายชื่ออาคาร" },
-        { to: "/room", text: "รายชื่อห้อง" },
-        { to: "/schedule", text: "ตารางทั้งหมด" },
-        { to: "/class", text: "ชั้นเรียนทั้งหมด" },
-        { to: "/subject", text: "รายวิชาทั้งหมด" },
-        { to: "/report", text: "รายงานระบบ" },
+        { to: "/admin", text: "หน้าหลัก" },
+        { to: "/admin/users", text: "ผู้ใช้งานทั้งหมด" },
+        { to: "/admin/teachers", text: "รายชื่ออาจารย์" },
+        { to: "/admin/build", text: "รายชื่ออาคาร" },
+        { to: "/admin/room", text: "รายชื่อห้อง" },
+        { to: "/admin/schedule", text: "ตารางทั้งหมด" },
+        { to: "/admin/class", text: "ชั้นเรียนทั้งหมด" },
+        { to: "/admin/subject", text: "รายวิชาทั้งหมด" },
+        { to: "/admin/banner", text: "แบนเนอร์" },
+        { to: "/admin/report", text: "รายงานระบบ" },
 
     ] : [
-        { to: "/", text: "หน้าหลัก" },
-        { to: "/teacher-table", text: "รายการสอน" },
-        { to: "/teachers", text: "รายชื่ออาจารย์" },
-        { to: "/build", text: "รายชื่ออาคาร" },
-        { to: "/report", text: "รายงานระบบ" }
+        { to: "/teacher", text: "หน้าหลัก" },
+        { to: "/teacher/teacher-table", text: "รายการสอน" },
+        { to: "/teacher/teachers", text: "รายชื่ออาจารย์" },
+        { to: "/teacher/build", text: "รายชื่ออาคาร" },
+        { to: "/teacher/report", text: "รายงานระบบ" }
     ];
 
     const ltion = useLocation();
     const location = ltion.pathname;
-    const regex = /^\/users\//;
-    const tablePath = /^\/schedule\//;
-    const roomPath = /^\/room\//;
-    const buildPath = /^\/build\//;
-    const subPath = /^\/subject\//;
-    const acText = location === "/profile" ? "โปรไฟล์" :
-        location === "/teacher" ? "หน้าหลัก"
-            : regex.test(location) ? "แก้ไขผู้ใช้งาน"
-                : tablePath.test(location) ? "เพิ่มตารางเรียน"
-                    : roomPath.test(location) ? "เพิ่มห้อง"
-                        : buildPath.test(location) ? "เพิ่มอาคาร"
-                            : subPath.test(location) ? "เพิ่มวิชา"
-                                : location === "/teacher-schedule" ? "ดูตารางสอน"
-                                    : liNav.find(link => link.to === location)?.text;
+    const regex = /^\/admin\/users\//;
+    const tablePath = /^\/admin\/schedule\//;
+    const roomAddPath = /^\/admin\/room\/add$/;
+    const roomEditPath = /^\/admin\/room\/edit\/\d+$/;
+    const buildAddPath = /^\/admin\/build\/add$/;
+    const buildEditPath = /^\/admin\/build\/edit\/\d+$/;
+    const subAddPath = /^\/admin\/subject\/add$/;
+    const subEditPath = /^\/admin\/subject\/edit\/\d+$/;
+    const bannerAddPath = /^\/admin\/banner\/add$/;
+    const bannerEditPath = /^\/admin\/banner\/edit\/\d+$/;
+    const acText = location === "profile" ? "โปรไฟล์" :
+        location === "/teacher" + ("/profile") ? "โปรไฟล์" :
+            location === "/admin" + ("/profile") ? "โปรไฟล์" :
+                location === "teacher" ? "หน้าหลัก"
+                    : location.startsWith("/admin") && regex.test(location) ? "แก้ไขผู้ใช้งาน"
+                        : tablePath.test(location) ? "เพิ่มตารางเรียน"
+                            : roomAddPath.test(location) ? "เพิ่มห้อง"
+                                : roomEditPath.test(location) ? "แก้ไขห้อง"
+                                    : bannerAddPath.test(location) ? "เพิ่มแบนเนอร์"
+                                        : bannerEditPath.test(location) ? "แก้ไขแบนเนอร์"
+                                            : buildAddPath.test(location) ? "เพิ่มอาคาร"
+                                                : buildEditPath.test(location) ? "แก้ไขอาคาร"
+                                                    : subAddPath.test(location) ? "เพิ่มวิชา"
+                                                        : subEditPath.test(location) ? "แก้ไขวิชา"
+                                                            : location === "/teacher/teacher-schedule" ? "ดูตารางสอน"
+                                                                : liNav.find(link => link.to === location)?.text;
 
     useEffect(() => {
         const id = user.user_id
@@ -87,7 +109,7 @@ export default function Header() {
                             </div>
                         </div>
                         <ul tabIndex={0} className="menu menu-sm dropdown-content mt-16 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                            <li><Link to="/profile" onClick={() => location.reload()}>โปรไฟล์</Link></li>
+                            <li><Link to="profile" onClick={() => location.reload()}>โปรไฟล์</Link></li>
                             <li><Link to="#" onClick={hdlLogout}>ออกจากระบบ</Link></li>
                         </ul>
                     </div>

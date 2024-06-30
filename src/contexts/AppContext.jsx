@@ -11,6 +11,7 @@ function AuthContextProvider(props) {
     const [loading, setLoading] = useState(true);
     const [fullStudent, setFullStudent] = useState([])
     const [fullSchedule, setFullSchedule] = useState([])
+    const [refetchBanner, setRefetchBanner] = useState(false)
 
     useEffect(() => {
 
@@ -31,7 +32,19 @@ function AuthContextProvider(props) {
                 setUser(rs.data);
 
             } catch (err) {
-                console.log(err.message)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error token',
+                    text: err.response.data.message
+                })
+                if (err.response.data.message.startsWith('Token verification failed')) {
+                    localStorage.removeItem('token');
+                }
+
+
+                if (err.response.data.message.startsWith('TokenExpiredError')) {
+                    localStorage.removeItem('token');
+                }
             } finally {
                 setLoading(false)
             };
@@ -41,21 +54,12 @@ function AuthContextProvider(props) {
     }, []);
 
     const logout = () => {
-        Swal.fire({
-            text: "Log out complete",
-            icon: "success",
-            timer: 2000,
-            showConfirmButton: false,
-            width: '500px'
-        }).then(() => {
-            setUser(null);
-            localStorage.removeItem("token");
-        })
-
+        localStorage.removeItem("token");
+        setUser(null);
     };
 
     return (
-        <AuthContext.Provider value={{ user, setUser, loading, logout, setLoading, fullStudent, setFullStudent, fullSchedule, setFullSchedule }}>
+        <AuthContext.Provider value={{ user, setUser, loading, logout, setLoading, fullStudent, setFullStudent, fullSchedule, setFullSchedule, refetchBanner, setRefetchBanner }}>
             {props.children}
         </AuthContext.Provider>
     )

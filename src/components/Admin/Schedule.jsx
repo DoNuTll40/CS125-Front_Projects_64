@@ -113,7 +113,6 @@ export default function Schedule() {
                                             <td className="text-[15px]">{el.user.user_firstname}</td>
                                             <td className="text-[15px]">{el.subject.room.room_name}</td>
                                             <td className="text-[15px]">{el.subject.room.build.build_name}</td>
-                                            <th className="text-[15px]">กำลังพัฒนา..</th>
                                             <th className="text-[15px]"><button className="py-2.5 px-3 hover:bg-gray-600 rounded-full" onClick={() => hdlDelete(el.sched_id)}><FontAwesomeIcon icon={faTrash} /></button></th>
                                         </tr>
                                     ))}

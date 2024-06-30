@@ -4,6 +4,7 @@ import useAuth from "../hooks/UseAuth"
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import axiosPath from '../configs/axios-path';
+import SlideDashboard from "./SlideDashboard";
 
 export default function LoginStudent() {
 
@@ -63,19 +64,12 @@ export default function LoginStudent() {
     return (
         <div data-theme="light" className="bg-[url('https://a.cdn-hotels.com/gdcs/production122/d1368/1ecd1184-2b25-4fa6-877c-320dc8a0f1e5.jpg?impolicy=fcrop&w=1600&h=1066&q=medium')] flex justify-center h-[100vh] items-center bg-cover bg-center">
             <div className="w-full h-full flex flex-col justify-center items-center backdrop-blur-sm">
-                <div className="bg-gradient-to-r from-[#6096B4] to-[#FF90BC] flex rounded-lg drop-shadow-[5px_5px_3px_rgba(0,0,0,0.25)] scale-75 md:scale-100 w-full md:w-[650px] md:h-[450px]">
-                    <div className="max-w-[470px] max-h-[450px] hidden md:block">
-                        <img
-                            loading="lazy"
-                            className="rounded-l-lg object-cover w-[100%] h-[100%]"
-                            src="https://picsum.photos/id/125/1200"
-                            type="image/jpeg"
-                        />
-                    </div>
+                <div className="bg-gradient-to-r from-[#6096B4] to-[#FF90BC] flex rounded-lg drop-shadow-[5px_5px_3px_rgba(0,0,0,0.25)] scale-95 md:scale-100 w-full md:w-[650px] md:h-[450px]">
+                    <SlideDashboard />
                     <div className="p-4 w-full">
-                        <form className="flex flex-col" onSubmit={hdlSubmit}>
+                        <form className="flex flex-col select-none  " onSubmit={hdlSubmit}>
                             <div className="flex flex-col gap-2">
-                                <img className='mx-auto rounded-full w-[120px] h-[120px]' src='https://picsum.photos/id/125/600' />
+                                <img className='mx-auto rounded-full w-[120px] h-[120px] pointer-events-none' src='https://picsum.photos/id/125/600' />
                                 <h1 className="text-2xl text-center font-extrabold text-white drop-shadow-[2px_2px_1.5px_rgba(0,0,0,0.25)]">Login</h1>
                                 <label className='text-white font-semibold'>Username</label>
                                 <input className={`h-[2.5rem] border-2 rounded-full px-5 focus:outline-[#6096B4] ${input.username === "" ? "border-[#FF90BC]" : "border-[#6096B4]"}`}
@@ -100,8 +94,8 @@ export default function LoginStudent() {
                             </div>
                             <div className="flex justify-between mt-3">
                                 <div className="flex gap-4">
-                                    <Link to="/teacher" className='font-semibold text-white'>Teacher</Link>
-                                    <Link className='font-semibold text-white'>Admin</Link>
+                                    <Link to="/teacher" className='font-semibold text-white hover:cursor-pointer'>Teacher</Link>
+                                    <Link to="/admin" className='font-semibold text-white hover:cursor-pointer'>Admin</Link>
                                 </div>
                                 <input type="submit" className="bg-white font-semibold px-8 scale-100 active:scale-95 hover:bg-green-700 hover:text-white rounded-full" value="Login" />
                             </div>

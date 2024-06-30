@@ -1,4 +1,4 @@
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axiosPath from "../../configs/axios-path";
 import { useEffect, useState } from "react";
@@ -41,12 +41,16 @@ export default function Subjects() {
         }
     }
 
+    const hdlEdit = (id) => {
+        navigate(`edit/${id}`)
+    }
+
     return (
         <>
             <div className='max-w-[80rem] mx-auto mt-3 select-none'>
-                <div className='bg-white p-3 md:p-5 rounded-2xl max-w-[53rem] mt-5 mx-auto overflow-hidden'>
+                <div className='bg-white p-3 md:p-5 rounded-2xl max-w-[53rem] mt-5 mx-auto overflow-hidden animate-slidein opacity-0 [--slidein-delay:100ms]'>
                     <div className='flex justify-end'>
-                        <button className='p-2 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' type="button" onClick={hdlAdd}>เพิ่ม</button>
+                        <button className='p-2 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95 animate-slidein opacity-0 [--slidein-delay:100ms]' type="button" onClick={hdlAdd}>เพิ่ม</button>
                     </div>
                     <div className="hidden md:block">
                         {getSubject.length !== 0 ?
@@ -69,7 +73,7 @@ export default function Subjects() {
                                             <td className="text-[15px]">{el.sub_code}</td>
                                             <td className="text-[15px]">{el.major.major_name}</td>
                                             <td className="text-[15px]">{el.room.room_name}</td>
-                                            <th className="text-[15px]">กำลังพัฒนา..</th>
+                                            <th className="text-[15px]"><button className="py-2.5 px-3 hover:bg-gray-600 rounded-full" onClick={() => hdlEdit(el.sub_id)}><FontAwesomeIcon icon={faPenToSquare} /></button></th>
                                             <th className="text-[15px]"><button className="py-2.5 px-3 hover:bg-gray-600 rounded-full" onClick={() => hdlDelete(el.sub_id)}><FontAwesomeIcon icon={faTrash} /></button></th>
                                         </tr>
                                     ))}
@@ -81,12 +85,16 @@ export default function Subjects() {
                     {/* responsive */}
 
                     <div className="font-semibold block md:hidden">
-                        <p className="text-black text-center font-bold text-lg mb-2">รายชื่อวิชาทั้งหมดที่เรามี</p>
+                        <p className="text-black text-center font-bold text-lg mb-2 animate-slidein opacity-0 [--slidein-delay:200ms]">รายชื่อวิชาทั้งหมดที่เรามี</p>
                         <hr />
                         <div className="flex sm:gap-2 mx-auto flex-col sm:flex-row sm:flex-wrap">
                             {getSubject.map((el, index) => (
-                                <div className="relative w-full sm:w-[48%] mx-auto" key={index}>
+                                <div className="relative w-full sm:w-[48%] mx-auto animate-slidein opacity-0 [--slidein-delay:400ms]" key={index}>
                                     <p className="absolute bg-white text-base-200 px-2 w-1/4 text-center font-extrabold top-1 left-0 rounded-br-md">{index + 1}</p>
+                                    <div className="absolute flex pt-1.5 items-center justify-around bg-white text-base-200 px-2 w-1/4 text-center font-extrabold top-1 right-0 rounded-bl-md">
+                                        <button className="text-sm" onClick={() => hdlEdit(el.sub_id)}><FontAwesomeIcon icon={faPenToSquare} /></button>
+                                        <button className="text-sm" onClick={() => hdlDelete(el.sub_id)}><FontAwesomeIcon icon={faTrash} /></button>
+                                    </div>
                                     <div className={`flex text-white text-[15px] sm:text-[16px] justify-between py-2 px-3 pt-6 my-1 sm:my-1.5 rounded-lg gap-2 shadow-lg border-2 border-white ${index % 2 === 0 ? "bg-[#6096B4]" : "bg-[#FF90BC]"}`}>
                                         <div>
                                             <p>รหัส {el.sub_code}</p>

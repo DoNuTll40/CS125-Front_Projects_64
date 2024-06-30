@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import axiosPath from "../../configs/axios-path";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
 export default function Rooms() {
@@ -58,6 +58,10 @@ export default function Rooms() {
         }
     }
 
+    const hdlEdit = async (id) => {
+        navigate(`edit/${id}`)
+    }
+
     return (
         <>
             <div className='max-w-[80rem] mx-auto mt-3 select-none'>
@@ -84,7 +88,7 @@ export default function Rooms() {
                                             <td>{room.room_name}</td>
                                             <td>{room.room_number}</td>
                                             <td>{room.build.build_name}</td>
-                                            <th className='text-end'><button className=''>กำลังพัฒนา..</button></th>
+                                            <th className='text-end'><button className='' onClick={() => hdlEdit(room.room_id)}><FontAwesomeIcon icon={faPenToSquare} /></button></th>
                                             <td><button className='' onClick={() => hdlDelete(room.room_id)}><FontAwesomeIcon icon={faTrash} /></button></td>
                                         </tr>
                                     ))}
@@ -103,6 +107,10 @@ export default function Rooms() {
                             {rooms.map((el, index) => (
                                 <div className={`flex gap-2 relative my-2 py-2 border-white border-2 rounded-md shadow-md ${index % 2 === 0 ? "bg-[#6096B4]" : "bg-[#FF90BC]"}`} key={index}>
                                     <p className='absolute bg-white w-10 rounded-br-lg rounded-tl-md text-end px-2 -top-[0.1rem] -left-[0.1rem] text-black font-extrabold text-sm'>{index + 1}</p>
+                                    <div className="absolute flex items-center justify-around bg-white text-base-200 px-2 w-1/5 text-center font-extrabold -top-[0.1rem] right-0 rounded-bl-md">
+                                        <button className="text-sm" onClick={() => hdlEdit(el.room_id)}><FontAwesomeIcon icon={faPenToSquare} /></button>
+                                        <button className="text-sm" onClick={() => hdlDelete(el.room_id)}><FontAwesomeIcon icon={faTrash} /></button>
+                                    </div>
                                     <div className='flex px-5 w-full justify-between mt-5 text-white font-bold'>
                                         <div className='flex justify-between w-full sm:hidden'>
                                             <div className='text-center'>

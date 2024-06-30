@@ -15,7 +15,7 @@ export default function EditUser() {
     const [getUser, setGetUser] = useState([]);
     const [lock, setLock] = useState(true);
     const fileInput = useRef(null);
-    const userId = location.pathname.split('/')[3]
+    const userId = location.pathname.split('/')[4]
 
     const [input, setInput] = useState({
         user_username: "",
@@ -35,6 +35,7 @@ export default function EditUser() {
     })
 
     const formatBirthday = input.user_brithday ? new Date(input.user_brithday).toISOString().substr(0, 10) : '';
+
     document.title = `Edit : ${getUser.user_firstname} ${getUser.user_lastname}`
 
     useEffect(() => {

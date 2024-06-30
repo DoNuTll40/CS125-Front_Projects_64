@@ -28,6 +28,13 @@ import Printlist from '../components/Print-list';
 import TableTeacher from '../components/Teacher/TableTeacher';
 import Report from '../components/Report';
 import ClassRooms from '../components/Admin/ClassRooms';
+import LoginTeacher from '../components/LoginTeacher';
+import Banner from '../components/Admin/Banner';
+import AddBanner from '../components/Admin/AddBanner';
+import EditBanner from '../components/Admin/EditBanner';
+import EditBuild from '../components/Admin/EditBuild';
+import EditSubject from '../components/Admin/EditSubject';
+import EditRoom from '../components/Admin/EditRoom';
 
 const guestRouter = createBrowserRouter([
     {
@@ -37,7 +44,8 @@ const guestRouter = createBrowserRouter([
         </>,
         children: [
             { index: true, element: <LoginStudent /> },
-            { path: "teacher", element: <LoginAdmin /> },
+            { path: "teacher", element: <LoginTeacher /> },
+            { path: "admin", element: <LoginAdmin /> },
         ]
     },
     {
@@ -68,7 +76,7 @@ const userRouter = createBrowserRouter([
         </>
     },
     {
-        path: '/profile',
+        path: 'profile',
         element: <>
             <Header />
             <Outlet />
@@ -81,7 +89,7 @@ const userRouter = createBrowserRouter([
 
 const teacherRouter = createBrowserRouter([
     {
-        path: '/',
+        path: '/teacher',
         element: <>
             <Header />
             <DashBoard />
@@ -98,7 +106,7 @@ const teacherRouter = createBrowserRouter([
         ]
     },
     {
-        path: 'teacher-schedule',
+        path: '/teacher/teacher-schedule',
         element: <>
             <Header />
             <Outlet />
@@ -108,7 +116,7 @@ const teacherRouter = createBrowserRouter([
         ]
     },
     {
-        path: '/print',
+        path: '/teacher/print',
         element: <>
             <Outlet />
         </>,
@@ -117,7 +125,7 @@ const teacherRouter = createBrowserRouter([
         ]
     },
     {
-        path: '/profile',
+        path: '/teacher/profile',
         element: <>
             <Header />
             <Outlet />
@@ -136,7 +144,7 @@ const teacherRouter = createBrowserRouter([
 
 const adminRouter = createBrowserRouter([
     {
-        path: '/',
+        path: '/admin',
         element: <>
             <Header />
             <DashBoard />
@@ -147,7 +155,7 @@ const adminRouter = createBrowserRouter([
             { path: 'teacher', element: <Welcome /> },
             { path: 'build', element: <Build /> },
             { path: 'room', element: <Rooms /> },
-            { path: 'users', element: <AllUsers /> },
+            { path: 'users*', element: <AllUsers /> },
             { path: 'users/edit/:id', element: <EditUser /> },
             { path: 'teachers', element: <Teacher /> },
             { path: 'report', element: <Report /> },
@@ -156,13 +164,19 @@ const adminRouter = createBrowserRouter([
             { path: 'profile', element: <Profile /> },
             { path: 'subject', element: <Subjects /> },
             { path: 'subject/add', element: <AddSubject /> },
+            { path: 'subject/edit/:id', element: <EditSubject /> },
             { path: 'room/add', element: <AddRoom /> },
+            { path: 'room/edit/:id', element: <EditRoom /> },
             { path: 'build/add', element: <AddBuild /> },
+            { path: 'build/edit/:id', element: <EditBuild /> },
+            { path: 'banner', element: <Banner /> },
+            { path: 'banner/add', element: <AddBanner /> },
+            { path: 'banner/edit/:id', element: <EditBanner /> },
             { path: 'class', element: <ClassRooms />},
         ]
     },
     {
-        path: '/profile',
+        path: '/admin/profile',
         element: <>
             <Header />
             <Outlet />

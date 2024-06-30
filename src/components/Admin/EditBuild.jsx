@@ -1,9 +1,9 @@
 
 import axiosPath from "../../configs/axios-path";
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom";
 
-export default function AddBuild() {
+function EditBuild() {
 
     const navigate = useNavigate();
 
@@ -13,23 +13,50 @@ export default function AddBuild() {
     })
     const [selectFile, setSelectFile] = useState(null)
 
+    const id = location.pathname.split("/")[4]
+
+    let token = localStorage.getItem('token');
+
     const fileInput = useRef(null)
 
     const hdlChange = e => {
         setInput(prv => ({ ...prv, [e.target.name]: e.target.value }))
     };
 
+    const fetchApi = async () => {
+        try {
+            const rs = await axiosPath(`/admin/builds/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            if(rs.status === 200){
+                setInput(rs.data.build)
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    useEffect( () => {
+        fetchApi();
+    }, [] )
+
+    console.log(input)
+
     const hdlSubmit = async () => {
         try {
             const file = fileInput.current.files[0];
 
-            if (!input.build_name || !input.build_number || !file) {
+            if (!input.build_name || !input.build_number) {
                 return alert("กรุณาป้อนข้อมูลให้ครบ")
             }
 
             const formData = new FormData();
 
-            Object.entries(input).forEach(([key, value]) => {
+            const { build_id, ...data } = input
+
+            Object.entries(data).forEach(([key, value]) => {
                 formData.append(key, value);
             });
 
@@ -37,14 +64,15 @@ export default function AddBuild() {
                 formData.append('imageBuild', file);
             }
             const token = localStorage.getItem('token')
-            const rs = await axiosPath.post('/admin/builds', formData, {
+            const rs = await axiosPath.patch(`/admin/builds/${id}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             })
             console.log(rs.data)
             if (rs.status === 200) {
-                alert("เพิ่มข้อมูลเรียบร้อย")
+                alert("แก้ไขข้อมูลเรียบร้อย")
+                navigate(-1)
             }
         } catch (err) {
             console.log(err);
@@ -70,12 +98,12 @@ export default function AddBuild() {
     return (
         <div data-theme="light" className="max-w-[53rem] min-h-[24rem] text-black mx-auto mt-5 pt-5 pb-2 select-none rounded-2xl px-5 bg-white shadow-lg">
             <p className="text-xl text-center font-extrabold">เพิ่มอาคาร</p>
-            <form className="flex gap-2 mt-2 w-full">
-                <div className="w-1/2">
+            <form className="flex flex-col sm:flex-row gap-2 mt-2 w-full">
+                <div className="w-full sm:w-1/2">
                     <p className='font-bold'>ชื่ออาคาร</p>
                     <input className={`w-full px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white ${input.build_name !== "" ? "border-[#FF609C]" : ""}`} name="build_name" type='text' value={input.build_name} onChange={hdlChange} placeholder='พิมพ์ชื่ออาคาร' />
                 </div>
-                <div className="w-1/2">
+                <div className="w-full sm:w-1/2">
                     <p className='font-bold'>เลขอาคาร</p>
                     <input className={`w-full px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white ${input.build_number !== "" ? "border-[#FF609C]" : ""}`} type="text" name="build_number" onChange={hdlChange} value={input.build_number} placeholder='พิมพ์เลขอาคาร' />
                 </div>
@@ -83,16 +111,22 @@ export default function AddBuild() {
             <div className="w-full mt-3">
                 <p>ใส่ภาพถ่ายอาคาร</p>
                 <input className="block w-full focus:outline-none py-2 rounded-lg bg-gray-50 cursor-pointer mt-1 file:rounded-md file:mx-2 file:py-2 file:px-4 file:border-0" type="file" ref={fileInput} onChange={hdlChangeFile} accept="image/*" />
-                {selectFile !== null && (
-                    <img className="max-w-[85%] sm:max-w-[50%] mx-auto rounded-lg my-2 shadow-md border-2 border-white" src={URL.createObjectURL(selectFile)} alt="ภาพตัวอย่าง" />
+                {input.build_image && (
+                    <>
+                    {selectFile ? "" : <p className="text-center text-md font-medium">ภาพที่อยู่ในระบบ</p>}
+                    <img className="max-w-[85%] sm:max-w-[50%] mx-auto rounded-lg my-2 shadow-md border-2 border-white" src={selectFile ? URL.createObjectURL(selectFile) : input.build_image} alt="ภาพตัวอย่าง" />
+                    </>
                 )}
             </div>
             <div className='flex justify-end gap-1 mt-5 mb-3'>
                 <button className='border-2 border-[#FF609C] w-1/4 md:w-28 py-2 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' type='submit' onClick={hdlSubmit}>เพิ่มข้อมูล</button>
-                <button className='border-2 border-[#FF609C] w-1/4 md:w-28 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' onClick={hdlClear}>ล้างข้อมูล</button>
+                <button className='border-2 border-[#FF609C] w-28 py-1 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95 disabled:opacity-45 disabled:active:scale-100 disabled:cursor-not-allowed' disabled onClick={hdlClear}>ล้างข้อมูล</button>
                 <button className='border-2 border-[#FF609C] w-1/4 md:w-28 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' onClick={() => navigate(-1)}>ย้อนกลับ</button>
             </div>
             <hr />
         </div>
     )
 }
+
+
+export default EditBuild

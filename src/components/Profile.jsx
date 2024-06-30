@@ -79,10 +79,10 @@ export default function Profile() {
                         </div>
                         <p><b>ชื่อเล่น :</b> {user.user_nickname}</p>
                         <p><b>อีเมล์ :</b> {user.user_email}</p>
-                        <p><b>เบอร์โทร :</b> <InputMask className='bg-transparent pointer-events-none' mask="999-999-XXXX" value={user.user_phone} /></p>
+                        <p><b>เบอร์โทร :</b> <input className='bg-transparent pointer-events-none' value={user.user_phone} readOnly/></p>
                         <p><b>ที่อยู่ :</b> {user.user_address}</p>
                         <p><b>วันเกิด :</b> {fBrithDay}</p>
-                        <p className=' select-none'><b>รหัสบัตรประชาชน :</b> <InputMask className='bg-transparent pointer-events-none' mask="9-9999-XXXXX-99-9" maskChar={null} value={`${user.user_identity.substring(0, 6)}${user.user_identity.substring(13, 17)}`} /></p>
+                        <p className=' select-none'><b>รหัสบัตรประชาชน :</b> <input className='bg-transparent pointer-events-none' value={`${user.user_identity}`} readOnly/></p>
                         <p><b>ชั้นเรียน :</b> {user.class.class_name === "ADMIN" ? "ไม่พบห้อง" : user.class.class_name}</p>
                     </div>
                     <div className="flex-grow">

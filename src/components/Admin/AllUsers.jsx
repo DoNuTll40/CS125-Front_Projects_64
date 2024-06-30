@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import axiosPath from "../../configs/axios-path";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdd, faEdit, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faAngleRight, faAnglesLeft, faAnglesRight, faEdit, faMagnifyingGlass, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import InputMask from 'react-input-mask'
 
@@ -12,7 +12,11 @@ export default function AllUsers() {
     const [useClass, setUseClass] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
     const [refreshTable, setRefreshTable] = useState(false);
-    const [select, setSelect] = useState([])
+    const [select, setSelect] = useState('')
+    const [limit, setLimit] = useState('')
+    const [search, setSearch] = useState({ search: '' })
+    const [page, setPage] = useState(1)
+    const [totalPage, setTotalPage] = useState("")
 
     const [input, setInput] = useState({
         user_username: "",
@@ -37,14 +41,32 @@ export default function AllUsers() {
 
     useEffect(() => {
         document.title = 'Admin : Student';
+        const roleParam = select.select || '';
+        const limitParam = limit.limit || 10;
+        const searchParam = search.search || '';
+
         const getUser = async () => {
             let token = localStorage.getItem('token')
-            const rs = await axiosPath.get('/admin/users', {
-                headers: {
-                    Authorization: `Bearer ${token}`
+            try {
+                const rs = await axiosPath.get(`/admin/all/users?page=${page}`, {
+                    params: {
+                        search: searchParam,
+                        page: 1,
+                        limit: limitParam,
+                        role: roleParam,
+                        class: ''
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                if (rs.status === 200) {
+                    setStudent(rs?.data)
+                    setTotalPage(rs?.data?.totalPages)
                 }
-            })
-            setStudent(rs.data.user)
+            } catch (err) {
+                alert(err.response.data.message)
+            }
         }
 
         const getClass = async () => {
@@ -59,7 +81,7 @@ export default function AllUsers() {
         getClass();
         getUser();
 
-    }, [refreshTable])
+    }, [refreshTable, select, limit, search, page])
 
     const hdlChange = e => {
         setInput(prv => ({ ...prv, [e.target.name]: e.target.value }))
@@ -69,13 +91,26 @@ export default function AllUsers() {
         setSelect(prv => ({ ...prv, [e.target.name]: e.target.value }))
     }
 
+    const hdlChangeLimit = e => {
+        setLimit(prv => ({ ...prv, [e.target.name]: e.target.value }))
+    }
+
+    let timeout = null
+
+    const hdlSearchInput = (e) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            setSearch({ search: e.target.value }); // แก้ไขเป็นการกำหนดค่าโดยตรงให้เป็น object
+        }, 1000);
+    };
+
     const hdlSubmit = async (e) => {
         e.preventDefault();
 
         const checkPhone = input.user_phone.replace(/_/g, '')
 
         const checkIdent = input.user_identity.replace(/_/g, '')
-        
+
         if (checkIdent.length !== 17) {
             return alert("โปรดป้อนเลขบัตรประชาชนให้ครบ");
         }
@@ -175,7 +210,7 @@ export default function AllUsers() {
     }
 
     const hdlEdit = (id) => {
-        navigate(`/users/edit/${id}`)
+        navigate(`/admin/users/edit/${id}`)
     }
 
     const hdlDelete = (id) => {
@@ -201,75 +236,128 @@ export default function AllUsers() {
         }
     }
 
-    const dataNotAdmin = student.filter(el => el.user_role !== "ADMIN")
-    const woman = dataNotAdmin.filter(el => el.user_nameprefix === "เด็กหญิง" || el.user_nameprefix === "นางสาว" || el.user_nameprefix === "นาง")
-    const gender = dataNotAdmin.filter(el => el.user_nameprefix === "เด็กชาย" || el.user_nameprefix === "นาย")
+    const handlePrevious = () => {
+        if (page > 1) {
+            setPage(page - 1);
+        }
+    };
+
+    const handleNext = () => {
+        if (page < totalPage) {
+            setPage(page + 1);
+        }
+    };
 
     return (
         <>
-            {student && <div className='max-w-[80rem] mx-auto mt-3 select-none'>
+            {student.get_user && <div className='max-w-[80rem] mx-auto mt-3 select-none'>
                 <div className='bg-white px-4 py-3 lg:p-5 rounded-2xl max-w-[53rem] mt-5 mx-auto overflow-hidden'>
+                    <div className='flex justify-between mb-2 relative' data-theme='light'>
+                        <select className='w-[120px] bg-transparent font-bold focus:outline-none' name="limit" onChange={hdlChangeLimit}>
+                            <option value={5}>5</option>
+                            <option value={10} selected>10</option>
+                            <option value={20}>20</option>
+                            <option value={50}>50</option>
+                            <option value={100}>100</option>
+                        </select>
+                        <div className='relative flex items-center bg-white border border-gray-300 rounded-lg px-3'>
+                        <FontAwesomeIcon className='text-gray-500 mr-2' icon={faMagnifyingGlass} />
+                        <input className='flex-1 h-9 rounded-lg px-1 focus:outline-none'
+                            name='search'
+                            type="text"
+                            placeholder="Search..."
+                            onChange={hdlSearchInput} />
+                        </div>
+                    </div>
                     <div className='flex justify-between items-center'>
                         <select className='w-[120px] bg-transparent font-bold focus:outline-none' name="select" id="" onChange={hdlChange2}>
-                            <option value="ADMIN">ทั้งหมด</option>
-                            <option value="TEACHER">นักเรียน</option>
-                            <option value="USER">คุณครู</option>
+                            <option value="">ทั้งหมด</option>
+                            <option value="USER">นักเรียน</option>
+                            <option value="TEACHER">คุณครู</option>
                         </select>
                         <p className='w-[120px] font-bold text-lg'>รายชื่อทั้งหมด</p>
                         <div className='w-[120px] flex justify-end'>
                             <button name='btn-add' className='px-2.5 py-2 rounded-full hover:bg-[#FF90BC] hover:text-white transition ease-in-out flex items-center' onClick={() => document.getElementById('my_modal_3').showModal()} type="button"><FontAwesomeIcon icon={faAdd} /></button>
                         </div>
                     </div>
-                    {student.length !== 0 ?
-                        <div className='mt-2'>
-                            <table className='table table-xs text-black hidden lg:block'>
-                                <thead className='text-center'>
-                                    <tr className='text-sm text-black'>
-                                        <th>ลำดับ</th>
-                                        <th>คำนำหน้า</th>
-                                        <th>ชื่อ</th>
-                                        <th>นามสกุล</th>
-                                        <th>ชื่อเล่น</th>
-                                        <th>เมล</th>
-                                        <th>หน้าที่</th>
-                                        <th>ห้อง</th>
-                                        <th colSpan="2">ตัวเลือก</th>
-                                    </tr>
-                                </thead>
-                                <tbody className='text-center'>
-                                    {student.filter(user => user.user_role !== select.select).map((user, number) => (
-                                        <tr className='hover:bg-[#FF90BC] hover:text-white transition ease-in-out' key={user.user_id}>
-                                            <td className="text-[14px] rounded-l-full">{number + 1}</td>
-                                            <td className="text-[14px]">{user.user_nameprefix}</td>
-                                            <td className="text-[14px]">{user.user_firstname}</td>
-                                            <td className="text-[14px]">{user.user_lastname}</td>
-                                            <td className="text-[14px]">{user.user_nickname}</td>
-                                            <td className="text-[14px]">{user.user_email}</td>
-                                            <td className="text-[14px]">{user.user_role === "USER" ? "นักเรียน" : "ครู"}</td>
-                                            <td className="text-[14px]">{user.class.class_name}</td>
-                                            <td className='text-[14px]'>
-                                                <button className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => hdlEdit(user.user_id)}><FontAwesomeIcon icon={faEdit} /></button>
-                                            </td>
-                                            <td className='text-[14px] rounded-r-full'>
-                                                <button className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => { hdlDelete(user.user_id) }}><FontAwesomeIcon icon={faTrash} /></button>
-                                            </td>
+                    {student.get_user.length !== 0 ?
+                        <div className='mt-2 w-full'>
+                            <div className=' hidden lg:block'>
+                                <table className="min-w-full text-black border-collapse">
+                                    <thead className="border-b">
+                                        <tr className="text-md text-black">
+                                            <th className="text-center font-semibold py-3">ลำดับ</th>
+                                            <th className="text-center font-semibold py-3">คำนำหน้า</th>
+                                            <th className="text-center font-semibold py-3">ชื่อ - นามสกุล</th>
+                                            <th className="text-center font-semibold py-3">ชื่อเล่น</th>
+                                            <th className="text-center font-semibold py-3">เมล</th>
+                                            <th className="text-center font-semibold py-3">หน้าที่</th>
+                                            <th className="text-center font-semibold py-3">ห้อง</th>
+                                            <th className="text-center font-semibold py-3" colSpan="2">ตัวเลือก</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className='text-sm'>
+                                        {student.get_user.map((user, number) => (
+                                            <tr
+                                                className="hover:bg-[#FF90BC] hover:text-white transition ease-in-out"
+                                                key={user.user_id}
+                                            >
+                                                <td className='text-center'>{number + 1}</td>
+                                                <td>{user.user_nameprefix}</td>
+                                                <td>{user.user_firstname} {user.user_lastname}</td>
+                                                <td>{user.user_nickname}</td>
+                                                <td>{user.user_email}</td>
+                                                <td>
+                                                    {user.user_role === "USER" ? "นักเรียน" : "ครู"}
+                                                </td>
+                                                <td>{user.class.class_name}</td>
+                                                <td>
+                                                    <button
+                                                        className="rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out"
+                                                        onClick={() => hdlEdit(user.user_id)}
+                                                    >
+                                                        <FontAwesomeIcon icon={faEdit} />
+                                                    </button>
+                                                </td>
+                                                <td className='text-center'>
+                                                    <button
+                                                        className="rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out"
+                                                        onClick={() => {
+                                                            hdlDelete(user.user_id);
+                                                        }}
+                                                    >
+                                                        <FontAwesomeIcon icon={faTrash} />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                <div data-theme='light' className='flex justify-end items-center mt-5 gap-2'>
+                                    <button className="btn btn-ghost btn-sm capitalize" onClick={handlePrevious} disabled={page === 1}>
+                                        <FontAwesomeIcon icon={faAnglesLeft} className='mr-1' />
+                                        <span>ก่อน</span>
+                                    </button>
+                                    <p className='text-center'>หน้า {page} จาก {totalPage}</p>
+                                    <button className="btn btn-ghost btn-sm capitalize" onClick={handleNext} disabled={page === totalPage}>
+                                        <span>ถัดไป</span>
+                                        <FontAwesomeIcon icon={faAnglesRight} className='mr-1' />
+                                    </button>
+                                </div>
+                            </div>
 
                             {/* responsive */}
 
                             <div className='block lg:hidden font-medium'>
                                 <div className='flex gap-1 items-center'>
                                     <span className='w-4 h-4 rounded-full bg-[#6096B4]'></span>
-                                    <label className='font-bold'>ผู้ชาย {gender.filter(el => el.user_role !== select.select).length} คน</label>
+                                    <label className='font-bold'>ผู้ชาย {student.man} คน</label>
                                 </div>
                                 <div className='flex gap-1 items-center'>
                                     <span className='w-4 h-4 rounded-full bg-[#FF96BC]'></span>
-                                    <label className='font-bold'>ผู้หญิง {woman.filter(el => el.user_role !== select.select).length} คน</label>
+                                    <label className='font-bold'>ผู้หญิง {student.woman} คน</label>
                                 </div>
-                                {student.filter(user => user.user_role !== select.select && user.user_role !== "ADMIN").map((user, number) => (
+                                {student.get_user.map((user, number) => (
                                     <div key={number + 1} className={`flex my-3 justify-between h-20 rounded-md text-white ${user.user_nameprefix === "นาย" || user.user_nameprefix === "เด็กชาย" ? "bg-[#6096B4]" : "bg-[#FF90BC]"}`}>
                                         <div className='flex gap-1 relative pl-2 items-center'>
                                             <p>{number + 1}</p>
@@ -285,8 +373,18 @@ export default function AllUsers() {
                                         </div>
                                     </div>
                                 ))}
+                                <div data-theme='light' className='flex justify-end items-center mt-5 gap-2 pb-2'>
+                                        <button className="btn btn-ghost btn-sm capitalize" onClick={handlePrevious} disabled={page === 1}>
+                                            <FontAwesomeIcon icon={faAnglesLeft} className='mr-1' />
+                                            <span>ก่อน</span>
+                                        </button>
+                                        <p className='text-center'>หน้า {page} จาก {totalPage}</p>
+                                        <button className="btn btn-ghost btn-sm capitalize" onClick={handleNext} disabled={page === totalPage}>
+                                            <span>ถัดไป</span>
+                                            <FontAwesomeIcon icon={faAnglesRight} className='mr-1' />
+                                        </button>
+                                </div>
                             </div>
-
                         </div>
                         : <p className='text-2xl font-semibold underline'>ไม่พบข้อมูล</p>
                     }
