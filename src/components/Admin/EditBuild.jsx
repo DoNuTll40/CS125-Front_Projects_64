@@ -39,6 +39,7 @@ function EditBuild() {
     }
 
     useEffect( () => {
+        document.title = `แก้ไขข้อมูลอาคาร | ${id}`
         fetchApi();
     }, [] )
 
@@ -97,7 +98,7 @@ function EditBuild() {
 
     return (
         <div data-theme="light" className="max-w-[53rem] min-h-[24rem] text-black mx-auto mt-5 pt-5 pb-2 select-none rounded-2xl px-5 bg-white shadow-lg">
-            <p className="text-xl text-center font-extrabold">เพิ่มอาคาร</p>
+            <p className="text-xl text-center font-extrabold">แก้ไขอาคาร</p>
             <form className="flex flex-col sm:flex-row gap-2 mt-2 w-full">
                 <div className="w-full sm:w-1/2">
                     <p className='font-bold'>ชื่ออาคาร</p>
@@ -119,7 +120,7 @@ function EditBuild() {
                 )}
             </div>
             <div className='flex justify-end gap-1 mt-5 mb-3'>
-                <button className='border-2 border-[#FF609C] w-1/4 md:w-28 py-2 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' type='submit' onClick={hdlSubmit}>เพิ่มข้อมูล</button>
+                <button className='border-2 border-[#FF609C] w-1/4 md:w-28 py-2 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' type='submit' onClick={hdlSubmit}>แก้ไขข้อมูล</button>
                 <button className='border-2 border-[#FF609C] w-28 py-1 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95 disabled:opacity-45 disabled:active:scale-100 disabled:cursor-not-allowed' disabled onClick={hdlClear}>ล้างข้อมูล</button>
                 <button className='border-2 border-[#FF609C] w-1/4 md:w-28 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' onClick={() => navigate(-1)}>ย้อนกลับ</button>
             </div>

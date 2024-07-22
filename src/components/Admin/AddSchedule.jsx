@@ -2,6 +2,7 @@
 import axiosPath from "../../configs/axios-path";
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Swal from "sweetalert2";
 
 export default function AddSchedule() {
 
@@ -9,6 +10,7 @@ export default function AddSchedule() {
   const [getClass, setGetClass] = useState([]);
   const [getSubject, setGetSubject] = useState([]);
   const [getById, setGetById] = useState([]);
+  const [getScheduleByClick, setGetScheduleByClick] = useState([])
   const [users, setUsers] = useState([]);
   const [input, setInput] = useState({
     class_id: "",
@@ -19,10 +21,17 @@ export default function AddSchedule() {
     user_id: "",
   });
 
+  const [refetch, setRefetch] = useState(false)
+
+  let token = localStorage.getItem('token')
+
   useEffect(() => {
+
+    document.title = `Admin | เพิ่มข้อมูลตารางเรียน`
+
     const getClassRoom = async () => {
       try {
-        let token = localStorage.getItem('token')
+
         const rs = await axiosPath.get(`/admin/class`, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -37,7 +46,7 @@ export default function AddSchedule() {
 
     const getSubject = async () => {
       try {
-        let token = localStorage.getItem('token')
+
         const rs = await axiosPath.get(`/admin/subject`, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -51,7 +60,7 @@ export default function AddSchedule() {
     getSubject();
 
     const getUser = async () => {
-      let token = localStorage.getItem('token')
+
       const rs = await axiosPath.get('/admin/users', {
         headers: {
           Authorization: `Bearer ${token}`
@@ -62,7 +71,26 @@ export default function AddSchedule() {
     }
     getUser();
 
-  }, [])
+  }, [refetch])
+
+  const fetchSchedule = async () => {
+    try {
+      if (input.class_id !== "" || input.sched_day !== "") {
+        const rs = await axiosPath.get(`/admin/select/schedule?classID=${input?.class_id}&day=${input?.sched_day}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        setGetScheduleByClick(rs.data.schedule)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    fetchSchedule();
+  }, [input, refetch])
 
   const hdlChange = e => {
     setInput(prv => ({ ...prv, [e.target.name]: e.target.value }))
@@ -84,13 +112,18 @@ export default function AddSchedule() {
       });
       if (rs.status === 200) {
         alert("บันทึกข้อมูลเรียบร้อย");
-        hdlReset();
+        // hdlReset();
+        setRefetch(prev => !prev)
       }
     } catch (err) {
-      alert(err.response.data.message);
+      Swal.fire({
+        icon: "warning",
+        titleText: "ระบบตรวจพบข้อมูลซ้ำกัน",
+        text: err.response.data.message
+      })
       console.log(err);
     }
-  };  
+  };
 
   const hdlReset = () => {
     setInput({
@@ -106,10 +139,20 @@ export default function AddSchedule() {
     document.querySelector('select[name="sched_time"]').selectedIndex = 0;
     document.querySelector('select[name="sched_day"]').selectedIndex = 0;
     document.querySelector('select[name="user_id"]').selectedIndex = 0;
+    setGetScheduleByClick([])
   }
 
+  console.log(getScheduleByClick)
+
+  function sortByDay(a, b) {
+    const daysOrder = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์'];
+    return daysOrder.indexOf(a.sched_day) - daysOrder.indexOf(b.sched_day);
+  }
+
+  const sortedSchedules = getScheduleByClick.sort(sortByDay);
+
   return (
-    <div data-theme="light" className="max-w-[53rem] md:h-[24rem] text-black mx-auto mt-5 pt-5 pb-2 select-none rounded-2xl px-5 bg-white shadow-lg">
+    <div data-theme="light" className="max-w-[53rem] md:min-h-[23rem] text-black mx-auto mt-5 pt-5 pb-2 select-none rounded-2xl px-5 bg-white shadow-lg">
       <p className="text-xl text-center font-extrabold">เพิ่มตารางเรียน</p>
       <form className="flex gap-2 mt-2 flex-col md:flex-row">
         <div className="w-full md:w-1/6">
@@ -174,6 +217,160 @@ export default function AddSchedule() {
         <button className='border-2 border-[#FF609C] w-1/4 md:w-[16%] py-1 rounded-full text-[#FF609C] text-md font-bold scale-100 hover:bg-[#FF609C] hover:text-white hover:drop-shadow-lg transition ease-in-out active:scale-95' onClick={() => navigate(-1)}>ย้อนกลับ</button>
       </div>
       <hr />
+      <div className="my-2">
+        <div className="pb-10">
+          {getScheduleByClick.length !== 0 ?
+            <>
+              <p className="px-4 text-md font-bold drop-shadow-md">จำนวน {getScheduleByClick.length} ข้อมูล ของชั้น {getScheduleByClick[0]?.class?.class_name} {input.sched_day !== "" ? `และวัน ${input.sched_day}` : ""}</p>
+              <div className="hidden md:block">
+                <table className='table text-black my-1'>
+                  <thead className='text-center'>
+                    <tr className='text-[15px] text-black'>
+                      <th>ลำดับ</th>
+                      <th>วัน</th>
+                      <th>เวลา</th>
+                      <th>จำนวนคาบ</th>
+                      <th>ชื่อวิชา</th>
+                      <th>ชื่ออาจารย์</th>
+                    </tr>
+                  </thead>
+                  <tbody className='text-center'>
+                    {getScheduleByClick.map((el, number) => (
+                      <tr key={number} className="text-[15px]">
+                        <th className="text-[15px]">{number + 1}</th>
+                        <td className="text-[15px]">{el.sched_day}</td>
+                        <td className="text-[15px]">{el.sched_time}</td>
+                        <td className="text-[15px]">{el.sched_count}</td>
+                        <td className="text-[15px]">{el.subject.sub_name}</td>
+                        <td className="text-[15px]">{el.user.user_firstname} {el.user.user_lastname}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+            : <p className="text-xl font-semibold py-2 my-4 text-center">{`${!input.class_id && !input.sched_day ? "โปรดเลือกชั้นเรียนและวันที่ต้องการ" : "ไม่พบข้อมูลในระบบ"}`}</p>
+          }
+
+          {/* responsive */}
+
+          <div className="block md:hidden">
+            <div>
+              {sortedSchedules.length !== 0 ?
+                <div className="flex gap-2 flex-wrap justify-between mt-1 text-sm font-bold text-white sm:text-[13px]">
+                  <div className="w-full sm:w-[49%] rounded-md p-1 pt-3 mt-2 relative border-2 border-yellow-400">
+                    <p className="text-lg font-bold absolute -top-3.5 left-2 bg-white px-2 text-yellow-400">วันจันทร์</p>
+                    {sortedSchedules.filter(el => el.sched_day === "จันทร์").map((el, index) => (
+                      <div className={`my-2 p-2 rounded-md bg-slate-800 pt-6 relative border-2 border-white drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)] ${index % 2 === 0 ? "bg-[#FF90B4]" : "bg-[#6096BC]"} `} key={index + 1}>
+                        <div className="absolute bg-white top-0 left-0 w-[45%] h-6 pt-0.5 rounded-br-md">
+                          <p className="text-center text-black font-extrabold">{el.sched_time}</p>
+                        </div>
+                        <div className="my-1 text-center">
+                          <div>
+                            <p className="text-[16px]">วิชา {el.subject.sub_name}</p>
+                            <p>จำนวน {el.sched_count} คาบ</p>
+                          </div>
+                          <p>ครู {el.user.user_firstname} {el.user.user_lastname}</p>
+                        </div>
+                        <div className="flex gap-1 justify-center">
+                          <p>ห้อง {el.subject.room.room_name}</p>
+                          <p>อาคาร {el.subject.room.build.build_name}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="w-full sm:w-[49%] rounded-md p-1 pt-3 mt-2 relative border-2 border-pink-400">
+                    <p className="text-lg font-bold absolute -top-3.5 left-2 bg-white px-2 text-pink-400">วันอังคาร</p>
+                    {sortedSchedules.filter(el => el.sched_day === "อังคาร").map((el, index) => (
+                      <div className={`my-2 p-2 rounded-md bg-slate-800 pt-6 relative border-2 border-white drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)] ${index % 2 === 0 ? "bg-[#FF90B4]" : "bg-[#6096BC]"} `} key={index + 1}>
+                        <div className="absolute bg-white top-0 left-0 w-[45%] h-6 pt-0.5 rounded-br-md">
+                          <p className="text-center text-black font-extrabold">{el.sched_time}</p>
+                        </div>
+                        <div className="my-1 text-center">
+                          <div>
+                            <p className="text-[16px]">วิชา {el.subject.sub_name}</p>
+                            <p>จำนวน {el.sched_count} คาบ</p>
+                          </div>
+                          <p>ครู {el.user.user_firstname} {el.user.user_lastname}</p>
+                        </div>
+                        <div className="flex gap-1 justify-center">
+                          <p>ห้อง {el.subject.room.room_name}</p>
+                          <p>อาคาร {el.subject.room.build.build_name}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="w-full sm:w-[49%] rounded-md p-1 pt-3 mt-2 relative border-2 border-green-400">
+                    <p className="text-lg font-bold absolute -top-3.5 left-2 bg-white px-2 text-green-400">วันพุธ</p>
+                    {sortedSchedules.filter(el => el.sched_day === "พุธ").map((el, index) => (
+                      <div className={`my-2 p-2 rounded-md bg-slate-800 pt-6 relative border-2 border-white drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)] ${index % 2 === 0 ? "bg-[#FF90B4]" : "bg-[#6096BC]"} `} key={index + 1}>
+                        <div className="absolute bg-white top-0 left-0 w-[45%] h-6 pt-0.5 rounded-br-md">
+                          <p className="text-center text-black font-extrabold">{el.sched_time}</p>
+                        </div>
+                        <div className="my-1 text-center">
+                          <div>
+                            <p className="text-[16px]">วิชา {el.subject.sub_name}</p>
+                            <p>จำนวน {el.sched_count} คาบ</p>
+                          </div>
+                          <p>ครู {el.user.user_firstname} {el.user.user_lastname}</p>
+                        </div>
+                        <div className="flex gap-1 justify-center">
+                          <p>ห้อง {el.subject.room.room_name}</p>
+                          <p>อาคาร {el.subject.room.build.build_name}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="w-full sm:w-[49%] rounded-md p-1 pt-3 mt-2 relative border-2 border-orange-400">
+                    <p className="text-lg font-bold absolute -top-3.5 left-2 bg-white px-2 text-orange-400">วันพฤหัสบดี</p>
+                    {sortedSchedules.filter(el => el.sched_day === "พฤหัสบดี").map((el, index) => (
+                      <div className={`my-2 p-2 rounded-md bg-slate-800 pt-6 relative border-2 border-white drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)] ${index % 2 === 0 ? "bg-[#FF90B4]" : "bg-[#6096BC]"} `} key={index + 1}>
+                        <div className="absolute bg-white top-0 left-0 w-[45%] h-6 pt-0.5 rounded-br-md">
+                          <p className="text-center text-black font-extrabold">{el.sched_time}</p>
+                        </div>
+                        <div className="my-1 text-center">
+                          <div>
+                            <p className="text-[16px]">วิชา {el.subject.sub_name}</p>
+                            <p>จำนวน {el.sched_count} คาบ</p>
+                          </div>
+                          <p>ครู {el.user.user_firstname} {el.user.user_lastname}</p>
+                        </div>
+                        <div className="flex gap-1 justify-center">
+                          <p>ห้อง {el.subject.room.room_name}</p>
+                          <p>อาคาร {el.subject.room.build.build_name}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="w-full sm:w-[49%] rounded-md p-1 pt-3 mt-2 relative border-2 border-blue-400">
+                    <p className="text-lg font-bold absolute -top-3.5 left-2 bg-white px-2 text-blue-400">วันศุกร์</p>
+                    {sortedSchedules.filter(el => el.sched_day === "ศุกร์").map((el, index) => (
+                      <div className={`my-2 p-2 rounded-md bg-slate-800 pt-6 relative border-2 border-white drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)] ${index % 2 === 0 ? "bg-[#FF90B4]" : "bg-[#6096BC]"} `} key={index + 1}>
+                        <div className="absolute bg-white top-0 left-0 w-[45%] h-6 pt-0.5 rounded-br-md">
+                          <p className="text-center text-black font-extrabold">{el.sched_time}</p>
+                        </div>
+                        <div className="my-1 text-center">
+                          <div>
+                            <p className="text-[16px]">วิชา {el.subject.sub_name}</p>
+                            <p>จำนวน {el.sched_count} คาบ</p>
+                          </div>
+                          <p>ครู {el.user.user_firstname} {el.user.user_lastname}</p>
+                        </div>
+                        <div className="flex gap-1 justify-center">
+                          <p>ห้อง {el.subject.room.room_name}</p>
+                          <p>อาคาร {el.subject.room.build.build_name}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                : ""
+              }
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
   )
 }

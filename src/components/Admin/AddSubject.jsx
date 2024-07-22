@@ -18,6 +18,9 @@ export default function AddSubject() {
   });
 
   useEffect(() => {
+
+    document.title = `Admin | เพิ่มข้อมูลวิชาเรียน`
+
     const getRoom = async () => {
       try {
         let token = localStorage.getItem('token')

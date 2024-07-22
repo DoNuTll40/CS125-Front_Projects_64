@@ -35,6 +35,9 @@ import EditBanner from '../components/Admin/EditBanner';
 import EditBuild from '../components/Admin/EditBuild';
 import EditSubject from '../components/Admin/EditSubject';
 import EditRoom from '../components/Admin/EditRoom';
+import Major from '../components/Admin/Major';
+import EditMajor from '../components/Admin/EditMajor';
+import AddMajor from '../components/Admin/AddMajor';
 
 const guestRouter = createBrowserRouter([
     {
@@ -155,7 +158,7 @@ const adminRouter = createBrowserRouter([
             { path: 'teacher', element: <Welcome /> },
             { path: 'build', element: <Build /> },
             { path: 'room', element: <Rooms /> },
-            { path: 'users*', element: <AllUsers /> },
+            { path: 'users/*', element: <AllUsers /> },
             { path: 'users/edit/:id', element: <EditUser /> },
             { path: 'teachers', element: <Teacher /> },
             { path: 'report', element: <Report /> },
@@ -173,6 +176,9 @@ const adminRouter = createBrowserRouter([
             { path: 'banner/add', element: <AddBanner /> },
             { path: 'banner/edit/:id', element: <EditBanner /> },
             { path: 'class', element: <ClassRooms />},
+            { path: 'major', element: <Major /> },
+            { path: 'major/add', element: <AddMajor /> },
+            { path: 'major/edit/:id', element: <EditMajor /> },
         ]
     },
     {

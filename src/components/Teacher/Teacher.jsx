@@ -7,7 +7,7 @@ export default function Teacher() {
     const [users, setUsers] = useState([])
 
     useEffect(() => {
-        document.title = 'SCHOOL NAME : Student';
+        document.title = 'Teacher | Student';
 
         const getUser = async () => {
             let token = localStorage.getItem('token')

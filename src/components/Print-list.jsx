@@ -12,6 +12,7 @@ export default function Printlist() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.title = "ปริ้นรายชื่อนักเรียน ชั้น " + classRoom
         if (fullStudent.length === 0) {
             alert('ระบบไม่พบข้อมูลโปรดลองใหม่อีกครั้ง')
             navigate('/');
@@ -19,8 +20,6 @@ export default function Printlist() {
     }, [fullStudent, navigate]);
 
     const classRoom = fullStudent.length > 0 ? fullStudent[0].class.class_name : "ไม่มีข้อมูล";
-
-    document.title = "ปริ้นรายชื่อนักเรียน ชั้น " + classRoom
 
     const gender = fullStudent.filter(el => el.user_nameprefix === "เด็กชาย" || el.user_nameprefix === "นาย").length
     const woman = fullStudent.filter(el => el.user_nameprefix === "เด็กหญิง" || el.user_nameprefix === "นางสาว" || el.user_nameprefix === "นาง").length

@@ -11,7 +11,9 @@ export default function Subjects() {
 
     let token = localStorage.getItem('token');
 
+    
     useEffect(() => {
+        document.title = "Admin | รายชื่อวิชาเรียน"
         const useSubjects = async () => {
             const rs = await axiosPath.get('/admin/subject', {
                 headers: {

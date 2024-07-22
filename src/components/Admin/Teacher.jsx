@@ -6,8 +6,11 @@ export default function Teacher() {
 
     const [users, setUsers] = useState([])
 
+    const role = location.pathname.split('/')[1]
+
+
     useEffect(() => {
-        document.title = 'SCHOOL NAME : Teacher';
+        document.title = role.slice(0, 1).toUpperCase()+role.slice(1, role.length) + ' | รายชื่อคุณครู';
         const getUser = async () => {
             let token = localStorage.getItem('token')
             const rs = await axiosPath.get('/admin/users', {

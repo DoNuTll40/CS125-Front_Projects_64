@@ -13,9 +13,9 @@ function AuthContextProvider(props) {
     const [fullSchedule, setFullSchedule] = useState([])
     const [refetchBanner, setRefetchBanner] = useState(false)
 
-    useEffect(() => {
+    console.log(refetchBanner)
 
-        document.title = "SCHOOL NAME : Login";
+    useEffect(() => {
 
         const run = async () => {
             try {

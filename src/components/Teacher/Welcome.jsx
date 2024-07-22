@@ -12,7 +12,7 @@ export default function Student() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = `Home`;
+        document.title = `Teacher | หน้าหลัก`;
         const getUser = async () => {
             let token = localStorage.getItem('token')
             const rs = await axiosPath.get('/admin/users', {

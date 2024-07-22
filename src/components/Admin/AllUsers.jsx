@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd, faAngleRight, faAnglesLeft, faAnglesRight, faEdit, faMagnifyingGlass, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import InputMask from 'react-input-mask'
+import Swal from 'sweetalert2';
+import { icon } from '@fortawesome/fontawesome-svg-core';
 
 export default function AllUsers() {
 
@@ -40,7 +42,7 @@ export default function AllUsers() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = 'Admin : Student';
+        document.title = 'Admin | รายชื่อนักเรียน';
         const roleParam = select.select || '';
         const limitParam = limit.limit || 10;
         const searchParam = search.search || '';
@@ -65,7 +67,11 @@ export default function AllUsers() {
                     setTotalPage(rs?.data?.totalPages)
                 }
             } catch (err) {
-                alert(err.response.data.message)
+                Swal.fire({
+                    icon: 'error',
+                    title: "เกิดข้อผิดพลาด",
+                    text: (err.response.data.message),
+                })
             }
         }
 
@@ -253,7 +259,7 @@ export default function AllUsers() {
             {student.get_user && <div className='max-w-[80rem] mx-auto mt-3 select-none'>
                 <div className='bg-white px-4 py-3 lg:p-5 rounded-2xl max-w-[53rem] mt-5 mx-auto overflow-hidden'>
                     <div className='flex justify-between mb-2 relative' data-theme='light'>
-                        <select className='w-[120px] bg-transparent font-bold focus:outline-none' name="limit" onChange={hdlChangeLimit}>
+                        <select className='w-[120px] bg-transparent font-bold text-gray-400 focus:outline-none' name="limit" onChange={hdlChangeLimit}>
                             <option value={5}>5</option>
                             <option value={10} selected>10</option>
                             <option value={20}>20</option>
@@ -300,9 +306,8 @@ export default function AllUsers() {
                                         {student.get_user.map((user, number) => (
                                             <tr
                                                 className="hover:bg-[#FF90BC] hover:text-white transition ease-in-out"
-                                                key={user.user_id}
-                                            >
-                                                <td className='text-center'>{number + 1}</td>
+                                                key={user.user_id}>
+                                                <td className='text-center'>{user.user_id}</td>
                                                 <td>{user.user_nameprefix}</td>
                                                 <td>{user.user_firstname} {user.user_lastname}</td>
                                                 <td>{user.user_nickname}</td>

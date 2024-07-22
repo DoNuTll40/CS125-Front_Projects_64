@@ -7,12 +7,13 @@ import { useNavigate } from "react-router-dom";
 
 function Banner() {
     const [banner, setBanner] = useState([]);
-    const { setRefetchBanner } = useAuth();
+    const { setRefetchBanner, refetchBanner } = useAuth();
     const navigate = useNavigate();
 
     let token = localStorage.getItem('token');
 
     useEffect(() => {
+        document.title = "Admin | แบนเนอร์"
         fetchBannerApi();
     }, []);
 
@@ -24,7 +25,7 @@ function Banner() {
         });
         if (rs.status === 200) {
             setBanner(rs.data.banner);
-            setRefetchBanner((prev) => !prev)
+            setRefetchBanner(prev => !prev)
         }
     };
 
@@ -39,18 +40,23 @@ function Banner() {
 
         } catch (error) {
             console.error("Error updating banner status:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: (error.response.data.message)
+            })
         }
     };
 
     const handleToggle = (id, currentStatus, endDate) => {
-        const nowDate = new Date().toLocaleDateString('th-TH');
-        if (new Date(endDate).toLocaleDateString('th-TH') > nowDate) {
+        const nowDate = new Date();
+        if (new Date(endDate) > nowDate) {
             const newStatus = currentStatus === 1 ? 0 : 1;
             updateBannerStatus(id, newStatus);
         }
     };
 
-    const nowDate = new Date().toLocaleDateString('th-TH');
+    const nowDate = new Date();
 
     const hdlDeleteBanner = async (id) => {
         try {
@@ -93,7 +99,7 @@ function Banner() {
                 <div className="flex justify-end pb-3 border-b font-semibold">
                     <button className="bg-[#FF90BC] transition-all ease-in-out duration-150 hover:bg-[#6096B4] border-2 border-white text-white shadow-md py-2 px-3 rounded-lg" onClick={() => navigate('add')}>เพิ่มแบนเนอร์</button>
                 </div>
-                <div className="w-full flex flex-col gap-4 mt-3">
+                <div key={1} className="w-full flex flex-col gap-4 mt-3">
                     {banner?.length !== 0 ? (
                         banner.map((el, index) => (
                             <>
@@ -118,17 +124,17 @@ function Banner() {
                                             <div>
                                                 <p className="font-semibold">วันหมดอายุ</p>
                                                 <p>{new Date(el.b_enddate).toLocaleDateString('th-TH')}</p>
-                                                <p className={`font-bold ${new Date(el.b_enddate).toLocaleDateString('th-TH') <= nowDate ? "text-red-600" : "text-green-600 drop-shadow-md"}`}>{new Date(el.b_enddate).toLocaleDateString('th-TH') <= nowDate ? "หมดอายุแล้ว" : "ยังไม่หมดอายุ"}</p>
+                                                <p className={`font-bold ${new Date(el.b_enddate) <= nowDate ? "text-red-600" : "text-green-600 drop-shadow-md"}`}>{new Date(el.b_enddate) <= nowDate ? "หมดอายุแล้ว" : "ยังไม่หมดอายุ"}</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="flex flex-col items-center justify-center gap-10">
                                         <div data-theme="light" className="w-[100px] flex flex-col items-center gap-2">
-                                            <p>{el.b_status === 1 && new Date(el.b_enddate).toLocaleDateString('th-TH') !== nowDate ? "แสดงผล" : "ปิดการแสดง"}</p>
+                                            <p>{el.b_status === 1 && new Date(el.b_enddate) !== nowDate ? "แสดงผล" : "ปิดการแสดง"}</p>
                                             <input
                                                 type="checkbox"
-                                                className={`toggle ${new Date(el.b_enddate).toLocaleDateString('th-TH') <= nowDate ? "toggle-error" : "toggle-success"} toggle-sm`}
-                                                disabled={new Date(el.b_enddate).toLocaleDateString('th-TH') <= nowDate}
+                                                className={`toggle ${new Date(el.b_enddate) <= nowDate ? "toggle-error" : "toggle-success"} toggle-sm`}
+                                                disabled={new Date(el.b_enddate) <= nowDate}
                                                 checked={el?.b_status === 1 ? 1 : 0}
                                                 onChange={() => handleToggle(el.b_id, el.b_status, el.b_enddate)}
                                             />
@@ -142,13 +148,13 @@ function Banner() {
 
                                 {/* responsive */}
 
-                                <div className="block lg:hidden">
+                                <div key={index + 1} className="block lg:hidden">
                                     <div data-theme="light" className="flex flex-col justify-end items-end my-2">
-                                        <p>{el.b_status === 1 && new Date(el.b_enddate).toLocaleDateString('th-TH') !== nowDate ? "แสดงผล" : "ปิดการแสดง"}</p>
+                                        <p>{el.b_status === 1 && new Date(el.b_enddate) !== nowDate ? "แสดงผล" : "ปิดการแสดง"}</p>
                                         <input
                                             type="checkbox"
-                                            className={`toggle ${new Date(el.b_enddate).toLocaleDateString('th-TH') <= nowDate ? "toggle-error" : "toggle-success"} toggle-sm`}
-                                            disabled={new Date(el.b_enddate).toLocaleDateString('th-TH') <= nowDate}
+                                            className={`toggle ${new Date(el.b_enddate) <= nowDate ? "toggle-error" : "toggle-success"} toggle-sm`}
+                                            disabled={new Date(el.b_enddate) <= nowDate}
                                             checked={el?.b_status === 1 ? 1 : 0}
                                             onChange={() => handleToggle(el.b_id, el.b_status, el.b_enddate)}
                                         />
@@ -180,7 +186,7 @@ function Banner() {
                                             <div>
                                                 <p className="font-semibold">วันหมดอายุ</p>
                                                 <p>{new Date(el.b_enddate).toLocaleDateString('th-TH')}</p>
-                                                <p className={`font-bold ${new Date(el.b_enddate).toLocaleDateString('th-TH') <= nowDate ? "text-red-600" : "text-green-600 drop-shadow-md"}`}>{new Date(el.b_enddate).toLocaleDateString('th-TH') <= nowDate ? "หมดอายุแล้ว" : "ยังไม่หมดอายุ"}</p>
+                                                <p className={`font-bold ${new Date(el.b_enddate) <= nowDate ? "text-red-600" : "text-green-600 drop-shadow-md"}`}>{new Date(el.b_enddate) <= nowDate ? "หมดอายุแล้ว" : "ยังไม่หมดอายุ"}</p>
                                             </div>
                                         </div>
                                     </div>

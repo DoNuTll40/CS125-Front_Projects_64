@@ -14,10 +14,13 @@ export default function TeacherSchedule() {
     const [frame, setFrame] = useState(false)
 
     const navigate = useNavigate();
+
     
     let token = localStorage.getItem('token')
     useEffect(() => {
-
+        
+        document.title = "Teacher | ตารางการสอน"
+        
         const getSchedule = async () => {
             const rs = await axiosPath.get(`/admin/teacher/schedule`, {
                 headers: {

@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import axiosPath from "../configs/axios-path";
 import ScrollProgress from './ScrollProgress';
 import Swal from 'sweetalert2';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowDown, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
 export default function Header() {
 
@@ -23,17 +25,18 @@ export default function Header() {
             navigate('/');
             logout();
         });
-    }    
+    }
 
     const liNav = user.user_role === "ADMIN" ? [
         { to: "/admin", text: "หน้าหลัก" },
         { to: "/admin/users", text: "ผู้ใช้งานทั้งหมด" },
         { to: "/admin/teachers", text: "รายชื่ออาจารย์" },
+        { to: "/admin/class", text: "ชั้นเรียนทั้งหมด" },
         { to: "/admin/build", text: "รายชื่ออาคาร" },
         { to: "/admin/room", text: "รายชื่อห้อง" },
-        { to: "/admin/schedule", text: "ตารางทั้งหมด" },
-        { to: "/admin/class", text: "ชั้นเรียนทั้งหมด" },
         { to: "/admin/subject", text: "รายวิชาทั้งหมด" },
+        { to: "/admin/major", text: "รายชื่อกลุ่มวิชา" },
+        { to: "/admin/schedule", text: "ตารางทั้งหมด" },
         { to: "/admin/banner", text: "แบนเนอร์" },
         { to: "/admin/report", text: "รายงานระบบ" },
 
@@ -57,6 +60,8 @@ export default function Header() {
     const subEditPath = /^\/admin\/subject\/edit\/\d+$/;
     const bannerAddPath = /^\/admin\/banner\/add$/;
     const bannerEditPath = /^\/admin\/banner\/edit\/\d+$/;
+    const majorAddPath = /^\/admin\/major\/add$/;
+    const majorEditPath = /^\/admin\/major\/edit\/\d+$/;
     const acText = location === "profile" ? "โปรไฟล์" :
         location === "/teacher" + ("/profile") ? "โปรไฟล์" :
             location === "/admin" + ("/profile") ? "โปรไฟล์" :
@@ -67,12 +72,14 @@ export default function Header() {
                                 : roomEditPath.test(location) ? "แก้ไขห้อง"
                                     : bannerAddPath.test(location) ? "เพิ่มแบนเนอร์"
                                         : bannerEditPath.test(location) ? "แก้ไขแบนเนอร์"
-                                            : buildAddPath.test(location) ? "เพิ่มอาคาร"
-                                                : buildEditPath.test(location) ? "แก้ไขอาคาร"
-                                                    : subAddPath.test(location) ? "เพิ่มวิชา"
-                                                        : subEditPath.test(location) ? "แก้ไขวิชา"
-                                                            : location === "/teacher/teacher-schedule" ? "ดูตารางสอน"
-                                                                : liNav.find(link => link.to === location)?.text;
+                                            : majorAddPath.test(location) ? "เพิ่มกลุ่มวิชา"
+                                                : majorEditPath.test(location) ? "แก้ไขกลุ่มวิชา"
+                                                    : buildAddPath.test(location) ? "เพิ่มอาคาร"
+                                                        : buildEditPath.test(location) ? "แก้ไขอาคาร"
+                                                            : subAddPath.test(location) ? "เพิ่มวิชา"
+                                                                : subEditPath.test(location) ? "แก้ไขวิชา"
+                                                                    : location === "/teacher/teacher-schedule" ? "ดูตารางสอน"
+                                                                        : liNav.find(link => link.to === location)?.text;
 
     useEffect(() => {
         const id = user.user_id
@@ -83,13 +90,25 @@ export default function Header() {
         getUserBid();
     }, [])
 
+    const hdlCheckProfileClick = () => {
+        try {
+            if(location.endsWith('/profile')){
+                window.location.reload()
+            } else {
+                navigate('profile')
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     return (
         <>
             <div data-theme="light" className='bg-gradient-to-r from-[#FF90BC] to-[#6096B4] h-[58px] select-none fixed top-0 w-screen z-50'>
                 <div className='max-w-[80rem] mx-auto flex justify-between items-center'>
                     {user.user_role !== "USER" ?
                         <div className="dropdown w-[170px] mobile:w-[200px]">
-                            <summary tabIndex={0} role='button' className="m-1 btn px-2 mobile:px-4">{acText}</summary>
+                            <summary tabIndex={0} role='button' className="m-1 btn px-2 mobile:px-4">{acText} <FontAwesomeIcon icon={faCaretDown} /></summary>
                             <ul className="p-2 shadow mt-2 menu dropdown-content z-[1] bg-base-100 rounded-box w-36 mobile:w-52">
                                 {liNav.map((el, number) => (
                                     <li key={number + 1} className={`${acText === el.text ? "bg-pink-500 text-white font-bold" : ""} rounded-md`}><Link to={el.to} onClick={() => location.reload()}>{el.text}</Link></li>
@@ -109,7 +128,7 @@ export default function Header() {
                             </div>
                         </div>
                         <ul tabIndex={0} className="menu menu-sm dropdown-content mt-16 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                            <li><Link to="profile" onClick={() => location.reload()}>โปรไฟล์</Link></li>
+                            <li><Link onClick={ () => hdlCheckProfileClick()}>โปรไฟล์</Link></li>
                             <li><Link to="#" onClick={hdlLogout}>ออกจากระบบ</Link></li>
                         </ul>
                     </div>

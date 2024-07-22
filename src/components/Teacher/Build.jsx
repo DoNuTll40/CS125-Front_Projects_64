@@ -8,7 +8,7 @@ export default function Build() {
 
 
     useEffect(() => {
-        document.title = 'SCHOOL NAME - Builds';
+        document.title = 'Teacher | อาคารเรียน';
 
         const getBuild = async () => {
             let token = localStorage.getItem('token')
@@ -35,7 +35,6 @@ export default function Build() {
                                         <th>ชื่ออาคาร</th>
                                         <th>เลขอาคาร</th>
                                         <th>รูปอาคาร</th>
-                                        <th colSpan="2">ตัวเลือก</th>
                                     </tr>
                                 </thead>
                                 <tbody className='text-center'>
@@ -45,7 +44,6 @@ export default function Build() {
                                             <td>{builds.build_name}</td>
                                             <td>{builds.build_number}</td>
                                             <td><img className='rounded-lg max-w-[200px] mx-auto pointer-events-none' src={builds.build_image} /></td>
-                                            <th className='text-end'><button className=''>กำลังพัฒนา..</button></th>
                                         </tr>
                                     ))}
                                 </tbody>

@@ -16,9 +16,11 @@ export default function LoginTeacher() {
         password: ''
     });
 
-    document.title = "Login - Teacher";
-
+    
     useEffect(() => {
+        
+        document.title = "เข้าสู่ระบบ | Teacher";
+
         const loadImage = async () => {
             const image1 = "https://a.cdn-hotels.com/gdcs/production122/d1368/1ecd1184-2b25-4fa6-877c-320dc8a0f1e5.jpg?impolicy=fcrop&w=1600&h=1066&q=medium";
             // setLoading(true);
@@ -79,7 +81,7 @@ export default function LoginTeacher() {
                     <div className="p-4 w-full"s>
                         <form className="flex flex-col" onSubmit={hdlSubmit}>
                             <div className="flex flex-col gap-2">
-                                <img className='mx-auto rounded-full w-[120px] h-[120px]' src='https://picsum.photos/id/125/600' />
+                                <img className='mx-auto rounded-full w-[120px] h-[120px]' src='/Blue and Pink Simple School Logo.png' />
                                 <h1 className="text-2xl text-center font-bold text-white drop-shadow-[2px_2px_1.5px_rgba(0,0,0,0.25)]">Login Teacher</h1>
                                 <label className='text-white font-semibold'>Username</label>
                                 <input className="h-[2.5rem] border-2 border-[#FF90BC] rounded-full px-5 focus:outline-[#6096B4]"

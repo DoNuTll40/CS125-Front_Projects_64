@@ -3,13 +3,17 @@ import { faAnglesLeft, faBackward, faBackwardStep, faBan, faCircleExclamation, f
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom"
 import useAuth from "../hooks/UseAuth";
+import { useEffect } from "react";
 
 export default function PageFound() {
 
     const { user } =  useAuth()
 
     const navigate = useNavigate();
-    document.title = "404 Not found"
+    
+    useEffect( () => {
+        document.title = "ระบบตารางเรียน | 404 ไม่พบหน้าที่ต้องการ"
+    }, [])
 
     const hdlBack = () => {
         user?.user_id? navigate(-1) : navigate('/')

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAuth from "../hooks/UseAuth"
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
@@ -8,7 +8,7 @@ import SlideDashboard from "./SlideDashboard";
 
 export default function LoginStudent() {
 
-    const { setUser, loading, setLoading } = useAuth();
+    const { setUser, loading, setLoading, refetchBanner } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
 
     const [input, setInput] = useState({
@@ -16,7 +16,9 @@ export default function LoginStudent() {
         password: ''
     });
 
-    document.title = "Login";
+    useEffect( () => {
+        document.title = "เข้าสู่ระบบ";
+    }, [])
 
     const hdlSubmit = async e => {
         try {
@@ -69,7 +71,7 @@ export default function LoginStudent() {
                     <div className="p-4 w-full">
                         <form className="flex flex-col select-none  " onSubmit={hdlSubmit}>
                             <div className="flex flex-col gap-2">
-                                <img className='mx-auto rounded-full w-[120px] h-[120px] pointer-events-none' src='https://picsum.photos/id/125/600' />
+                                <img className='mx-auto rounded-full w-[120px] h-[120px] pointer-events-none' src='/Blue and Pink Simple School Logo.png' />
                                 <h1 className="text-2xl text-center font-extrabold text-white drop-shadow-[2px_2px_1.5px_rgba(0,0,0,0.25)]">Login</h1>
                                 <label className='text-white font-semibold'>Username</label>
                                 <input className={`h-[2.5rem] border-2 rounded-full px-5 focus:outline-[#6096B4] ${input.username === "" ? "border-[#FF90BC]" : "border-[#6096B4]"}`}

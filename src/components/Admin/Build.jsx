@@ -13,7 +13,7 @@ export default function Build() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = 'SCHOOL NAME - Builds';
+        document.title = 'Admin | รายชื่ออาคาร';
 
         const getBuild = async () => {
             let token = localStorage.getItem('token')

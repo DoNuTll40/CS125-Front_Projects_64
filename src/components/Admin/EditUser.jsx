@@ -1,5 +1,5 @@
 
-import axiosPath from "../../configs/axios-path";
+import axios from "../../configs/axios-path";
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
@@ -36,12 +36,10 @@ export default function EditUser() {
 
     const formatBirthday = input.user_brithday ? new Date(input.user_brithday).toISOString().substr(0, 10) : '';
 
-    document.title = `Edit : ${getUser.user_firstname} ${getUser.user_lastname}`
-
     useEffect(() => {
         const getUserById = async () => {
             let token = localStorage.getItem('token')
-            const rs = await axiosPath.get(`/admin/users/${userId}`, {
+            const rs = await axios.get(`/admin/users/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -50,6 +48,7 @@ export default function EditUser() {
             setInput(rs.data.user)
         }
         getUserById();
+        document.title = `แก้ไขข้อมูลผู้ใช้ | ${getUser?.user_firstname} ${getUser?.user_lastname}`
     }, [])
 
     const hdlSubmit = async (e) => {
@@ -59,12 +58,12 @@ export default function EditUser() {
 
         try {
             let token = localStorage.getItem('token')
-            const rs = await axiosPath.patch(`/admin/users/${userId}`, output, {
+            const rs = await axios.patch(`/admin/users/${userId}`, output, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             })
-            console.log(rs.data)
+            // console.log(rs.data)
             if (rs.status === 200) {
                 alert("แก้ไขข้อมูลสำเร็จ")
                 navigate(-1)

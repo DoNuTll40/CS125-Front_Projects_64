@@ -12,9 +12,10 @@ export default function Schedule() {
     const [input, setInput] = useState({
         class_id: "1",
     });
+    const [ refetch, setRefetch ] = useState(false)
 
     useEffect(() => {
-        document.title = "All Schedule"
+        document.title = "Admin | ตารางเรียนทั้งหมด"
         const getClassRoom = async () => {
             try {
                 let token = localStorage.getItem('token')
@@ -47,7 +48,7 @@ export default function Schedule() {
         }
         importSchedule()
 
-    }, [input])
+    }, [input, refetch])
 
     const hdlChange = e => {
         setInput(prv => ({ ...prv, [e.target.name]: e.target.value }))
@@ -64,6 +65,7 @@ export default function Schedule() {
             })
             if (rs.status === 200) {
                 alert("ลบข้อมูลเรียบร้อยแล้ว")
+                setRefetch(prev => !prev)
             }
         }
     }

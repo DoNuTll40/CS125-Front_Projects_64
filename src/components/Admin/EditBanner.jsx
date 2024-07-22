@@ -37,6 +37,9 @@ function EditBanner() {
     }
 
     useEffect(() => {
+
+        document.title = `แก้ไขข้อมูลแบนเนอร์ | ${bannerId}`
+
         getBannerByID();
     }, [])
 

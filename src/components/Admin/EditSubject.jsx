@@ -1,7 +1,6 @@
 import axiosPath from "../../configs/axios-path";
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Select from 'react-select';
 
 export default function EditSubject() {
   const navigate = useNavigate();
@@ -58,6 +57,9 @@ export default function EditSubject() {
   };
 
   useEffect(() => {
+
+    document.title = `แก้ไขข้อมูลวิชา | ${id}`
+
     getSubjectById();
     getAllRoom();
     adminGetMajor();
@@ -90,8 +92,6 @@ export default function EditSubject() {
       console.log(err);
     }
   };
-
-  console.log(input)
 
   const hdlReset = () => {
     setInput({

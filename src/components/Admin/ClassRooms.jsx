@@ -16,11 +16,12 @@ function ClassRooms() {
         sec_id: "",
     })
 
-    document.title = "Admin : Classrooms"
     let token = localStorage.getItem('token');
     const accordion = document.getElementsByName('my-accordion-2')[0];
-
+    
     useEffect(() => {
+        
+        document.title = "Admin | รายชื่อชั้นเรียน"
 
         const Class = async () => {
             try {
@@ -209,8 +210,8 @@ function ClassRooms() {
                             </div>
                         </div>
                         <button className={`w-full mt-3 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white`}>บันทึก</button>
-                        <div className={`${input.class_name !== "" || input.sec_id !== "" ? "block transition-opacity duration-1000" : "hidden transition-opacity duration-1000"}`}>
-                            <button type="button" onClick={hdlReset} className={`w-full mt-3 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white`}>ล้างข้อมูล</button>
+                        <div className={`${input.class_name !== "" || input.sec_id !== "" ? "block transition-opacity duration-1000" : "hidden transition-opacity duration-1000"} ${!edit ? "block" : "hidden"}`}>
+                            <button type="button" onClick={hdlReset} className={`w-full mt-3 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white`} disabled>ล้างข้อมูล</button>
                         </div>
                     </form>
                 </div>

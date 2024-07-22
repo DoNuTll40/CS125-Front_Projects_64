@@ -20,8 +20,10 @@ export default function Profile() {
 
     const navigate = useNavigate();
 
+    const role = location.pathname.split("/")[1]
+
     useEffect(() => {
-        document.title = "Profile";
+        document.title = role.slice(0, 1).toUpperCase()+role.slice(1, role.length) +" | โปรไฟล์";
     }, [])
 
     const hdlEditProfile = () => {

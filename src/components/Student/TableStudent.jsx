@@ -14,7 +14,7 @@ export default function TableStudent() {
   const [cView, setCView] = useState([])
 
   useEffect(() => {
-    document.title = "Schedule"
+    document.title = `ตารางเรียนของ ${user.user_nameprefix} ${user.user_firstname} ${user.user_lastname}`
     const getTable = async () => {
       let token = localStorage.getItem('token');
       const rs = await axiosPath.get('/user/table', {
@@ -98,7 +98,7 @@ export default function TableStudent() {
             {["08:30-09:30", "09:30-10:30", "10:30-11:30", "11:30-12:30", "พัก", "13:30-14:30", "14:30-15:30", "15:30-16:30"].map((time, index) => {
               const scheduleItem = schedule.find(el => el.sched_day === "จันทร์" && el.sched_time === time);
               const shouldRemoveBreak1 = time === "พัก" && schedule.some(el => el.sched_day === "จันทร์" && el.sched_time === "08:30-09:30" && el.sched_count === 2);
-              const shouldRemoveBreak2 = time === "11:30-12:30" && schedule.some(el => el.sched_day === "จันทร์" && el.sched_time === "09:30-10:30" && el.sched_count === 2);
+              const shouldRemoveBreak2 = time === "10:30-11:30" && schedule.some(el => el.sched_day === "จันทร์" && el.sched_time === "09:30-10:30" && el.sched_count === 2);
               const shouldRemoveBreak3 = time === "11:30-12:30" && schedule.some(el => el.sched_day === "จันทร์" && el.sched_time === "10:30-11:30" && el.sched_count === 2);
               const shouldRemoveBreak4 = time === "14:30-15:30" && schedule.some(el => el.sched_day === "จันทร์" && el.sched_time === "13:30-14:30" && el.sched_count === 2);
               const shouldRemoveBreak5 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "จันทร์" && el.sched_time === "14:30-15:30" && el.sched_count === 2);
@@ -120,8 +120,8 @@ export default function TableStudent() {
             <td className='rounded-lg border-2 border-black dark:bg-[#FF90BC] dark:border-0 text-xl'>อังคาร</td>
             {["08:30-09:30", "09:30-10:30", "10:30-11:30", "11:30-12:30", "พัก", "13:30-14:30", "14:30-15:30", "15:30-16:30"].map((time, index) => {
               const scheduleItem = schedule.find(el => el.sched_day === "อังคาร" && el.sched_time === time);
-              const shouldRemoveBreak1 = time === "พัก" && schedule.some(el => el.sched_day === "อังคาร" && el.sched_time === "08:30-09:30" && el.sched_count === 2);
-              const shouldRemoveBreak2 = time === "11:30-12:30" && schedule.some(el => el.sched_day === "อังคาร" && el.sched_time === "09:30-10:30" && el.sched_count === 2);
+              const shouldRemoveBreak1 = time === "09:30-10:30" && schedule.some(el => el.sched_day === "อังคาร" && el.sched_time === "08:30-09:30" && el.sched_count === 2);
+              const shouldRemoveBreak2 = time === "10:30-11:30" && schedule.some(el => el.sched_day === "อังคาร" && el.sched_time === "09:30-10:30" && el.sched_count === 2);
               const shouldRemoveBreak3 = time === "11:30-12:30" && schedule.some(el => el.sched_day === "อังคาร" && el.sched_time === "10:30-11:30" && el.sched_count === 2);
               const shouldRemoveBreak4 = time === "14:30-15:30" && schedule.some(el => el.sched_day === "อังคาร" && el.sched_time === "13:30-14:30" && el.sched_count === 2);
               const shouldRemoveBreak5 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "อังคาร" && el.sched_time === "14:30-15:30" && el.sched_count === 2);
@@ -143,8 +143,8 @@ export default function TableStudent() {
             <td className='rounded-lg border-2 border-black dark:bg-[#FF90BC] dark:border-0 text-xl'>พุธ</td>
             {["08:30-09:30", "09:30-10:30", "10:30-11:30", "11:30-12:30", "พัก", "13:30-14:30", "14:30-15:30", "15:30-16:30"].map((time, index) => {
               const scheduleItem = schedule.find(el => el.sched_day === "พุธ" && el.sched_time === time);
-              const shouldRemoveBreak1 = time === "พัก" && schedule.some(el => el.sched_day === "พุธ" && el.sched_time === "08:30-09:30" && el.sched_count === 2);
-              const shouldRemoveBreak2 = time === "11:30-12:30" && schedule.some(el => el.sched_day === "พุธ" && el.sched_time === "09:30-10:30" && el.sched_count === 2);
+              const shouldRemoveBreak1 = time === "09:30-10:30" && schedule.some(el => el.sched_day === "พุธ" && el.sched_time === "08:30-09:30" && el.sched_count === 2);
+              const shouldRemoveBreak2 = time === "10:30-11:30" && schedule.some(el => el.sched_day === "พุธ" && el.sched_time === "09:30-10:30" && el.sched_count === 2);
               const shouldRemoveBreak3 = time === "11:30-12:30" && schedule.some(el => el.sched_day === "พุธ" && el.sched_time === "10:30-11:30" && el.sched_count === 2);
               const shouldRemoveBreak4 = time === "14:30-15:30" && schedule.some(el => el.sched_day === "พุธ" && el.sched_time === "13:30-14:30" && el.sched_count === 2);
               const shouldRemoveBreak5 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "พุธ" && el.sched_time === "14:30-15:30" && el.sched_count === 2);
@@ -167,7 +167,7 @@ export default function TableStudent() {
             {["08:30-09:30", "09:30-10:30", "10:30-11:30", "11:30-12:30", "พัก", "13:30-14:30", "14:30-15:30", "15:30-16:30"].map((time, index) => {
               const scheduleItem = schedule.find(el => el.sched_day === "พฤหัสบดี" && el.sched_time === time);
               const shouldRemoveBreak1 = time === "พัก" && schedule.some(el => el.sched_day === "พฤหัสบดี" && el.sched_time === "08:30-09:30" && el.sched_count === 2);
-              const shouldRemoveBreak2 = time === "11:30-12:30" && schedule.some(el => el.sched_day === "พฤหัสบดี" && el.sched_time === "09:30-10:30" && el.sched_count === 2);
+              const shouldRemoveBreak2 = time === "10:30-11:30" && schedule.some(el => el.sched_day === "พฤหัสบดี" && el.sched_time === "09:30-10:30" && el.sched_count === 2);
               const shouldRemoveBreak3 = time === "11:30-12:30" && schedule.some(el => el.sched_day === "พฤหัสบดี" && el.sched_time === "10:30-11:30" && el.sched_count === 2);
               const shouldRemoveBreak4 = time === "14:30-15:30" && schedule.some(el => el.sched_day === "พฤหัสบดี" && el.sched_time === "13:30-14:30" && el.sched_count === 2);
               const shouldRemoveBreak5 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "พฤหัสบดี" && el.sched_time === "14:30-15:30" && el.sched_count === 2);
@@ -190,7 +190,7 @@ export default function TableStudent() {
             {["08:30-09:30", "09:30-10:30", "10:30-11:30", "11:30-12:30", "พัก", "13:30-14:30", "14:30-15:30", "15:30-16:30"].map((time, index) => {
               const scheduleItem = schedule.find(el => el.sched_day === "ศุกร์" && el.sched_time === time);
               const shouldRemoveBreak1 = time === "พัก" && schedule.some(el => el.sched_day === "ศุกร์" && el.sched_time === "08:30-09:30" && el.sched_count === 2);
-              const shouldRemoveBreak2 = time === "11:30-12:30" && schedule.some(el => el.sched_day === "ศุกร์" && el.sched_time === "09:30-10:30" && el.sched_count === 2);
+              const shouldRemoveBreak2 = time === "10:30-11:30" && schedule.some(el => el.sched_day === "ศุกร์" && el.sched_time === "09:30-10:30" && el.sched_count === 2);
               const shouldRemoveBreak3 = time === "11:30-12:30" && schedule.some(el => el.sched_day === "ศุกร์" && el.sched_time === "10:30-11:30" && el.sched_count === 2);
               const shouldRemoveBreak4 = time === "14:30-15:30" && schedule.some(el => el.sched_day === "ศุกร์" && el.sched_time === "13:30-14:30" && el.sched_count === 2);
               const shouldRemoveBreak5 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "ศุกร์" && el.sched_time === "14:30-15:30" && el.sched_count === 2);
@@ -214,8 +214,8 @@ export default function TableStudent() {
         <button className='font-semibold shadow-md bg-transparent text-[#6096B4] py-1.5 px-4 rounded-full mb-3 scale-100 transition ease-in-out border-2 border-[#6096B4] active:scale-95 active:bg-[#FF90BC] active:border-[#FF90BC] active:text-white active:font-bold hover:font-bold hover:bg-[#FF90BC] hover:border-[#FF90BC] hover:text-white' onClick={hdlPrint} ><FontAwesomeIcon icon={faPrint} /> ปริ้นตารางเรียน</button>
       </div>
       {cView.length !== 0 && (
-        <dialog data-theme="light" id="my_modal_3" className="modal select-none">
-          <div className="modal-box px-0 py-0">
+        <dialog data-theme="light" id="my_modal_3" className="modal select-none backdrop-blur-sm">
+          <div className="modal-box px-0 py-0 shadow-lg">
             <form method="dialog">
               <button className="btn btn-sm btn-circle btn-ghost absolute text-[#FF90BC] hover:bg-[#6096B4] hover:text-white right-2 top-2">✕</button>
             </form>

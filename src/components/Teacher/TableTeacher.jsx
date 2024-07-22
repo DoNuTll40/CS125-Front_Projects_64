@@ -15,7 +15,7 @@ export default function TableTeacher() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = "Teacher | Schedule"
+    document.title = "Teacher | ดูตารางการสอน"
     const getTable = async () => {
       let token = localStorage.getItem('token');
       const rs = await axiosPath.get('/admin/teacher/schedule', {
