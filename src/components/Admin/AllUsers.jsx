@@ -2,11 +2,10 @@
 import { useEffect, useRef, useState } from 'react';
 import axiosPath from "../../configs/axios-path";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdd, faAngleRight, faAnglesLeft, faAnglesRight, faEdit, faMagnifyingGlass, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faAnglesLeft, faAnglesRight, faEdit, faMagnifyingGlass, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import InputMask from 'react-input-mask'
 import Swal from 'sweetalert2';
-import { icon } from '@fortawesome/fontawesome-svg-core';
 import useAuth from '../../hooks/UseAuth';
 
 export default function AllUsers() {
@@ -45,8 +44,25 @@ export default function AllUsers() {
 
     useEffect(() => {
         document.title = 'Admin | รายชื่อนักเรียน';
-        const roleParam = select.select || '';
-        const limitParam = limit.limit || 10;
+    
+        const savedRole = sessionStorage.getItem('role-select');
+        const savedLimit = sessionStorage.getItem('limit-select');
+        const savedPage = sessionStorage.getItem('page-user');
+
+        if (savedRole) {
+            setSelect(savedRole);
+        }
+
+        if(savedLimit) {
+            setLimit(savedLimit)
+        }
+
+        if(savedPage) {
+            setPage(parseInt(savedPage))
+        }
+
+        const roleParam = savedRole || '';
+        const limitParam = savedLimit || 10;
         const searchParam = search.search || '';
 
         const getUser = async () => {
@@ -73,6 +89,9 @@ export default function AllUsers() {
                     icon: 'error',
                     title: "เกิดข้อผิดพลาด",
                     text: (err.response.data.message),
+                }).then(() => {
+                    setPage(1)
+                    sessionStorage.setItem('page-user', 1)
                 })
             }
         }
@@ -97,10 +116,12 @@ export default function AllUsers() {
 
     const hdlChange2 = e => {
         setSelect(prv => ({ ...prv, [e.target.name]: e.target.value }))
+        sessionStorage.setItem('role-select', e.target.value)
     }
 
     const hdlChangeLimit = e => {
         setLimit(prv => ({ ...prv, [e.target.name]: e.target.value }))
+        sessionStorage.setItem('limit-select', e.target.value)
     }
 
     let timeout = null
@@ -109,6 +130,10 @@ export default function AllUsers() {
         clearTimeout(timeout);
         timeout = setTimeout(() => {
             setSearch({ search: e.target.value }); // แก้ไขเป็นการกำหนดค่าโดยตรงให้เป็น object
+            setPage(1); // Reset page to 1 on new search
+            setSelect('')
+            sessionStorage.setItem('role-select', '')
+            sessionStorage.setItem('page-user', '1');
         }, 1000);
     };
 
@@ -298,12 +323,14 @@ export default function AllUsers() {
     const handlePrevious = () => {
         if (page > 1) {
             setPage(page - 1);
+            sessionStorage.setItem('page-user', page - 1)
         }
     };
 
     const handleNext = () => {
         if (page < totalPage) {
             setPage(page + 1);
+            sessionStorage.setItem('page-user', page + 1)
         }
     };
 
@@ -312,9 +339,9 @@ export default function AllUsers() {
             {student.get_user && <div className='max-w-[80rem] mx-auto mt-3 select-none'>
                 <div className='bg-white px-4 py-3 lg:p-5 rounded-2xl max-w-[53rem] mt-5 mx-auto overflow-hidden'>
                     <div className='flex justify-between mb-2 relative' data-theme='light'>
-                        <select className='w-[120px] bg-transparent font-bold text-gray-400 focus:outline-none' name="limit" onChange={hdlChangeLimit}>
+                        <select className='w-[120px] bg-transparent font-bold text-gray-400 focus:outline-none' name="limit" value={limit} onChange={hdlChangeLimit}>
                             <option value={5}>5</option>
-                            <option value={10} selected>10</option>
+                            <option value={10}>10</option>
                             <option value={20}>20</option>
                             <option value={50}>50</option>
                             <option value={100}>100</option>
@@ -329,7 +356,7 @@ export default function AllUsers() {
                         </div>
                     </div>
                     <div className='flex justify-between items-center'>
-                        <select className='w-[120px] bg-transparent font-bold focus:outline-none' name="select" id="" onChange={hdlChange2}>
+                        <select className='w-[120px] bg-transparent font-bold focus:outline-none' name="select" id="role-fullscreen" value={select} onChange={hdlChange2}>
                             <option value="">ทั้งหมด</option>
                             <option value="USER">นักเรียน</option>
                             <option value="TEACHER">คุณครู</option>
@@ -418,7 +445,7 @@ export default function AllUsers() {
                                 {student.get_user.map((user, number) => (
                                     <div key={number + 1} className={`flex my-3 justify-between h-20 rounded-md text-white ${user.user_nameprefix === "นาย" || user.user_nameprefix === "เด็กชาย" ? "bg-[#6096B4]" : "bg-[#FF90BC]"}`}>
                                         <div className='flex gap-1 relative pl-2 items-center'>
-                                            <p>{number + 1}</p>
+                                            <p>{user.user_id}</p>
                                             <div className='border-l-2 border-white px-1'>
                                                 <p className='text-[14px]'>{user.user_nameprefix} {user.user_firstname} {user.user_lastname}</p>
                                                 <p className='text-[14px]'>หน้าที่ {user.user_role === "USER" ? "นักเรียน" : "คุณครู"}</p>
