@@ -3,15 +3,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axiosPath from "../../configs/axios-path";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function Subjects() {
 
     const [getSubject, setGetSubject] = useState([]);
+    const [reload, setReload] = useState(false)
     const navigate = useNavigate();
 
     let token = localStorage.getItem('token');
 
-    
     useEffect(() => {
         document.title = "Admin | รายชื่อวิชาเรียน"
         const useSubjects = async () => {
@@ -23,24 +24,47 @@ export default function Subjects() {
             setGetSubject(rs.data.sub)
         }
         useSubjects();
-    }, [])
+    }, [reload])
 
     const hdlAdd = () => {
         navigate('add')
     }
 
-    const hdlDelete = async (id) => {
-        if (confirm(`คุณต้องการลบใช้หรือไม่`)) {
-            try {
-                const rs = await axiosPath.delete(`/admin/subject/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+    const hdlDelete = async (id, sub_name) => {
+        Swal.fire({
+            icon: 'question',
+            title: "ต้องการลบข้อมูลหรือไม่ ?",
+            text: `คุณต้องการลบวิชา ${sub_name} หรือไม่, เนื่องด้วยการลบจะทำให้ตารางเรียนที่ใช้วิชานี้อยู่นั้นจะหายไปด้วย, โปรดตรวจสอบข้อมูลก่อน`,
+            showCancelButton: true,
+            confirmButtonColor: '#E5252A',
+            confirmButtonText: 'ใช่, ต้องการลบ',
+            cancelButtonText: "ไม่, ยกเลิก",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const rs = await axiosPath.delete(`/admin/subject/${id}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    if(rs.status === 200){
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'ลบข้อมูลวิชาเรียนสำเร็จ',
+                        }).then(() => {
+                            setReload(prev => !prev)
+                        })
                     }
-                })
-            } catch (err) {
-                console.log(err)
+                } catch (err) {
+                    console.log(err)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'พบข้อผิดพลาด',
+                        text: err.response.data.message
+                    })
+                }
             }
-        }
+        })
     }
 
     const hdlEdit = (id) => {
@@ -76,7 +100,7 @@ export default function Subjects() {
                                             <td className="text-[15px]">{el.major.major_name}</td>
                                             <td className="text-[15px]">{el.room.room_name}</td>
                                             <th className="text-[15px]"><button className="py-2.5 px-3 hover:bg-gray-600 rounded-full" onClick={() => hdlEdit(el.sub_id)}><FontAwesomeIcon icon={faPenToSquare} /></button></th>
-                                            <th className="text-[15px]"><button className="py-2.5 px-3 hover:bg-gray-600 rounded-full" onClick={() => hdlDelete(el.sub_id)}><FontAwesomeIcon icon={faTrash} /></button></th>
+                                            <th className="text-[15px]"><button className="py-2.5 px-3 hover:bg-gray-600 rounded-full" onClick={() => hdlDelete(el.sub_id, el.sub_name)}><FontAwesomeIcon icon={faTrash} /></button></th>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -95,7 +119,7 @@ export default function Subjects() {
                                     <p className="absolute bg-white text-base-200 px-2 w-1/4 text-center font-extrabold top-1 left-0 rounded-br-md">{index + 1}</p>
                                     <div className="absolute flex pt-1.5 items-center justify-around bg-white text-base-200 px-2 w-1/4 text-center font-extrabold top-1 right-0 rounded-bl-md">
                                         <button className="text-sm" onClick={() => hdlEdit(el.sub_id)}><FontAwesomeIcon icon={faPenToSquare} /></button>
-                                        <button className="text-sm" onClick={() => hdlDelete(el.sub_id)}><FontAwesomeIcon icon={faTrash} /></button>
+                                        <button className="text-sm" onClick={() => hdlDelete(el.sub_id, el.sub_name)}><FontAwesomeIcon icon={faTrash} /></button>
                                     </div>
                                     <div className={`flex text-white text-[15px] sm:text-[16px] justify-between py-2 px-3 pt-6 my-1 sm:my-1.5 rounded-lg gap-2 shadow-lg border-2 border-white ${index % 2 === 0 ? "bg-[#6096B4]" : "bg-[#FF90BC]"}`}>
                                         <div>

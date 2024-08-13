@@ -2,6 +2,7 @@
 import axiosPath from "../../configs/axios-path";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function AddMajor() {
 
@@ -24,7 +25,10 @@ export default function AddMajor() {
     const hdlSubmit = async (e) => {
         e.preventDefault();
         if (!input.major_name) {
-            return alert('กรอกข้อมูลให้ครบทุกช่อง')
+            return Swal.fire({
+                title: 'กรุณาป้อนข้อมูลให้ครบ',
+                icon: 'warning'
+            })
         }
         try {
             let token = localStorage.getItem('token')
@@ -34,12 +38,20 @@ export default function AddMajor() {
                 }
             })
             if (rs.status === 200) {
-                alert("เพิ่มข้อมูลเสร็จสิ้น")
-                navigate(-1)
+                Swal.fire({
+                    title: "บันทึกข้อมูลเรียบร้อย",
+                    icon: 'success',
+                }).then(() => {
+                    navigate(-1)
+                })
             }
         } catch (err) {
             console.log(err)
-            alert(err.message, "โปรดแจ้งผู้พัฒนา")
+            Swal.fire({
+                text: err.response.data.message,
+                title: 'พบข้อผิดพลาด',
+                icon: 'error',
+            });
         }
     }
 

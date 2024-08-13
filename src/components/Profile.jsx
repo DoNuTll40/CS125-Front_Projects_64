@@ -85,7 +85,7 @@ export default function Profile() {
                         <p><b>ที่อยู่ :</b> {user.user_address}</p>
                         <p><b>วันเกิด :</b> {fBrithDay}</p>
                         <p className=' select-none'><b>รหัสบัตรประชาชน :</b> <input className='bg-transparent pointer-events-none' value={`${user.user_identity}`} readOnly/></p>
-                        <p><b>ชั้นเรียน :</b> {user.class.class_name === "ADMIN" ? "ไม่พบห้อง" : user.class.class_name}</p>
+                        <p><b>{user.user_role === "USER" ? "ชั้นเรียน" : user.user_role === "ADMIN" ? "ตำแหน่ง" : "ประจำชั้น"} :</b> {user.class.class_name === "ADMIN" ? "ผู้ดูแลระบบ" : user.class.class_name}</p>
                     </div>
                     <div className="flex-grow">
                         <img className='rounded-lg border-2 sm:border-4 border-white shadow-lg max-w-[120px] max-h-[120px] sm:max-w-[200px] sm:max-h-[200px] mx-auto pointer-events-none' src={profile} alt="profile" />

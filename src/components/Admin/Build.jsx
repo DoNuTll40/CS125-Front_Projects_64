@@ -5,10 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import e from 'cors';
+import Swal from 'sweetalert2';
 
 export default function Build() {
 
     const [builds, setBuild] = useState([])
+    const [fetchBuild, setFetchBuild] = useState(false)
 
     const navigate = useNavigate();
 
@@ -26,25 +28,41 @@ export default function Build() {
         }
         getBuild();
 
-    }, [])
+    }, [fetchBuild])
 
-    const hdlDelete = async (id) => {
+    const hdlDelete = async (id, build_name) => {
+        Swal.fire({
+            icon: 'warning',
+            title: "ต้องการลบข้อมูลหรือไม่ ?",
+            html: `คุณต้องการลบข้อมูลอาคาร <strong>${build_name}</strong> หรือไม่, เนื่องด้วยการลบจะทำให้ตารางเรียนที่ใช้อาคารนี้อยู่นั้นจะหายไปด้วย โปรดตรวจสอบข้อมูลก่อน`,
+            showCancelButton: true,
+            confirmButtonColor: '#E5252A',
+            confirmButtonText: 'ใช่, ต้องการลบ',
+            cancelButtonText: "ไม่, ยกเลิก",
+         }).then((result) => {
+            if(result.isConfirmed){
         try {
-            if (confirm("คุณต้องการลบข้อมูลหรือไม่")) {
                 let token = localStorage.getItem('token')
-                const rs = await axiosPath.delete(`/admin/builds/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+                const DeleteBuild = async () => {
+                    const rs = await axiosPath.delete(`/admin/builds/${id}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    if (rs.status === 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: "ลบข้อมูลเรียบร้อย",
+                            text: "ระบบได้ลบข้อมูลอาคารเรียนเรียบร้อยแล้ว",
+                        })
+                        setFetchBuild(prev => !prev)
                     }
-                })
-                if (rs.status === 200) {
-                    alert("ลบข้อมูลเรียบร้อยแล้ว")
                 }
-            }
+                DeleteBuild();
         } catch (err) {
             console.log(err)
             alert(err.message)
-        }
+        }}})
     }
 
     const hdlEdit = (id) => {
@@ -79,7 +97,7 @@ export default function Build() {
                                             <td>{builds.build_number}</td>
                                             <td><img className='rounded-lg max-w-[200px] mx-auto pointer-events-none' src={builds.build_image} /></td>
                                             <th className='text-end'><button className='' onClick={ () => hdlEdit(builds.build_id)}><FontAwesomeIcon icon={faPenToSquare} /></button></th>
-                                            <td><button className='' onClick={() => hdlDelete(builds.build_id)}><FontAwesomeIcon icon={faTrash} /></button></td>
+                                            <td><button className='' onClick={() => hdlDelete(builds.build_id, builds.build_name)}><FontAwesomeIcon icon={faTrash} /></button></td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -104,7 +122,7 @@ export default function Build() {
                                         <p>เลขอาคาร {el.build_number}</p>
                                     </div>
                                     <button className='pr-3' onClick={() => hdlEdit(el.build_id)}><FontAwesomeIcon icon={faPenToSquare} /></button>
-                                    <button className='pr-3' onClick={() => hdlDelete(el.build_id)}><FontAwesomeIcon icon={faTrash} /></button>
+                                    <button className='pr-3' onClick={() => hdlDelete(el.build_id, el.build_name)}><FontAwesomeIcon icon={faTrash} /></button>
                                 </div>
                             ))}
                         </div>

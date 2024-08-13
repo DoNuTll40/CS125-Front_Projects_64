@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axiosPath from "../../configs/axios-path";
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function Schedule() {
 
@@ -12,7 +13,7 @@ export default function Schedule() {
     const [input, setInput] = useState({
         class_id: "1",
     });
-    const [ refetch, setRefetch ] = useState(false)
+    const [refetch, setRefetch] = useState(false)
 
     useEffect(() => {
         document.title = "Admin | ตารางเรียนทั้งหมด"
@@ -54,20 +55,29 @@ export default function Schedule() {
         setInput(prv => ({ ...prv, [e.target.name]: e.target.value }))
     };
 
-    const hdlDelete = async (id) => {
-        // alert(id)
-        if (confirm('คุณต้องการลบหรือไม่')) {
-            let token = localStorage.getItem('token');
-            const rs = await axiosPath.delete(`/admin/schedule/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+    const hdlDelete = async (id, sub_name) => {
+        Swal.fire({
+            icon: 'question',
+            title: "ต้องการลบข้อมูลหรือไม่ ?",
+            html: `คุณต้องการลบวิชา <strong>${sub_name}</strong> หรือไม่, โปรดตรวจสอบข้อมูลก่อนลบ`,
+            showCancelButton: true,
+            confirmButtonColor: '#E5252A',
+            confirmButtonText: 'ใช่, ต้องการลบ',
+            cancelButtonText: "ไม่, ยกเลิก",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                let token = localStorage.getItem('token');
+                const rs = await axiosPath.delete(`/admin/schedule/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                if (rs.status === 200) {
+                    alert("ลบข้อมูลเรียบร้อยแล้ว")
+                    setRefetch(prev => !prev)
                 }
-            })
-            if (rs.status === 200) {
-                alert("ลบข้อมูลเรียบร้อยแล้ว")
-                setRefetch(prev => !prev)
             }
-        }
+        })
     }
 
     function sortByDay(a, b) {
@@ -115,7 +125,7 @@ export default function Schedule() {
                                             <td className="text-[15px]">{el.user.user_firstname}</td>
                                             <td className="text-[15px]">{el.subject.room.room_name}</td>
                                             <td className="text-[15px]">{el.subject.room.build.build_name}</td>
-                                            <th className="text-[15px]"><button className="py-2.5 px-3 hover:bg-gray-600 rounded-full" onClick={() => hdlDelete(el.sched_id)}><FontAwesomeIcon icon={faTrash} /></button></th>
+                                            <th className="text-[15px]"><button className="py-2.5 px-3 hover:bg-gray-600 rounded-full" onClick={() => hdlDelete(el.sched_id, el.subject.sub_name)}><FontAwesomeIcon icon={faTrash} /></button></th>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -138,7 +148,7 @@ export default function Schedule() {
                                                     <p className="text-center text-black font-extrabold">{el.sched_time}</p>
                                                 </div>
                                                 <div className="absolute bg-white top-0 right-0 w-[20%] h-6 pt-0.5 rounded-bl-md hover:bg-gray-700 text-black hover:text-white hover:font-extrabold hover:cursor-pointer transition ease-in-out">
-                                                    <button className="ml-[20%] rounded-full" onClick={() => hdlDelete(el.sched_id)}><FontAwesomeIcon icon={faTrash} /> ลบ</button>
+                                                    <button className="ml-[20%] rounded-full" onClick={() => hdlDelete(el.sched_id, el.subject.sub_name)}><FontAwesomeIcon icon={faTrash} /> ลบ</button>
                                                 </div>
                                                 <div className="my-1 text-center">
                                                     <div>

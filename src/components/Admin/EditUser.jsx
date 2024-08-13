@@ -65,11 +65,19 @@ export default function EditUser() {
             })
             // console.log(rs.data)
             if (rs.status === 200) {
-                alert("แก้ไขข้อมูลสำเร็จ")
-                navigate(-1)
+                Swal.fire({
+                    title: "บันทึกข้อมูลเรียบร้อย",
+                    icon: 'success',
+                }).then(() => {
+                    navigate(-1)
+                })
             }
         } catch (err) {
-            alert(err.message)
+            Swal.fire({
+                icon: 'error',
+                title: 'พบข้อผิดพลาด',
+                text: err.response.data.message,
+            })
         }
     }
 
@@ -86,7 +94,10 @@ export default function EditUser() {
         const fileSizeInMB = checkSize / (1024 * 1024);
 
         if (fileSizeInMB > 10) {
-            alert("ขนาดของไฟล์เกิน 10 MB");
+            Swal.fire({
+                title:"ขนาดของไฟล์เกิน 10 MB",
+                icon: 'warning',
+            });
             e.target.value = null;
         }
 
@@ -102,8 +113,12 @@ export default function EditUser() {
         const fileSizeInMB = checkSize / (1024 * 1024);
 
         if (fileSizeInMB > 10) {
-            alert("ขนาดของไฟล์เกิน 10 MB");
-            location.reload();
+            Swal.fire({
+                title:"ขนาดของไฟล์เกิน 10 MB",
+                icon: 'warning',
+            }).then(() => {
+                location.reload();
+            })
         }
         Swal.fire({
             title: "คุณต้องการเปลี่ยนภาพหรือไม่?",
@@ -131,6 +146,11 @@ export default function EditUser() {
                         }
                     } catch (err) {
                         console.log(err)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'พบข้อผิดพลาด',
+                            text: err.response.data.message,
+                        })
                     }
                 }
                 updateProfile();
@@ -204,7 +224,7 @@ export default function EditUser() {
 
             </form>
 
-            <dialog id="my_modal_2" className="modal">
+            <dialog id="my_modal_2" className="modal bg-black/40">
                 <div className="modal-box px-0 py-0 max-w-fit flex justify-center items-center pointer-events-none select-none">
                     <img className="max-w-[450px] max-h-[450px] skeleton shadow-md rounded-lg pointer-events-none select-none" src={getUser.user_image} alt="Profile" />
                 </div>

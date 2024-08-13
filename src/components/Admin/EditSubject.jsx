@@ -1,6 +1,7 @@
 import axiosPath from "../../configs/axios-path";
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from "sweetalert2";
 
 export default function EditSubject() {
   const navigate = useNavigate();
@@ -72,10 +73,13 @@ export default function EditSubject() {
   const hdlSubmit = async (e) => {
     e.preventDefault();
     if (!input.sub_code || !input.sub_name || !input.major_id || !input.room_id) {
-      return alert('กรุณาป้อนข้อมูลให้ครบ');
+      return Swal.fire({
+        title: 'กรุณาป้อนข้อมูลให้ครบ',
+        icon: 'warning'
+      })
     }
     try {
-      
+
       const { sub_id, ...data } = input
 
       const rs = await axiosPath.patch(`/admin/subject/${id}`, data, {
@@ -84,11 +88,19 @@ export default function EditSubject() {
         }
       });
       if (rs.status === 200) {
-        alert("บันทึกข้อมูลเรียบร้อย");
-        navigate(-1)
+        Swal.fire({
+          title: "บันทึกข้อมูลเรียบร้อย",
+          icon: 'success',
+        }).then(() => {
+          navigate(-1)
+        })
       }
     } catch (err) {
-      alert(err.message);
+      Swal.fire({
+        text: err.response.data.message,
+        title: 'พบข้อผิดพลาด',
+        icon: 'error',
+      });
       console.log(err);
     }
   };
@@ -115,11 +127,11 @@ export default function EditSubject() {
       <form className="flex gap-2 mt-2 flex-col md:flex-row">
         <div>
           <p className='font-bold'>ชื่อวิชา</p>
-          <input className={`w-full md:w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white`} name="sub_name" type='text' value={input.sub_name} onChange={hdlChange} placeholder='พิมพ์ชื่อวิชา'/>
+          <input className={`w-full md:w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white`} name="sub_name" type='text' value={input.sub_name} onChange={hdlChange} placeholder='พิมพ์ชื่อวิชา' />
         </div>
         <div>
           <p className='font-bold'>รหัสวิชา</p>
-          <input className={`w-full md:w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white`} type="text" name="sub_code" onChange={hdlChange} value={input.sub_code} placeholder='พิมพ์รหัสวิชา'/>
+          <input className={`w-full md:w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white`} type="text" name="sub_code" onChange={hdlChange} value={input.sub_code} placeholder='พิมพ์รหัสวิชา' />
         </div>
         <div>
           <p className='font-bold'>ห้องเรียน</p>
@@ -135,9 +147,9 @@ export default function EditSubject() {
           {/* <Select className={`w-full md:w-[215px] hover:font-bold focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:text-white text-ellipsis`} name="major_id" onChange={handleMajorChange} options={selectMajor} value={selectMajor.find(option => option.value === input.major_id)}/> */}
           <select className={`w-full md:w-[215px] px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white text-ellipsis`} name="major_id" value={input.major_id} onChange={hdlChange}>
             <option hidden>เลือกกลุ่มวิชา</option>
-              {getMajor.map( (el, number) => (
-                <option key={number} value={el.major_id}>{el.major_name}</option>
-              ))}
+            {getMajor.map((el, number) => (
+              <option key={number} value={el.major_id}>{el.major_name}</option>
+            ))}
           </select>
         </div>
       </form>

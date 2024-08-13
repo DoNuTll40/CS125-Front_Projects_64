@@ -26,9 +26,12 @@ function AddBanner() {
         const fileSizeInMB = checkSize / (1024 * 1024);
 
         if (fileSizeInMB > 10) {
-            alert("ขนาดของไฟล์เกิน 10 MB");
-            setSelectedFile(null)
+            setSelectedFile(undefined)
             e.target.value = null;
+            Swal.fire({
+                title:"ขนาดของไฟล์เกิน 10 MB",
+                icon: 'warning',
+            });
         }
     };
 
@@ -39,17 +42,11 @@ function AddBanner() {
     const empty = (!input.b_enddate || input.b_header === "หัวข้อเรื่อง" || input.b_title === "เนื้อหาคราวๆ" || !inputRef.current.value || !input.b_enddate)
 
     const hdlUploadBanner = async () => {
-
-
         setLoading(true)
-
         let token = localStorage.getItem('token');
-
         const { b_enddate, ...data} = input
-
         const file = inputRef.current?.files[0];
         const formData = new FormData();
-
         Object.entries(data).forEach(([key, value]) => {
             formData.append(key, value);
         });
@@ -79,8 +76,15 @@ function AddBanner() {
             }
         }catch(err){
             console.log(err)
+            Swal.fire({
+                icon: 'error',
+                title: 'พบข้อผิดพลาด',
+                text: err.response.data.message,
+            })
         }
     }
+
+    const toDay = new Date().toISOString().split('T')[0]
 
   return (
     <div className="max-w-[80rem] mx-auto select-none text-black">
@@ -111,7 +115,7 @@ function AddBanner() {
                     </div>
                     <div className="w-full">
                         <p>วันหมดอายุ</p>
-                        <input className="w-full py-2 rounded-lg px-2 shadow-inner border" name="b_enddate" type="date" value={input.b_enddate} onChange={hdlChange} />
+                        <input className="w-full py-2 rounded-lg px-2 shadow-inner border" name="b_enddate" type="date" min={toDay} value={input.b_enddate} onChange={hdlChange} />
                     </div>
                     <div className="w-full mt-4">
                         <button className="w-full bg-[#FF90BC] text-white font-semibold py-2 rounded-lg disabled:opacity-80 disabled:cursor-not-allowed" onClick={ () => hdlUploadBanner()} disabled={empty}>{!loading ? "บันทึกข้อมูล" : (<div className="flex gap-2 justify-center"><span className="loading loading-spinner loading-md"></span>กำลังอัพโหลด</div>) }</button>

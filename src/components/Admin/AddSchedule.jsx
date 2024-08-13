@@ -1,15 +1,16 @@
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axiosPath from "../../configs/axios-path";
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Swal from "sweetalert2";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function AddSchedule() {
 
   const navigate = useNavigate();
   const [getClass, setGetClass] = useState([]);
   const [getSubject, setGetSubject] = useState([]);
-  const [getById, setGetById] = useState([]);
   const [getScheduleByClick, setGetScheduleByClick] = useState([])
   const [users, setUsers] = useState([]);
   const [input, setInput] = useState({
@@ -97,11 +98,42 @@ export default function AddSchedule() {
   };
 
   const hdlSubmit = async (e) => {
+    console.log(getScheduleByClick.find( (el) => el.sched_time == (parseInt(input.sched_time.slice(0, 2)) + 1)))
     e.preventDefault();
     if (!input.class_id || !input.sched_day || !input.sched_time || !input.sched_count || !input.sub_id || !input.user_id) {
-      return alert('กรุณาป้อนข้อมูลให้ครบ')
+      return Swal.fire({
+        icon: 'warning',
+        titleText: "ข้อมูลไม่ครบ",
+        text: "โปรดตรวจสอบข้อมูลและป้อนข้อมูลให้ครบ",
+      })
     } else if (input.sched_count < 1 || input.sched_count > 2) {
-      return alert('คาบเรียนต้องอยู่ในช่วง 1 ถึง 2 คาบเท่านั้น')
+      return Swal.fire({
+        icon: 'warning',
+        titleText: "ข้อมูลผิดพลาด",
+        text: "คาบเรียนต้องอยู่ในช่วง 1 ถึง 2 คาบเท่านั้น",
+      })
+    } else if ((input.sched_time == "11:30-12:30" || input.sched_time == "15:30-16:30") && input.sched_count == 2){
+      return Swal.fire({
+        icon: 'warning',
+        titleText: "ข้อมูลผิดพลาด",
+        text: `ช่วงเวลา ${input.sched_time} ไม่สามารถเป็นจำนวน สองคาบ ได้`,
+      })
+    } 
+    
+    const nextSchedTime = (() => {
+      const startHour = parseInt(input.sched_time.slice(0, 2), 10);
+      const nextStartHour = startHour + 1;
+      const nextEndHour = nextStartHour + 1;
+      return `${String(nextStartHour).padStart(2, '0')}:30-${String(nextEndHour).padStart(2, '0')}:30`;
+    })();
+
+    console.log(nextSchedTime)
+    if (getScheduleByClick.find(el => el.sched_time === nextSchedTime) && input.sched_count == 2) {
+      return Swal.fire({
+        icon: 'warning',
+        titleText: "ข้อมูลผิดพลาด",
+        text: `ช่วงเวลา ${nextSchedTime} มีการจัดสอนไปแล้ว เพราะเหตุนี้ช่วงเวลา ${input.sched_time} จึงไม่สามารถเป็นสองคาบได้`,
+      });
     }
     try {
       let token = localStorage.getItem('token');
@@ -111,15 +143,28 @@ export default function AddSchedule() {
         }
       });
       if (rs.status === 200) {
-        alert("บันทึกข้อมูลเรียบร้อย");
-        // hdlReset();
+        Swal.fire({
+          icon: 'success',
+          titleText: "บันทึกข้อมูลเรียบร้อย",
+          text: "ระบบได้บันทึกข้อมูลเป็นที่เรียบร้อยแล้ว",
+        })
         setRefetch(prev => !prev)
+        setInput((prev) => ({
+          ...prev,
+          sched_time: "",
+          sched_count: "",
+          sub_id: "",
+          user_id: "",
+        }))
+        document.querySelector('select[name="sub_id"]').selectedIndex = 0;
+        document.querySelector('select[name="sched_time"]').selectedIndex = 0;
+        document.querySelector('select[name="user_id"]').selectedIndex = 0;
       }
     } catch (err) {
       Swal.fire({
         icon: "warning",
         titleText: "ระบบตรวจพบข้อมูลซ้ำกัน",
-        text: err.response.data.message
+        text: err.response?.data?.message
       })
       console.log(err);
     }
@@ -142,7 +187,20 @@ export default function AddSchedule() {
     setGetScheduleByClick([])
   }
 
-  console.log(getScheduleByClick)
+  const hdlDelete = async (id) => {
+    if (confirm('คุณต้องการลบหรือไม่')) {
+        let token = localStorage.getItem('token');
+        const rs = await axiosPath.delete(`/admin/schedule/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (rs.status === 200) {
+            alert("ลบข้อมูลเรียบร้อยแล้ว")
+            setRefetch(prev => !prev)
+        }
+    }
+}
 
   function sortByDay(a, b) {
     const daysOrder = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์'];
@@ -151,6 +209,30 @@ export default function AddSchedule() {
 
   const sortedSchedules = getScheduleByClick.sort(sortByDay);
 
+  const timeOfSchedule = [
+    { value:"08:30-09:30", title:"08:30-09:30", disabled: false },
+    { value:"09:30-10:30", title:"09:30-10:30", disabled: false },
+    { value:"10:30-11:30", title:"10:30-11:30", disabled: false },
+    { value:"11:30-12:30", title:"11:30-12:30", disabled: false },
+    { value:"13:30-14:30", title:"13:30-14:30", disabled: false },
+    { value:"14:30-15:30", title:"14:30-15:30", disabled: false },
+    { value:"15:30-16:30", title:"15:30-16:30", disabled: false },
+  ]
+
+  sortedSchedules.forEach(schedule => {
+    const index = timeOfSchedule.findIndex(time => time.value === schedule.sched_time);
+    if (index !== -1) {
+      if (schedule.sched_count === 1) {
+        timeOfSchedule[index].disabled = true;
+      } else if (schedule.sched_count === 2) {
+        timeOfSchedule[index].disabled = true;
+        if (index + 1 < timeOfSchedule.length) {
+          timeOfSchedule[index + 1].disabled = true;
+        }
+      }
+    }
+  });
+  
   return (
     <div data-theme="light" className="max-w-[53rem] md:min-h-[23rem] text-black mx-auto mt-5 pt-5 pb-2 select-none rounded-2xl px-5 bg-white shadow-lg">
       <p className="text-xl text-center font-extrabold">เพิ่มตารางเรียน</p>
@@ -179,13 +261,9 @@ export default function AddSchedule() {
           <p className='font-bold'>เวลา</p>
           <select className={`w-full text-ellipsis appearance-none md:max-w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white ${input.sched_time !== "" ? "border-[#FF609C]" : ""}`} name="sched_time" onChange={hdlChange}>
             <option hidden>เลือกเวลา</option>
-            <option value="08:30-09:30">08:30-09:30</option>
-            <option value="09:30-10:30">09:30-10:30</option>
-            <option value="10:30-11:30">10:30-11:30</option>
-            <option value="11:30-12:30">11:30-12:30</option>
-            <option value="13:30-14:30">13:30-14:30</option>
-            <option value="14:30-15:30">14:30-15:30</option>
-            <option value="15:30-16:30">15:30-16:30</option>
+            {timeOfSchedule.map( el => (
+                <option value={el.value} disabled={el.disabled} >{el.title}</option>
+            ))}
           </select>
         </div>
         <div>
@@ -232,6 +310,7 @@ export default function AddSchedule() {
                       <th>จำนวนคาบ</th>
                       <th>ชื่อวิชา</th>
                       <th>ชื่ออาจารย์</th>
+                      <th>ตัวเลือก</th>
                     </tr>
                   </thead>
                   <tbody className='text-center'>
@@ -242,7 +321,8 @@ export default function AddSchedule() {
                         <td className="text-[15px]">{el.sched_time}</td>
                         <td className="text-[15px]">{el.sched_count}</td>
                         <td className="text-[15px]">{el.subject.sub_name}</td>
-                        <td className="text-[15px]">{el.user.user_firstname} {el.user.user_lastname}</td>
+                        <td className="text-[15px]">{el.user.user_nameprefix}{el.user.user_firstname} {el.user.user_lastname}</td>
+                        <th className="text-[15px]"><button className="rounded-full" onClick={() => hdlDelete(el.sched_id)}><FontAwesomeIcon icon={faTrash} /></button></th>
                       </tr>
                     ))}
                   </tbody>

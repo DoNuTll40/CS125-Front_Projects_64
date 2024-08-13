@@ -3,6 +3,7 @@ import axiosPath from "../../configs/axios-path";
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Select from 'react-select'
+import Swal from "sweetalert2";
 
 export default function AddSubject() {
 
@@ -59,7 +60,10 @@ export default function AddSubject() {
   const hdlSubmit = async (e) => {
     e.preventDefault();
     if (!input.sub_code || !input.sub_name || !input.major_id || !input.room_id) {
-      return alert('กรุณาป้อนข้อมูลให้ครบ')
+      return Swal.fire({
+        title: 'กรุณาป้อนข้อมูลให้ครบ',
+        icon: 'warning'
+      })
     }
     try {
       let token = localStorage.getItem('token');
@@ -69,10 +73,17 @@ export default function AddSubject() {
         }
       });
       if (rs.status === 200) {
-        alert("บันทึกข้อมูลเรียบร้อย");
+        Swal.fire({
+          title: "บันทึกข้อมูลเรียบร้อย",
+          icon: 'success',
+        });
       }
     } catch (err) {
-      alert(err.message);
+      Swal.fire({
+        text: err.response.data.message,
+        title: 'พบข้อผิดพลาด',
+        icon: 'error',
+      });
       console.log(err);
     }
   };

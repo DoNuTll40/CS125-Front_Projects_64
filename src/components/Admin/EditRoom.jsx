@@ -2,6 +2,7 @@
 import axiosPath from "../../configs/axios-path";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function EditRoom() {
 
@@ -62,7 +63,10 @@ export default function EditRoom() {
     const hdlSubmit = async (e) => {
         e.preventDefault();
         if (!input.room_name || !input.room_number || !input.build_id) {
-            return alert('กรอกข้อมูลให้ครบทุกช่อง')
+            return Swal.fire({
+                title: 'กรอกข้อมูลให้ครบทุกช่อง',
+                icon: 'warning',
+            })
         }
         try {
 
@@ -74,12 +78,20 @@ export default function EditRoom() {
                 }
             })
             if (rs.status === 200) {
-                alert("แก้ไขข้อมูลเสร็จสิ้น")
-                navigate(-1)
+                Swal.fire({
+                    title: "แก้ไขข้อมูลเสร็จสิ้น",
+                    icon: 'success',
+                }).then(() => {
+                    navigate(-1)
+                })
             }
         } catch (err) {
             console.log(err)
-            alert(err.response.data.message)
+            Swal.fire({
+                text: err.response.data.message,
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+            })
         }
     }
 

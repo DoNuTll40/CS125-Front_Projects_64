@@ -51,7 +51,6 @@ export default function TableStudent() {
       document.getElementById('my_modal_3').showModal()
     }
     getTable();
-    console.log(cView)
   }
 
   document.addEventListener('contextmenu', e => e.preventDefault());
@@ -104,7 +103,7 @@ export default function TableStudent() {
               const shouldRemoveBreak5 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "จันทร์" && el.sched_time === "14:30-15:30" && el.sched_count === 2);
               if (shouldRemoveBreak1 || shouldRemoveBreak2 || shouldRemoveBreak3 || shouldRemoveBreak4 || shouldRemoveBreak5) return null;
               return (
-                <td key={index} className='rounded-lg border-2 border-black dark:border-[#FF90BC] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
+                <td key={index} className='rounded-lg border-2 border-black dark:border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
                   {scheduleItem && (
                     <>
                       {scheduleItem.subject.sub_code} <br />
@@ -127,7 +126,7 @@ export default function TableStudent() {
               const shouldRemoveBreak5 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "อังคาร" && el.sched_time === "14:30-15:30" && el.sched_count === 2);
               if (shouldRemoveBreak1 || shouldRemoveBreak2 || shouldRemoveBreak3 || shouldRemoveBreak4 || shouldRemoveBreak5) return null;
               return (
-                <td key={index} className='rounded-lg border-2 border-black dark:border-[#FF90BC] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
+                <td key={index} className='rounded-lg border-2 border-black dark:border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
                   {scheduleItem && (
                     <>
                       {scheduleItem.subject.sub_code} <br />
@@ -150,7 +149,7 @@ export default function TableStudent() {
               const shouldRemoveBreak5 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "พุธ" && el.sched_time === "14:30-15:30" && el.sched_count === 2);
               if (shouldRemoveBreak1 || shouldRemoveBreak2 || shouldRemoveBreak3 || shouldRemoveBreak4 || shouldRemoveBreak5) return null;
               return (
-                <td key={index} className='rounded-lg border-2 border-black dark:border-[#FF90BC] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
+                <td key={index} className='rounded-lg border-2 border-black dark:border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
                   {scheduleItem && (
                     <>
                       {scheduleItem.subject.sub_code} <br />
@@ -163,7 +162,7 @@ export default function TableStudent() {
             })}
           </tr>
           <tr className='h-20'>
-            <td className='rounded-lg border-2 border-black dark:bg-[#6096B4] dark:border-0 text-xl'>พฤหัสบดี</td>
+            <td className='rounded-lg border-2 border-black dark:bg-[#FF90BC] dark:border-0 text-xl'>พฤหัสบดี</td>
             {["08:30-09:30", "09:30-10:30", "10:30-11:30", "11:30-12:30", "พัก", "13:30-14:30", "14:30-15:30", "15:30-16:30"].map((time, index) => {
               const scheduleItem = schedule.find(el => el.sched_day === "พฤหัสบดี" && el.sched_time === time);
               const shouldRemoveBreak1 = time === "พัก" && schedule.some(el => el.sched_day === "พฤหัสบดี" && el.sched_time === "08:30-09:30" && el.sched_count === 2);
@@ -186,7 +185,7 @@ export default function TableStudent() {
             })}
           </tr>
           <tr className='h-20'>
-            <td className='rounded-lg border-2 border-black dark:bg-[#6096B4] dark:border-0 text-xl'>ศุกร์</td>
+            <td className='rounded-lg border-2 border-black dark:bg-[#FF90BC] dark:border-0 text-xl'>ศุกร์</td>
             {["08:30-09:30", "09:30-10:30", "10:30-11:30", "11:30-12:30", "พัก", "13:30-14:30", "14:30-15:30", "15:30-16:30"].map((time, index) => {
               const scheduleItem = schedule.find(el => el.sched_day === "ศุกร์" && el.sched_time === time);
               const shouldRemoveBreak1 = time === "พัก" && schedule.some(el => el.sched_day === "ศุกร์" && el.sched_time === "08:30-09:30" && el.sched_count === 2);

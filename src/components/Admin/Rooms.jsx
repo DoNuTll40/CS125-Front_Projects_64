@@ -4,11 +4,13 @@ import axiosPath from "../../configs/axios-path";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 export default function Rooms() {
 
     const [builds, setBuild] = useState([])
     const [rooms, setRooms] = useState([])
+    const [fetchTable, setFetchTable] = useState(false)
 
     const navigate = useNavigate();
 
@@ -40,10 +42,19 @@ export default function Rooms() {
         getBuild();
         getRoom();
 
-    }, [])
+    }, [fetchTable])
 
-    const hdlDelete = async (id) => {
-        if (confirm("คุณต้องการลบข้อมูลใช่หรือไม่")) {
+    const hdlDelete = async (id, room_name) => {
+        Swal.fire({
+            icon: 'question',
+            title: "ต้องการลบข้อมูลหรือไม่ ?",
+            text: `คุณต้องการลบข้อมูลชื่อห้อง ${room_name} นี้ใช่ หรือไม่`,
+            showCancelButton: true,
+            confirmButtonColor: '#E5252A',
+            confirmButtonText: 'ใช่, ต้องการลบ',
+            cancelButtonText: "ไม่, ยกเลิก",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
             try {
                 let token = localStorage.getItem('token')
                 const rs = await axiosPath.delete(`/admin/rooms/${id}`, {
@@ -51,11 +62,22 @@ export default function Rooms() {
                         Authorization: `Bearer ${token}`
                     }
                 })
+                if(rs.status === 200){
+                    setFetchTable(prev => !prev)
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ลบข้อมูลสำเร็จ', 
+                    })
+                }
             } catch (err) {
                 console.log(err)
-                alert(err.message, "โปรดแจ้งผู้พัฒนา")
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ตรวจพบข้อผิดพลาด',
+                    text: err.response.data.message,
+                })
             }
-        }
+        }})
     }
 
     const hdlEdit = async (id) => {
@@ -89,7 +111,7 @@ export default function Rooms() {
                                             <td>{room.room_number}</td>
                                             <td>{room.build.build_name}</td>
                                             <th className='text-end'><button className='' onClick={() => hdlEdit(room.room_id)}><FontAwesomeIcon icon={faPenToSquare} /></button></th>
-                                            <td><button className='' onClick={() => hdlDelete(room.room_id)}><FontAwesomeIcon icon={faTrash} /></button></td>
+                                            <td><button className='' onClick={() => hdlDelete(room.room_id, room.room_name)}><FontAwesomeIcon icon={faTrash} /></button></td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -109,7 +131,7 @@ export default function Rooms() {
                                     <p className='absolute bg-white w-10 rounded-br-lg rounded-tl-md text-end px-2 -top-[0.1rem] -left-[0.1rem] text-black font-extrabold text-sm'>{index + 1}</p>
                                     <div className="absolute flex items-center justify-around bg-white text-base-200 px-2 w-1/5 text-center font-extrabold -top-[0.1rem] right-0 rounded-bl-md">
                                         <button className="text-sm" onClick={() => hdlEdit(el.room_id)}><FontAwesomeIcon icon={faPenToSquare} /></button>
-                                        <button className="text-sm" onClick={() => hdlDelete(el.room_id)}><FontAwesomeIcon icon={faTrash} /></button>
+                                        <button className="text-sm" onClick={() => hdlDelete(el.room_id, el.room_name)}><FontAwesomeIcon icon={faTrash} /></button>
                                     </div>
                                     <div className='flex px-5 w-full justify-between mt-5 text-white font-bold'>
                                         <div className='flex justify-between w-full sm:hidden'>

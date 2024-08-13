@@ -58,35 +58,44 @@ function Banner() {
 
     const nowDate = new Date();
 
-    const hdlDeleteBanner = async (id) => {
-        try {
-
-            let token = localStorage.getItem('token')
-
-            const rs = await axiosPath.delete(`/admin/banner/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-
-            if (rs.status === 200) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Delete banner success!',
-                    text: `Banner ID ${id}`,
-                    preConfirm: () => {
-                        fetchBannerApi();
+    const hdlDeleteBanner = async (id, header) => {
+        Swal.fire({
+            icon: 'question',
+            title: "ต้องการลบข้อมูลหรือไม่ ?",
+            html: `คุณต้องการลบแบนเนอร์หัวข้อเรื่อง <strong>${header}</strong> หรือไม่, โปรดตรวจสอบข้อมูลก่อนทำการลบ`,
+            showCancelButton: true,
+            confirmButtonColor: '#E5252A',
+            confirmButtonText: 'ใช่, ต้องการลบ',
+            cancelButtonText: "ไม่, ยกเลิก",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    let token = localStorage.getItem('token')
+                    const rs = await axiosPath.delete(`/admin/banner/${id}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    if (rs.status === 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Delete banner success!',
+                            text: `Banner ID ${id}`,
+                            preConfirm: () => {
+                                fetchBannerApi();
+                            }
+                        })
                     }
-                })
+                } catch (err) {
+                    console.log(err)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Delete banner fail!',
+                        text: err.response.data.message
+                    })
+                }
             }
-        } catch (err) {
-            console.log(err)
-            Swal.fire({
-                icon: 'error',
-                title: 'Delete banner fail!',
-                text: err.response.data.message
-            })
-        }
+        })
     }
 
     const hdlEdit = (id) => {
@@ -141,7 +150,7 @@ function Banner() {
                                         </div>
                                         <div className="grid grid-cols-2 w-full gap-2 text-white">
                                             <button className="border border-yellow-500 py-1 text-yellow-500 rounded-md shadow-md transition ease-in-out duration-150 scale-100 active:scale-95 hover:font-semibold hover:text-white hover:bg-yellow-500" onClick={() => hdlEdit(el.b_id)}>แก้ไข</button>
-                                            <button className="border border-red-600 py-1 text-red-600 rounded-md shadow-md transition ease-in-out duration-150 scale-100 active:scale-95 hover:font-semibold hover:text-white hover:bg-red-600" onClick={() => hdlDeleteBanner(el.b_id)}>ลบ</button>
+                                            <button className="border border-red-600 py-1 text-red-600 rounded-md shadow-md transition ease-in-out duration-150 scale-100 active:scale-95 hover:font-semibold hover:text-white hover:bg-red-600" onClick={() => hdlDeleteBanner(el.b_id, el.b_header)}>ลบ</button>
                                         </div>
                                     </div>
                                 </div>
@@ -192,7 +201,7 @@ function Banner() {
                                     </div>
                                     <div className="flex gap-4 px-2 my-4">
                                         <button className="border w-1/2 border-yellow-500 py-1 text-yellow-500 rounded-md shadow-md transition ease-in-out duration-150 scale-100 active:scale-95 hover:font-semibold hover:text-white hover:bg-yellow-500" onClick={() => hdlEdit(el.b_id)}>แก้ไข</button>
-                                        <button className="border w-1/2 border-red-600 py-1 text-red-600 rounded-md shadow-md transition ease-in-out duration-150 scale-100 active:scale-95 hover:font-semibold hover:text-white hover:bg-red-600" onClick={() => hdlDeleteBanner(el.b_id)}>ลบ</button>
+                                        <button className="border w-1/2 border-red-600 py-1 text-red-600 rounded-md shadow-md transition ease-in-out duration-150 scale-100 active:scale-95 hover:font-semibold hover:text-white hover:bg-red-600" onClick={() => hdlDeleteBanner(el.b_id, el.b_header)}>ลบ</button>
                                     </div>
                                 </div>
                                 <hr className="block sm:hidden" />

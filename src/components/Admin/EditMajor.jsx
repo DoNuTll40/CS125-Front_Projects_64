@@ -3,6 +3,7 @@ import axiosPath from "../../configs/axios-path";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../configs/axios-path";
+import Swal from "sweetalert2";
 
 export default function EditMajor() {
 
@@ -34,12 +35,12 @@ export default function EditMajor() {
 
             setInput(rs.data.major)
 
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
     }
 
-    useEffect( () => {
+    useEffect(() => {
 
         document.title = `แก้ไขข้อมูลกลุ่มวิชา| ${id}`
 
@@ -53,7 +54,10 @@ export default function EditMajor() {
     const hdlSubmit = async (e) => {
         e.preventDefault();
         if (!input.major_name) {
-            return alert('กรอกข้อมูลให้ครบทุกช่อง')
+            return Swal.fire({
+                title: 'กรุณาป้อนข้อมูลให้ครบ',
+                icon: 'warning'
+            })
         }
 
         const { major_id, ...data } = input
@@ -66,12 +70,20 @@ export default function EditMajor() {
                 }
             })
             if (rs.status === 200) {
-                alert("แก้ไขข้อมูลเสร็จสิ้น")
-                navigate(-1)
+                Swal.fire({
+                    title: "บันทึกข้อมูลเรียบร้อย",
+                    icon: 'success',
+                }).then(() => {
+                    navigate(-1)
+                })
             }
         } catch (err) {
             console.log(err)
-            alert(err.message, "โปรดแจ้งผู้พัฒนา")
+            Swal.fire({
+                text: err.response.data.message,
+                title: 'พบข้อผิดพลาด',
+                icon: 'error',
+            });
         }
     }
 

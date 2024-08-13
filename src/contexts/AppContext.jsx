@@ -13,8 +13,6 @@ function AuthContextProvider(props) {
     const [fullSchedule, setFullSchedule] = useState([])
     const [refetchBanner, setRefetchBanner] = useState(false)
 
-    console.log(refetchBanner)
-
     useEffect(() => {
 
         const run = async () => {

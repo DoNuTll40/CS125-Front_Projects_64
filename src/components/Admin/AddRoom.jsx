@@ -2,6 +2,7 @@
 import axiosPath from "../../configs/axios-path";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function AddRoom() {
 
@@ -52,11 +53,19 @@ export default function AddRoom() {
                 }
             })
             if (rs.status === 200) {
-                alert("เพิ่มข้อมูลเสร็จสิ้น")
+                Swal.fire({
+                    title: "เพิ่มข้อมูลเสร็จสิ้น",
+                    icon: 'success',
+                })
+                hdlReset();
             }
         } catch (err) {
             console.log(err)
-            alert(err.message, "โปรดแจ้งผู้พัฒนา")
+            Swal.fire({
+                icon: 'error',
+                title: 'ตรวจพบข้อผิดพลาด',
+                text: err.response.data.message,
+            })
         }
     }
 

@@ -108,6 +108,8 @@ function EditBanner() {
 
     const formatEndDate = input.b_enddate ? new Date(input.b_enddate).toISOString().substr(0, 10) : '';
 
+    const toDay = new Date().toISOString().split('T')[0]
+
   return (
     <div className="max-w-[80rem] mx-auto select-none text-black">
             <div className="bg-white grid grid-cols-1 md:grid-cols-2 gap-2 px-4 py-3 lg:p-5 rounded-2xl max-w-[53rem] mt-5 mx-auto ">
@@ -137,7 +139,7 @@ function EditBanner() {
                     </div>
                     <div className="w-full">
                         <p>วันหมดอายุ</p>
-                        <input className="w-full py-2 rounded-lg px-2 shadow-inner border" name="b_enddate" type="date" value={formatEndDate} onChange={hdlChange} />
+                        <input className="w-full py-2 rounded-lg px-2 shadow-inner border" name="b_enddate" type="date" min={toDay} value={formatEndDate} onChange={hdlChange} />
                     </div>
                     <div className="w-full mt-4">
                         <button className="w-full bg-[#FF90BC] text-white font-semibold py-2 rounded-lg disabled:opacity-80 disabled:cursor-not-allowed" onClick={ () => hdlUploadBanner()} disabled={empty}>{!loading ? "บันทึกข้อมูล" : (<div className="flex gap-2 justify-center"><span className="loading loading-spinner loading-md"></span>กำลังอัพโหลด</div>) }</button>

@@ -2,6 +2,7 @@
 import axiosPath from "../../configs/axios-path";
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function EditBuild() {
 
@@ -50,7 +51,10 @@ function EditBuild() {
             const file = fileInput.current.files[0];
 
             if (!input.build_name || !input.build_number) {
-                return alert("กรุณาป้อนข้อมูลให้ครบ")
+                return Swal.fire({
+                    title: 'กรุณาป้อนข้อมูลให้ครบ',
+                    icon: 'warning'
+                })
             }
 
             const formData = new FormData();
@@ -70,14 +74,21 @@ function EditBuild() {
                     Authorization: `Bearer ${token}`
                 }
             })
-            console.log(rs.data)
             if (rs.status === 200) {
-                alert("แก้ไขข้อมูลเรียบร้อย")
-                navigate(-1)
+                Swal.fire({
+                    title: "บันทึกข้อมูลเรียบร้อย",
+                    icon: 'success',
+                }).then(() => {
+                    navigate(-1)
+                })
             }
         } catch (err) {
             console.log(err);
-            alert(err.message);
+            Swal.fire({
+                text: err.response.data.message,
+                title: 'พบข้อผิดพลาด',
+                icon: 'error',
+            });
         }
     }
 

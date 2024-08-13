@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import InputMask from 'react-input-mask'
 import Swal from 'sweetalert2';
 import { icon } from '@fortawesome/fontawesome-svg-core';
+import useAuth from '../../hooks/UseAuth';
 
 export default function AllUsers() {
 
@@ -19,6 +20,7 @@ export default function AllUsers() {
     const [search, setSearch] = useState({ search: '' })
     const [page, setPage] = useState(1)
     const [totalPage, setTotalPage] = useState("")
+    const { setRefetchBanner } = useAuth(); 
 
     const [input, setInput] = useState({
         user_username: "",
@@ -118,17 +120,35 @@ export default function AllUsers() {
         const checkIdent = input.user_identity.replace(/_/g, '')
 
         if (checkIdent.length !== 17) {
-            return alert("โปรดป้อนเลขบัตรประชาชนให้ครบ");
+            document.getElementById('my_modal_3').close()
+            return Swal.fire({
+                title: 'โปรดป้อนเลขบัตรประชาชนให้ครบ',
+                icon: 'warning'
+            }).then(() => {
+                document.getElementById('my_modal_3').showModal()
+            })
         }
 
         if (checkPhone.length !== 12) {
-            return alert("โปรดป้อนหมายเลขโทรศัพท์ให้ครบ");
+            document.getElementById('my_modal_3').close()
+            return Swal.fire({
+                title: 'โปรดป้อนหมายเลขโทรศัพท์ให้ครบ',
+                icon: 'warning'
+            }).then(() => {
+                document.getElementById('my_modal_3').showModal()
+            })
         }
 
         const { select, user_birthday, ...data } = input;
 
         if (Object.values(data).some(value => value !== "user_image" && data[value] === "")) {
-            alert("Please enter input");
+            document.getElementById('my_modal_3').close()
+            return Swal.fire({
+                title: 'กรุณาป้อนข้อมูลให้ครบ',
+                icon: 'warning'
+            }).then(() => {
+                document.getElementById('my_modal_3').showModal()
+            })
         } else {
             try {
                 const file = fileInput.current?.files[0];
@@ -149,14 +169,27 @@ export default function AllUsers() {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 if (rs.status === 200) {
-                    alert("Create user success")
                     hdlCloseModal()
                     setRefreshTable(prevState => !prevState);
+                    setRefetchBanner(prev => !prev)
+                    Swal.fire({
+                        icon: 'success',
+                        title: "เพิ่มข้อมูลสำเร็จ",
+                        text: "ระบบได้เพิ่มข้อมูลเรียบร้อยแล้ว",
+                    })
                 }
-                console.log(rs)
             } catch (err) {
-                alert(err.message)
-                console.log(err)
+                document.getElementById('my_modal_3').close()
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ตรวจพบข้อผิดพลาด',
+                    text: err.response.data.message,
+                }).then((result) => {
+                    if(result.isConfirmed){
+                        document.getElementById('my_modal_3').showModal()
+                    }
+                })
+                // console.log(err)
             }
         }
     }
@@ -168,7 +201,13 @@ export default function AllUsers() {
         const fileSizeInMB = checkSize / (1024 * 1024);
 
         if (fileSizeInMB > 10) {
-            alert("ขนาดของไฟล์เกิน 10 MB");
+            document.getElementById('my_modal_3').close()
+            Swal.fire({
+                title:"ขนาดของไฟล์เกิน 10 MB",
+                icon: 'warning',
+            }).then(() => {
+                document.getElementById('my_modal_3').showModal()
+            })
             setSelectedFile(null)
             e.target.value = null;
         }
@@ -219,27 +258,41 @@ export default function AllUsers() {
         navigate(`/admin/users/edit/${id}`)
     }
 
-    const hdlDelete = (id) => {
-        if (confirm("คุณต้องการลบผู้ใช้งานหรือไม่") === true) {
-            try {
-                const deleteUser = async () => {
-                    let token = localStorage.getItem('token')
-                    const rs = await axiosPath.delete(`/admin/users/${id}`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`
+    const hdlDelete = (id, namePrefix, firstName, lastName) => {
+        Swal.fire({
+            icon: 'warning',
+            title: "ต้องการลบข้อมูลหรือไม่ ?",
+            text: `คุณต้องการลบข้อมูลผู้ใช้ ${namePrefix}${firstName} ${lastName}`,
+            showCancelButton: true,
+            confirmButtonColor: '#E5252A',
+            confirmButtonText: 'ใช่, ต้องการลบ',
+            cancelButtonText: "ไม่, ยกเลิก",
+         }).then((result) => {
+            if(result.isConfirmed){
+                try {
+                    const deleteUser = async () => {
+                        let token = localStorage.getItem('token')
+                        const rs = await axiosPath.delete(`/admin/users/${id}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        })
+                        if (rs.status === 200) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: "ลบผู้ใช้งานสำเร็จ",
+                                text: "ระบบได้ลบข้อมูลผู้ใช้งานเรียบร้อยแล้ว",
+                            })
+                            setRefreshTable(prevState => !prevState);
+                            setRefetchBanner(prev => !prev)
                         }
-                    })
-                    console.log(rs)
-                    if (rs.status === 200) {
-                        alert("ลบสำเร็จแล้ว")
-                        setRefreshTable(prevState => !prevState);
                     }
+                    deleteUser();
+                } catch (err) {
+                    alert(err)
                 }
-                deleteUser();
-            } catch (err) {
-                alert(err)
             }
-        }
+        });
     }
 
     const handlePrevious = () => {
@@ -292,7 +345,7 @@ export default function AllUsers() {
                                 <table className="min-w-full text-black border-collapse">
                                     <thead className="border-b">
                                         <tr className="text-md text-black">
-                                            <th className="text-center font-semibold py-3">ลำดับ</th>
+                                            <th className="text-center font-semibold py-3">ไอดี</th>
                                             <th className="text-center font-semibold py-3">คำนำหน้า</th>
                                             <th className="text-center font-semibold py-3">ชื่อ - นามสกุล</th>
                                             <th className="text-center font-semibold py-3">ชื่อเล่น</th>
@@ -328,7 +381,7 @@ export default function AllUsers() {
                                                     <button
                                                         className="rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out"
                                                         onClick={() => {
-                                                            hdlDelete(user.user_id);
+                                                            hdlDelete(user.user_id, user.user_nameprefix, user.user_firstname, user.user_lastname);
                                                         }}
                                                     >
                                                         <FontAwesomeIcon icon={faTrash} />
@@ -374,7 +427,7 @@ export default function AllUsers() {
                                         </div>
                                         <div className='flex gap-1 relative pr-2 items-center'>
                                             <td className='text-end text-[14px] w-10'><button name={`btn-edit-${number + 1}`} className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => hdlEdit(user.user_id)}><FontAwesomeIcon icon={faEdit} /></button></td>
-                                            <td className="text-[14px] w-10 rounded-r-full"><button name={`btn-del-${number + 1}`} className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => { hdlDelete(user.user_id) }}><FontAwesomeIcon icon={faTrash} /></button></td>
+                                            <td className="text-[14px] w-10 rounded-r-full"><button name={`btn-del-${number + 1}`} className='rounded-full scale-100 active:scale-95 hover:bg-[#6096B4] w-10 h-10 transition ease-in-out' onClick={() => { hdlDelete(user.user_id, user.user_nameprefix, user.user_firstname, user.user_lastname); }}><FontAwesomeIcon icon={faTrash} /></button></td>
                                         </div>
                                     </div>
                                 ))}
@@ -456,6 +509,7 @@ export default function AllUsers() {
                                     type="date"
                                     name="user_brithday"
                                     value={input.user_brithday}
+                                    placeholder='dd/mm/yyyy'
                                     onChange={hdlChange}
                                 />
                                 <p>email</p>

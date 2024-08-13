@@ -4,6 +4,7 @@ import axiosPath from "../../configs/axios-path";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 export default function Major() {
 
@@ -29,24 +30,41 @@ export default function Major() {
 
     }, [refetch])
 
-    const hdlDelete = async (id) => {
-        if (confirm("คุณต้องการลบข้อมูลใช่หรือไม่")) {
-            try {
-                let token = localStorage.getItem('token')
-                const rs = await axiosPath.delete(`/admin/major/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+    const hdlDelete = async (id, major_name) => {
+        Swal.fire({
+            icon: 'question',
+            title: "ต้องการลบข้อมูลหรือไม่ ?",
+            html: `คุณต้องการลบกลุ่มวิชา <strong>${major_name}</strong> หรือไม่, เนื่องด้วยการลบจะทำให้ตารางเรียนที่อยู่ในกลุ่มวิชานี้จะหายไปด้วย, โปรดตรวจสอบข้อมูลก่อน`,
+            showCancelButton: true,
+            confirmButtonColor: '#E5252A',
+            confirmButtonText: 'ใช่, ต้องการลบ',
+            cancelButtonText: "ไม่, ยกเลิก",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    let token = localStorage.getItem('token')
+                    const rs = await axiosPath.delete(`/admin/major/${id}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    if (rs.status === 200) {
+                        Swal.fire({
+                            title: "บันทึกข้อมูลเรียบร้อย",
+                            icon: 'success',
+                        });
+                        setRefetch(prev => !prev)
                     }
-                })
-                if(rs.status === 200){
-                    alert("ลบข้อมูลสำเร็จ")
-                    setRefetch(prev => !prev)
+                } catch (err) {
+                    console.log(err)
+                    Swal.fire({
+                        text: err.response.data.message,
+                        title: 'พบข้อผิดพลาด',
+                        icon: 'error',
+                    });
                 }
-            } catch (err) {
-                console.log(err)
-                alert(err.message, "โปรดแจ้งผู้พัฒนา")
             }
-        }
+        })
     }
 
     const hdlEdit = async (id) => {
@@ -76,7 +94,7 @@ export default function Major() {
                                             <td>{major.major_id}</td>
                                             <td>{major.major_name}</td>
                                             <th className='text-end'><button className='' onClick={() => hdlEdit(major.major_id)}><FontAwesomeIcon icon={faPenToSquare} /></button></th>
-                                            <td><button className='' onClick={() => hdlDelete(major.major_id)}><FontAwesomeIcon icon={faTrash} /></button></td>
+                                            <td><button className='' onClick={() => hdlDelete(major.major_id, major.major_name)}><FontAwesomeIcon icon={faTrash} /></button></td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -96,7 +114,7 @@ export default function Major() {
                                     <p className='absolute bg-white w-10 rounded-br-lg rounded-tl-md text-end px-2 -top-[0.1rem] -left-[0.1rem] text-black font-extrabold text-sm'>{index + 1}</p>
                                     <div className="absolute flex items-center justify-around bg-white text-base-200 px-2 w-1/5 text-center font-extrabold -top-[0.1rem] right-0 rounded-bl-md">
                                         <button className="text-sm" onClick={() => hdlEdit(el.major_id)}><FontAwesomeIcon icon={faPenToSquare} /></button>
-                                        <button className="text-sm" onClick={() => hdlDelete(el.major_id)}><FontAwesomeIcon icon={faTrash} /></button>
+                                        <button className="text-sm" onClick={() => hdlDelete(el.major_id, el.major_name)}><FontAwesomeIcon icon={faTrash} /></button>
                                     </div>
                                     <div className='flex px-5 w-full justify-between mt-5 text-white font-bold'>
                                         <div className='flex justify-between w-full sm:hidden'>

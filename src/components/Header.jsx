@@ -90,12 +90,18 @@ export default function Header() {
         getUserBid();
     }, [])
 
+    const locat = location.split('/')[1]
+
     const hdlCheckProfileClick = () => {
         try {
-            if(location.endsWith('/profile')){
+            if(location.endsWith('profile')){
                 window.location.reload()
             } else {
-                navigate('profile')
+                if(locat !== ""){
+                    navigate(`/${locat}/profile`)
+                }else {
+                    navigate(`profile`)
+                }
             }
         }catch(err){
             console.log(err)
@@ -108,7 +114,7 @@ export default function Header() {
                 <div className='max-w-[80rem] mx-auto flex justify-between items-center'>
                     {user.user_role !== "USER" ?
                         <div className="dropdown w-[170px] mobile:w-[200px]">
-                            <summary tabIndex={0} role='button' className="m-1 btn px-2 mobile:px-4">{acText} <FontAwesomeIcon icon={faCaretDown} /></summary>
+                            <summary tabIndex={0} role='button' className="m-1 btn px-2 mobile:px-4">{acText} <FontAwesomeIcon className='sm:block hidden' icon={faCaretDown} /></summary>
                             <ul className="p-2 shadow mt-2 menu dropdown-content z-[1] bg-base-100 rounded-box w-36 mobile:w-52">
                                 {liNav.map((el, number) => (
                                     <li key={number + 1} className={`${acText === el.text ? "bg-pink-500 text-white font-bold" : ""} rounded-md`}><Link to={el.to} onClick={() => location.reload()}>{el.text}</Link></li>

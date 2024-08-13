@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "../../configs/axios-path";
 import { useEffect, useState } from "react";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import Swal from "sweetalert2";
 
 function ClassRooms() {
 
@@ -18,9 +19,9 @@ function ClassRooms() {
 
     let token = localStorage.getItem('token');
     const accordion = document.getElementsByName('my-accordion-2')[0];
-    
+
     useEffect(() => {
-        
+
         document.title = "Admin | รายชื่อชั้นเรียน"
 
         const Class = async () => {
@@ -50,7 +51,7 @@ function ClassRooms() {
     const hdlSubmit = async (e) => {
         e.preventDefault();
 
-        if(!input.class_name || !input.sec_id){
+        if (!input.class_name || !input.sec_id) {
             setClassError(false)
             return alert("กรุณากรอกข้อมูลให้ครบ")
         }
@@ -62,7 +63,10 @@ function ClassRooms() {
                 }
             })
             if (rs.status === 200) {
-                alert(rs.data.message)
+                Swal.fire({
+                    icon: 'success',
+                    title: 'เพิ่มข้อมูลชั้นเรียนสำเร็จ!',
+                })
                 hdlReset()
                 setRefresh(prv => !prv)
                 setClassError(false)
@@ -71,7 +75,11 @@ function ClassRooms() {
 
         } catch (err) {
             console.log(err)
-            alert(err.response.data.message)
+            Swal.fire({
+                icon: 'error',
+                title: 'ตรวจพบข้อผิดพลาด',
+                text: err.response.data.message,
+            })
             setClassError(true)
         }
     }
@@ -85,25 +93,36 @@ function ClassRooms() {
         document.querySelector('select[name="sec_id"]').selectedIndex = 0;
     }
 
-    const hdlRemove = async (id) => {
-        if (confirm("คุณต้องการลบข้อมูลหรือไม่") === true) {
-            try {
-                const rs = await axios.delete(`/admin/class/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+    const hdlRemove = async (id, class_name) => {
+        Swal.fire({
+            icon: 'question',
+            title: "ต้องการลบข้อมูลหรือไม่ ?",
+            text: `คุณต้องการลบข้อมูลชั้นเรียน ${class_name} ใช่ หรือไม่`,
+            showCancelButton: true,
+            confirmButtonColor: '#E5252A',
+            confirmButtonText: 'ใช่, ต้องการลบ',
+            cancelButtonText: "ไม่, ยกเลิก",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const rs = await axios.delete(`/admin/class/${id}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    if (rs.status === 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'การลบข้อมูลสำเร็จ',
+                        })
+                        setRefresh(prv => !prv)
                     }
-                })
-                if (rs.status === 200) {
-                    alert(rs.data.message)
-                    setRefresh(prv => !prv)
+                } catch (err) {
+                    console.log(err)
+                    alert(err.message)
                 }
-            } catch (err) {
-                console.log(err)
-                alert(err.message)
             }
-        } else {
-            alert("คุณได้ยกเลิกการลบเรียบร้อยแล้ว")
-        }
+        })
     }
 
     const editButton = async (id) => {
@@ -120,10 +139,10 @@ function ClassRooms() {
                     Authorization: `Bearer ${token}`,
                 }
             })
-            if(rs.status === 200){
+            if (rs.status === 200) {
                 setInput(rs.data.useClass)
             }
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
     }
@@ -138,7 +157,7 @@ function ClassRooms() {
                     Authorization: `Bearer ${token}`
                 }
             })
-            if(rs.status === 200){
+            if (rs.status === 200) {
                 setEdit(false)
                 setEditId("")
                 hdlReset()
@@ -148,8 +167,14 @@ function ClassRooms() {
                 }
                 setRefresh((prev) => !prev);
             }
-        }catch(err){
+        } catch (err) {
             console.log(err)
+            Swal.fire({
+                icon: 'error',
+                title: 'ตรวจพบข้อผิดพลาด',
+                text: err.response.data.message,
+            })
+            setClassError(true)
         }
     }
 
@@ -161,7 +186,7 @@ function ClassRooms() {
                 </div>
                 <hr />
                 <div data-theme="light" className="collapse collapse-arrow">
-                    <input type="checkbox" name="my-accordion-2" onChange={ e => !e.target.checked ? (hdlReset(), setEdit(false)) : ""}/>
+                    <input type="checkbox" name="my-accordion-2" onChange={e => !e.target.checked ? (hdlReset(), setEdit(false)) : ""} />
                     <div className="collapse-title text-black text-lg font-semibold">
                         <p>{edit ? "แก้ไขชั้นเรียน" : "เพิ่มชั้นเรียน"}</p>
                     </div>
@@ -232,8 +257,8 @@ function ClassRooms() {
                                     <td>{index + 1}</td>
                                     <td>{el.class_name}</td>
                                     <td>{el.section.sec_type === "SECONDARY1" ? "มัธยมชวงชั้นที่ 1" : el.section.sec_type === "SECONDARY2" ? "มัธยมชวงชั้นที่ 2" : el.section.sec_type === "PRIMARY1" ? "ประถมศึกษาชั้นที่ 1" : "ประถมศึกษาชั้นที่ 2"}</td>
-                                    <td className="flex justify-center"><button disabled={accordion?.checked} className="flex justify-center items-center py-2 px-2 bg-yellow-300 my-1 rounded-md text-white shadow-md disabled:opacity-60 disabled:cursor-not-allowed" onClick={ () => {setEdit(!edit); editButton(el.class_id)}}><FontAwesomeIcon icon={faEdit}  /><span className="hidden md:block pl-1">แก้ไข</span></button></td>
-                                    <td><button className="flex justify-center items-center py-2 px-2 bg-red-600 my-1 rounded-md text-white shadow-md" onClick={() => hdlRemove(el.class_id)}><FontAwesomeIcon icon={faTrashAlt} /><span className="hidden md:block pl-1">ลบข้อมูล</span></button></td>
+                                    <td className="flex justify-center"><button disabled={accordion?.checked} className="flex justify-center items-center py-2 px-2 bg-yellow-300 my-1 rounded-md text-white shadow-md disabled:opacity-60 disabled:cursor-not-allowed" onClick={() => { setEdit(!edit); editButton(el.class_id) }}><FontAwesomeIcon icon={faEdit} /><span className="hidden md:block pl-1">แก้ไข</span></button></td>
+                                    <td><button className="flex justify-center items-center py-2 px-2 bg-red-600 my-1 rounded-md text-white shadow-md" onClick={() => hdlRemove(el.class_id, el.class_name)}><FontAwesomeIcon icon={faTrashAlt} /><span className="hidden md:block pl-1">ลบข้อมูล</span></button></td>
                                 </tr>
                             ))}
                         </tbody>
