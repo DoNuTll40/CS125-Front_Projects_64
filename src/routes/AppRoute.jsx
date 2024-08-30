@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 
-import { createBrowserRouter, RouterProvider, Outlet, useLocation } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 import useAuth from '../hooks/UseAuth';
 import Welcome from '../components/Admin/Welcome';
 import WelcomeT from '../components/Teacher/Welcome';
@@ -23,6 +24,7 @@ import AddSubject from '../components/Admin/AddSubject';
 import AddRoom from '../components/Admin/AddRoom';
 import AddBuild from '../components/Admin/AddBuild';
 import TeacherSchedule from '../components/Teacher/TeacherSchedule';
+import AdminTeacherSchedule from '../components/Admin/TableTeacher';
 import TeacherBuild from '../components/Teacher/Build';
 import Printlist from '../components/Print-list';
 import TableTeacher from '../components/Teacher/TableTeacher';
@@ -128,6 +130,16 @@ const teacherRouter = createBrowserRouter([
         ]
     },
     {
+        path: '/teacher/teachers/schedule/:id',
+        element: <>
+            <Header />
+            <Outlet />
+        </>,
+        children: [
+            { index: true, element: <AdminTeacherSchedule /> }
+        ]
+    },
+    {
         path: '/teacher/profile',
         element: <>
             <Header />
@@ -189,6 +201,16 @@ const adminRouter = createBrowserRouter([
         </>,
         children: [
             { index: true, element: <Profile /> }
+        ]
+    },
+    {
+        path: '/admin/teachers/schedule/:id',
+        element: <>
+            <Header />
+            <Outlet />
+        </>,
+        children: [
+            { index: true, element: <AdminTeacherSchedule /> }
         ]
     },
     {

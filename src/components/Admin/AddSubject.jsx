@@ -4,12 +4,15 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Select from 'react-select'
 import Swal from "sweetalert2";
+import useAuth from "../../hooks/UseAuth";
 
 export default function AddSubject() {
+
 
   const navigate = useNavigate();
   const [getMajor, setGetMajor] = useState([]);
   const [getRomm, setGetRoom] = useState([]);
+  const { setRefetchBanner } = useAuth();
 
   const [input, setInput] = useState({
     sub_name: "",
@@ -77,6 +80,7 @@ export default function AddSubject() {
           title: "บันทึกข้อมูลเรียบร้อย",
           icon: 'success',
         });
+        setRefetchBanner(prev => !prev)
       }
     } catch (err) {
       Swal.fire({

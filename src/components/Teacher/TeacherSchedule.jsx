@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import useAuth from "../../hooks/UseAuth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGrip, faGripLines, faPrint, faTable, faTableCells } from "@fortawesome/free-solid-svg-icons";
+import { faGrip, faGripLines, faTable } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import axiosPath from "../../configs/axios-path";
 
@@ -32,7 +32,7 @@ export default function TeacherSchedule() {
         }
         getSchedule();
         
-    }, [])
+    }, [setFullSchedule, token])
 
     const hdlPrint = () => {
         navigate('/teacher/teacher-schedule');

@@ -4,17 +4,21 @@ import axiosPath from "../../configs/axios-path";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import useAuth from "../../hooks/UseAuth";
 
 export default function Subjects() {
 
     const [getSubject, setGetSubject] = useState([]);
     const [reload, setReload] = useState(false)
     const navigate = useNavigate();
+    const { setRefetchBanner } = useAuth();
 
     let token = localStorage.getItem('token');
 
     useEffect(() => {
         document.title = "Admin | รายชื่อวิชาเรียน"
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useSubjects();
         const useSubjects = async () => {
             const rs = await axiosPath.get('/admin/subject', {
                 headers: {
@@ -23,8 +27,7 @@ export default function Subjects() {
             })
             setGetSubject(rs.data.sub)
         }
-        useSubjects();
-    }, [reload])
+    }, [reload, token])
 
     const hdlAdd = () => {
         navigate('add')
@@ -53,6 +56,7 @@ export default function Subjects() {
                             title: 'ลบข้อมูลวิชาเรียนสำเร็จ',
                         }).then(() => {
                             setReload(prev => !prev)
+                            setRefetchBanner(prev => !prev)
                         })
                     }
                 } catch (err) {

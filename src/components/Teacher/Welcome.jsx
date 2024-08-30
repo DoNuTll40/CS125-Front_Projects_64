@@ -24,13 +24,11 @@ export default function Student() {
             setFullStudent(rs.data.user.filter(users => users.class_id === user.class_id && users.user_role === "USER"))
         }
         getUser();
-    }, [])
+    }, [user.class_id, setFullStudent])
 
     const hdlPrint = () => {
         navigate('/teacher/print');
     }
-
-    // console.log(student)
 
     return (
         <>

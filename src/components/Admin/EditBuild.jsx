@@ -24,6 +24,7 @@ function EditBuild() {
         setInput(prv => ({ ...prv, [e.target.name]: e.target.value }))
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchApi = async () => {
         try {
             const rs = await axiosPath(`/admin/builds/${id}`, {
@@ -42,7 +43,7 @@ function EditBuild() {
     useEffect( () => {
         document.title = `แก้ไขข้อมูลอาคาร | ${id}`
         fetchApi();
-    }, [] )
+    }, [fetchApi, id] )
 
     console.log(input)
 
@@ -59,6 +60,7 @@ function EditBuild() {
 
             const formData = new FormData();
 
+            // eslint-disable-next-line no-unused-vars
             const { build_id, ...data } = input
 
             Object.entries(data).forEach(([key, value]) => {

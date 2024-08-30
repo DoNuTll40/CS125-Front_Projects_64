@@ -14,11 +14,13 @@ export default function TableTeacher() {
   const [schedule, setSchedule] = useState([]);
   const navigate = useNavigate();
 
+  const userID = location.pathname.split('/')[4];
+
   useEffect(() => {
     document.title = "Teacher | ดูตารางการสอน"
     const getTable = async () => {
       let token = localStorage.getItem('token');
-      const rs = await axiosPath.get('/admin/teacher/schedule', {
+      const rs = await axiosPath.get(`/admin/teacher/schedule?userId=${userID}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -26,7 +28,7 @@ export default function TableTeacher() {
       setSchedule(rs.data.getSchedule);
     }
     getTable();
-  }, [])
+  }, [userID])
 
   document.addEventListener('contextmenu', e => e.preventDefault());
   window.addEventListener('keydown', e => e.keyCode === 123 ? e.preventDefault() : '');
@@ -42,7 +44,7 @@ export default function TableTeacher() {
       <table className='mt-6 w-full text-black dark:text-white text-center table-spacing font-bold scale-90' ref={componentRef}>
         <thead className='h-16 border-2'>
           <tr className=''>
-            <th colSpan={9} className='text-xl'>ตารางการเรียนการสอนของคุณครู {user.user_firstname} {user.user_lastname}</th>
+            <th colSpan={9} className='text-xl'>ตารางการเรียนการสอนของคุณครู {schedule[0]?.user?.user_firstname} {schedule[0]?.user?.user_lastname}</th>
           </tr>
           <tr className='rounded-lg'>
             <th className='rounded-lg border-2 border-black dark:border-0 dark:bg-slate-600 w-32 text-xl' rowSpan={2}>วัน / เวลา</th>

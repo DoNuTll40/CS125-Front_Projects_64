@@ -1,5 +1,5 @@
 
-import { faAnglesLeft, faBackward, faBackwardStep, faBan, faCircleExclamation, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faAnglesLeft, faBan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom"
 import useAuth from "../hooks/UseAuth";
@@ -16,7 +16,17 @@ export default function PageFound() {
     }, [])
 
     const hdlBack = () => {
-        user?.user_id? navigate(-1) : navigate('/')
+        if(user?.user_id !== ""){
+            if(user?.user_role === "ADMIN"){
+                navigate('/admin')
+            }else if(user?.user_role === "TEACHER"){
+                navigate('/teacher')
+            }else{
+                navigate('/')
+            }
+        }else{
+            navigate('/')
+        }   
     }
 
     return (

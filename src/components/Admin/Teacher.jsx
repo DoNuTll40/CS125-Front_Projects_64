@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import axiosPath from "../../configs/axios-path";
+import { useNavigate } from 'react-router-dom';
 
 export default function Teacher() {
 
@@ -8,6 +9,7 @@ export default function Teacher() {
 
     const role = location.pathname.split('/')[1]
 
+    const navigate = useNavigate()
 
     useEffect(() => {
         document.title = role.slice(0, 1).toUpperCase()+role.slice(1, role.length) + ' | รายชื่อคุณครู';
@@ -23,7 +25,11 @@ export default function Teacher() {
             }
         }
         getUser();
-    }, [])
+    }, [role])
+
+    const hdlViewSchedule = async (userId) => {
+        navigate(`/${role}/teachers/schedule/${userId}`)
+    }
 
     return (
         <div className='max-w-[80rem] mx-auto mt-3 select-none'>
@@ -43,7 +49,7 @@ export default function Teacher() {
                         </thead>
                         <tbody className='text-center'>
                             {users.filter(user => user.user_role === "TEACHER").map((user, number) => (
-                                <tr className='hover:bg-[#FF90BC] hover:rounded-2xl hover:text-white' key={user.user_id}>
+                                <tr className='hover:bg-[#FF90BC] hover:rounded-2xl hover:text-white hover:cursor-pointer' onClick={ () => hdlViewSchedule(user?.user_id)} key={user.user_id}>
                                     <td className="text-[14px] rounded-l-full">{number + 1}</td>
                                     <td className="text-[14px]">{user.user_firstname}</td>
                                     <td className="text-[14px]">{user.user_lastname}</td>
@@ -62,7 +68,7 @@ export default function Teacher() {
             <div className="bg-white py-1 px-2 rounded-2xl max-w-[53rem] mt-5 mx-auto block md:hidden">
                 <p className='text-center text-lg font-bold text-base-200 mt-2 drop-shadow-[0_3px_2px_rgba(0,0,0,0.3)]'>รายชื่ออาจารย์</p>
                 {users.filter(user => user.user_role === "TEACHER").map((user, number) => (
-                    <div className={`animate-slidein opacity-0 [--slidein-delay:200ms] my-2 flex justify-between font-bold text-white px-2 py-2 rounded-lg shadow-md ${user.user_nameprefix === "นางสาว" || user.user_nameprefix === "นาง" ? "bg-[#FF90BC]" : "bg-[#6096B4]"}`} key={number}>
+                    <div className={`animate-slidein opacity-0 [--slidein-delay:200ms] my-2 flex justify-between font-bold text-white px-2 py-2 rounded-lg shadow-md ${user.user_nameprefix === "นางสาว" || user.user_nameprefix === "นาง" ? "bg-[#FF90BC]" : "bg-[#6096B4]"} hover:cursor-pointer`} onClick={ () => hdlViewSchedule(user?.user_id)}  key={number}>
                         <div className={`w-2/3 flex flex-col gap-2`}>
                             <p>{user.user_nameprefix} {user.user_firstname} {user.user_lastname}</p>
                             <p>{user.user_email}</p>

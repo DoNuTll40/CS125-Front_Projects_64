@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 
 import { useEffect, createContext, useState } from 'react';
 import Swal from 'sweetalert2';
@@ -30,6 +31,13 @@ function AuthContextProvider(props) {
                 setUser(rs.data);
 
             } catch (err) {
+                if(err.message === "Network Error") {
+                    return Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: "ไม่สามารถติดต่อกับเซิฟเวอร์ได้ในขณะนี้"
+                    })
+                }
                 Swal.fire({
                     icon: 'error',
                     title: 'Error token',
@@ -45,7 +53,7 @@ function AuthContextProvider(props) {
                 }
             } finally {
                 setLoading(false)
-            };
+            }
         };
         run();
 
@@ -61,7 +69,7 @@ function AuthContextProvider(props) {
             {props.children}
         </AuthContext.Provider>
     )
-};
+}
 
 export { AuthContextProvider };
 export default AuthContext;

@@ -4,6 +4,8 @@ import axiosPath from "../configs/axios-path";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarMinus } from "@fortawesome/free-regular-svg-icons";
 import TimeRealtime from "./TimeRealtime";
+import CountUp from "react-countup";
+
 
 export default function DashBoard() {
 
@@ -57,7 +59,7 @@ export default function DashBoard() {
                             <div>
                                 <h1 className='text-1xl font-bold' >จำนวนที่ดูแล</h1>
                                 <h2 className='text-2xl font-bold'>
-                                    {allUser.filter(users => users.user_role === "USER" && users.class_id === user.class_id).length} <label>คน</label>
+                                    <CountUp end={allUser.filter(users => users.user_role === "USER" && users.class_id === user.class_id).length} duration={5} /><label> คน</label>
                                 </h2>
                             </div>
                         </div>
@@ -65,7 +67,7 @@ export default function DashBoard() {
                             <div>
                                 <h1 className='text-1xl  font-bold'>นักเรียนทั้งหมด</h1>
                                 <h2 className='text-2xl font-bold'>
-                                    {allUser.filter(users => users.user_role === "USER").length} <label>คน</label>
+                                    <CountUp end={allUser.filter(users => users.user_role === "USER").length} duration={5} /> <label>คน</label>
                                 </h2>
                                 <h1 className="text-[12px] font-bold mt-1">คิดเป็น {(numberOFuser).toFixed(2)}% ของผู้ใช้ทั้งหมด</h1>
                             </div>
@@ -73,14 +75,14 @@ export default function DashBoard() {
                         <div className='h-[100px] md:h-[135px] p-3 bg-[#6096B4] rounded-xl flex justify-center items-center tooltip animate-slidein opacity-0 [--slidein-delay:600ms]' data-tip={`จำนวนครูทั้งหมด ${allUser.filter(user => user.user_role === "TEACHER").length} คน`}>
                             <div>
                                 <h1 className='text-1xl font-bold' >จำนวนครูทั้งหมด</h1>
-                                <h2 className='text-2xl font-bold'>{allUser.filter(user => user.user_role === "TEACHER").length} <label>คน</label></h2>
+                                <h2 className='text-2xl font-bold'><CountUp end={allUser.filter(user => user.user_role === "TEACHER").length} duration={5} /> <label>คน</label></h2>
                                 <h1 className="text-[12px] font-bold mt-1">คิดเป็น {(numberOFteacher).toFixed(2)}% ของผู้ใช้ทั้งหมด</h1>
                             </div>
                         </div>
                         <div className='h-[100px] md:h-[135px] p-3 bg-[#6096B4] rounded-xl flex justify-center items-center tooltip animate-slidein opacity-0 [--slidein-delay:800ms]' data-tip={`จำนวนวิชาทั้งหมด ${allSub.length} วิชา `}>
                             <div>
                                 <h1 className='text-1xl font-bold' >จำนวนวิชาทั้งหมด</h1>
-                                <h2 className='text-2xl font-bold'>{allSub.length} <label>วิชา</label></h2>
+                                <h2 className='text-2xl font-bold'><CountUp end={allSub.length} duration={5} /> <label>วิชา</label></h2>
                             </div>
                         </div>
                     </div>

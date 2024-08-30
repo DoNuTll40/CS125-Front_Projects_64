@@ -15,11 +15,13 @@ export default function AllUsers() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [refreshTable, setRefreshTable] = useState(false);
     const [select, setSelect] = useState('')
+    const [selectClass, setSelectClass] = useState('')
     const [limit, setLimit] = useState('')
     const [search, setSearch] = useState({ search: '' })
     const [page, setPage] = useState(1)
     const [totalPage, setTotalPage] = useState("")
-    const { setRefetchBanner } = useAuth(); 
+    const [loading, setLoading]  =useState(false)
+    const { setRefetchBanner } = useAuth();
 
     const [input, setInput] = useState({
         user_username: "",
@@ -42,39 +44,49 @@ export default function AllUsers() {
 
     const navigate = useNavigate();
 
+    const savedRole = sessionStorage.getItem('role-select');
+    const savedLimit = sessionStorage.getItem('limit-select');
+    const savedPage = sessionStorage.getItem('page-user');
+    const savedClass = sessionStorage.getItem('class-select');
+
     useEffect(() => {
         document.title = 'Admin | รายชื่อนักเรียน';
-    
-        const savedRole = sessionStorage.getItem('role-select');
-        const savedLimit = sessionStorage.getItem('limit-select');
-        const savedPage = sessionStorage.getItem('page-user');
 
         if (savedRole) {
             setSelect(savedRole);
         }
 
-        if(savedLimit) {
+        if (savedLimit) {
             setLimit(savedLimit)
         }
 
-        if(savedPage) {
+        if (savedPage) {
             setPage(parseInt(savedPage))
         }
 
+        if(savedClass){
+            setSelectClass(parseInt(savedClass))
+        }
+
+        if (savedPage && parseInt(savedPage) !== page) {
+            setPage(parseInt(savedPage));
+        }
+
         const roleParam = savedRole || '';
-        const limitParam = savedLimit || 10;
+        const limitParam = savedLimit || 5;
         const searchParam = search.search || '';
+        const classParam = savedClass || ''
 
         const getUser = async () => {
             let token = localStorage.getItem('token')
             try {
-                const rs = await axiosPath.get(`/admin/all/users?page=${page}`, {
+                const rs = await axiosPath.get(`/admin/all/users?page=${savedPage !== "" ? savedPage : page}`, {
                     params: {
                         search: searchParam,
                         page: 1,
                         limit: limitParam,
                         role: roleParam,
-                        class: ''
+                        class: classParam
                     },
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -108,7 +120,7 @@ export default function AllUsers() {
         getClass();
         getUser();
 
-    }, [refreshTable, select, limit, search, page])
+    }, [refreshTable, select, limit, search, page, savedPage, savedLimit, savedRole, selectClass, savedClass])
 
     const hdlChange = e => {
         setInput(prv => ({ ...prv, [e.target.name]: e.target.value }))
@@ -117,6 +129,13 @@ export default function AllUsers() {
     const hdlChange2 = e => {
         setSelect(prv => ({ ...prv, [e.target.name]: e.target.value }))
         sessionStorage.setItem('role-select', e.target.value)
+    }
+
+    const hdlChange3 = e => {
+        setPage(1)
+        sessionStorage.setItem('page-user', 1)
+        setSelectClass(prv => ({ ...prv, [e.target.name]: e.target.value }))
+        sessionStorage.setItem('class-select', e.target.value)
     }
 
     const hdlChangeLimit = e => {
@@ -164,6 +183,7 @@ export default function AllUsers() {
             })
         }
 
+        // eslint-disable-next-line no-unused-vars
         const { select, user_birthday, ...data } = input;
 
         if (Object.values(data).some(value => value !== "user_image" && data[value] === "")) {
@@ -176,6 +196,7 @@ export default function AllUsers() {
             })
         } else {
             try {
+                setLoading(true)
                 const file = fileInput.current?.files[0];
                 const formData = new FormData();
 
@@ -197,6 +218,7 @@ export default function AllUsers() {
                     hdlCloseModal()
                     setRefreshTable(prevState => !prevState);
                     setRefetchBanner(prev => !prev)
+                    setLoading(false)
                     Swal.fire({
                         icon: 'success',
                         title: "เพิ่มข้อมูลสำเร็จ",
@@ -210,7 +232,7 @@ export default function AllUsers() {
                     title: 'ตรวจพบข้อผิดพลาด',
                     text: err.response.data.message,
                 }).then((result) => {
-                    if(result.isConfirmed){
+                    if (result.isConfirmed) {
                         document.getElementById('my_modal_3').showModal()
                     }
                 })
@@ -228,7 +250,7 @@ export default function AllUsers() {
         if (fileSizeInMB > 10) {
             document.getElementById('my_modal_3').close()
             Swal.fire({
-                title:"ขนาดของไฟล์เกิน 10 MB",
+                title: "ขนาดของไฟล์เกิน 10 MB",
                 icon: 'warning',
             }).then(() => {
                 document.getElementById('my_modal_3').showModal()
@@ -292,8 +314,8 @@ export default function AllUsers() {
             confirmButtonColor: '#E5252A',
             confirmButtonText: 'ใช่, ต้องการลบ',
             cancelButtonText: "ไม่, ยกเลิก",
-         }).then((result) => {
-            if(result.isConfirmed){
+        }).then((result) => {
+            if (result.isConfirmed) {
                 try {
                     const deleteUser = async () => {
                         let token = localStorage.getItem('token')
@@ -347,21 +369,37 @@ export default function AllUsers() {
                             <option value={100}>100</option>
                         </select>
                         <div className='relative flex items-center bg-white border border-gray-300 rounded-lg px-3'>
-                        <FontAwesomeIcon className='text-gray-500 mr-2' icon={faMagnifyingGlass} />
-                        <input className='flex-1 h-9 rounded-lg px-1 focus:outline-none'
-                            name='search'
-                            type="text"
-                            placeholder="Search..."
-                            onChange={hdlSearchInput} />
+                            <FontAwesomeIcon className='text-gray-500 mr-2' icon={faMagnifyingGlass} />
+                            <input className='flex-1 h-9 rounded-lg px-1 focus:outline-none'
+                                name='search'
+                                type="text"
+                                placeholder="Search..."
+                                onChange={hdlSearchInput} />
                         </div>
                     </div>
+                    <p className='w-full font-bold text-lg text-center my-2'>รายชื่อทั้งหมด</p>
                     <div className='flex justify-between items-center'>
-                        <select className='w-[120px] bg-transparent font-bold focus:outline-none' name="select" id="role-fullscreen" value={select} onChange={hdlChange2}>
-                            <option value="">ทั้งหมด</option>
-                            <option value="USER">นักเรียน</option>
-                            <option value="TEACHER">คุณครู</option>
-                        </select>
-                        <p className='w-[120px] font-bold text-lg'>รายชื่อทั้งหมด</p>
+                        <div className='flex gap-2'>
+                            <div>
+                                <p className='font-semibold'>ตำแหน่ง</p>
+                                <hr />
+                                <select className='w-[120px] bg-transparent font-bold focus:outline-none' name="select" id="role-fullscreen" value={select} onChange={hdlChange2}>
+                                    <option value="">ทั้งหมด</option>
+                                    <option value="USER">นักเรียน</option>
+                                    <option value="TEACHER">คุณครู</option>
+                                </select>
+                            </div>
+                            <div>
+                                <p className='font-semibold'>ห้องเรียน</p>
+                                <hr />
+                                <select className="w-[120px] bg-transparent font-bold text-gray-400 focus:outline-none" name='selectClass' value={selectClass} onChange={hdlChange3}>
+                                    <option value=''>ทั้งหมด</option>
+                                    {useClass.filter(el => el.class_name !== "ADMIN").map((el, index) => (
+                                        <option key={index + 1} value={el.class_id}>{el.class_name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
                         <div className='w-[120px] flex justify-end'>
                             <button name='btn-add' className='px-2.5 py-2 rounded-full hover:bg-[#FF90BC] hover:text-white transition ease-in-out flex items-center' onClick={() => document.getElementById('my_modal_3').showModal()} type="button"><FontAwesomeIcon icon={faAdd} /></button>
                         </div>
@@ -375,7 +413,7 @@ export default function AllUsers() {
                                             <th className="text-center font-semibold py-3">ไอดี</th>
                                             <th className="text-center font-semibold py-3">คำนำหน้า</th>
                                             <th className="text-center font-semibold py-3">ชื่อ - นามสกุล</th>
-                                            <th className="text-center font-semibold py-3">ชื่อเล่น</th>
+                                            <th className="text-center font-semibold py-3">ชื่อผู้ใช้</th>
                                             <th className="text-center font-semibold py-3">เมล</th>
                                             <th className="text-center font-semibold py-3">หน้าที่</th>
                                             <th className="text-center font-semibold py-3">ห้อง</th>
@@ -383,14 +421,14 @@ export default function AllUsers() {
                                         </tr>
                                     </thead>
                                     <tbody className='text-sm'>
-                                        {student.get_user.map((user, number) => (
+                                        {student.get_user.map((user) => (
                                             <tr
                                                 className="hover:bg-[#FF90BC] hover:text-white transition ease-in-out"
                                                 key={user.user_id}>
                                                 <td className='text-center'>{user.user_id}</td>
                                                 <td>{user.user_nameprefix}</td>
                                                 <td>{user.user_firstname} {user.user_lastname}</td>
-                                                <td>{user.user_nickname}</td>
+                                                <td>{user.user_username}</td>
                                                 <td>{user.user_email}</td>
                                                 <td>
                                                     {user.user_role === "USER" ? "นักเรียน" : "ครู"}
@@ -459,15 +497,15 @@ export default function AllUsers() {
                                     </div>
                                 ))}
                                 <div data-theme='light' className='flex justify-end items-center mt-5 gap-2 pb-2'>
-                                        <button className="btn btn-ghost btn-sm capitalize" onClick={handlePrevious} disabled={page === 1}>
-                                            <FontAwesomeIcon icon={faAnglesLeft} className='mr-1' />
-                                            <span>ก่อน</span>
-                                        </button>
-                                        <p className='text-center'>หน้า {page} จาก {totalPage}</p>
-                                        <button className="btn btn-ghost btn-sm capitalize" onClick={handleNext} disabled={page === totalPage}>
-                                            <span>ถัดไป</span>
-                                            <FontAwesomeIcon icon={faAnglesRight} className='mr-1' />
-                                        </button>
+                                    <button className="btn btn-ghost btn-sm capitalize" onClick={handlePrevious} disabled={page === 1}>
+                                        <FontAwesomeIcon icon={faAnglesLeft} className='mr-1' />
+                                        <span>ก่อน</span>
+                                    </button>
+                                    <p className='text-center'>หน้า {page} จาก {totalPage}</p>
+                                    <button className="btn btn-ghost btn-sm capitalize" onClick={handleNext} disabled={page === totalPage}>
+                                        <span>ถัดไป</span>
+                                        <FontAwesomeIcon icon={faAnglesRight} className='mr-1' />
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -498,6 +536,7 @@ export default function AllUsers() {
                                             name='user_firstname'
                                             value={input.user_firstname}
                                             onChange={hdlChange}
+                                            required
                                         />
                                     </div>
                                     <div className='flex flex-col'>
@@ -507,6 +546,7 @@ export default function AllUsers() {
                                             name='user_lastname'
                                             value={input.user_lastname}
                                             onChange={hdlChange}
+                                            required
                                         />
                                     </div>
                                 </div>
@@ -518,6 +558,7 @@ export default function AllUsers() {
                                             name='user_nickname'
                                             value={input.user_nickname}
                                             onChange={hdlChange}
+                                            required
                                         />
                                     </div>
                                     <div className='flex flex-col w-full'>
@@ -538,6 +579,7 @@ export default function AllUsers() {
                                     value={input.user_brithday}
                                     placeholder='dd/mm/yyyy'
                                     onChange={hdlChange}
+                                    required
                                 />
                                 <p>email</p>
                                 <input className='w-full px-4 py-1 rounded-md'
@@ -545,6 +587,7 @@ export default function AllUsers() {
                                     name='user_email'
                                     value={input.user_email}
                                     onChange={hdlChange}
+                                    required
                                 />
                                 <p>เบอร์โทร</p>
                                 <InputMask
@@ -559,7 +602,7 @@ export default function AllUsers() {
                                     type="text"
                                 /> */}
                                 <p>ที่อยู่</p>
-                                <textarea className='w-full px-4 py-1 rounded-md resize-none' name="user_address" value={input.user_address} onChange={hdlChange} cols="5" rows="2"></textarea>
+                                <textarea className='w-full px-4 py-1 rounded-md resize-none' name="user_address" value={input.user_address} onChange={hdlChange} cols="5" rows="2" required></textarea>
                                 <div className='flex w-full gap-3'>
                                     <div className='flex flex-col w-full'>
                                         <p>หน้าที่</p>
@@ -586,7 +629,7 @@ export default function AllUsers() {
                                         {selectedFile && (
                                             <>
                                                 <img src={URL.createObjectURL(selectedFile)} alt="Selected Image" accept="image/*" className='mx-auto my-2 rounded-lg border-4 border-white max-h-[250px] pointer-events-none' />
-                                                <button className='w-full text-md my-2 rounded-full py-1 bg-gray-700 ' onClick={(e) => setSelectedFile(null)}>ลบภาพตัวอย่าง</button>
+                                                <button className='w-full text-md my-2 rounded-full py-1 bg-gray-700 ' onClick={() => setSelectedFile(null)}>ลบภาพตัวอย่าง</button>
                                             </>
 
                                         )}
@@ -600,6 +643,7 @@ export default function AllUsers() {
                                     name='user_username'
                                     value={input.user_username}
                                     onChange={hdlChange}
+                                    required
                                 />
                                 <p className='mt-1'>Password</p>
                                 <input className='w-full px-4 py-1 rounded-md'
@@ -607,6 +651,7 @@ export default function AllUsers() {
                                     name='user_password'
                                     value={input.user_password}
                                     onChange={hdlChange}
+                                    required
                                 />
                                 <p className='mt-1'>Comfirm Password</p>
                                 <input className='w-full px-4 py-1 rounded-md'
@@ -614,9 +659,10 @@ export default function AllUsers() {
                                     name='confirmPassword'
                                     value={input.confirmPassword}
                                     onChange={hdlChange}
+                                    required
                                 />
                                 <div className='flex justify-end gap-3 mt-2'>
-                                    <input className='btn btn-success' type='submit' value="ยืนยัน" />
+                                    <input className='btn btn-success' type='submit' value={`${loading ? "" : ""}`} />
                                     <input onClick={hdlClear} type='reset' className='btn btn-warning' value="ล้างข้อมูล" />
                                 </div>
                             </form>

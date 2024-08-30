@@ -6,7 +6,7 @@ import axiosPath from "../configs/axios-path";
 import ScrollProgress from './ScrollProgress';
 import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown, faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
 export default function Header() {
 
@@ -30,7 +30,7 @@ export default function Header() {
     const liNav = user.user_role === "ADMIN" ? [
         { to: "/admin", text: "หน้าหลัก" },
         { to: "/admin/users", text: "ผู้ใช้งานทั้งหมด" },
-        { to: "/admin/teachers", text: "รายชื่ออาจารย์" },
+        { to: "/admin/teachers", text: "รายชื่อคุณครู" },
         { to: "/admin/class", text: "ชั้นเรียนทั้งหมด" },
         { to: "/admin/build", text: "รายชื่ออาคาร" },
         { to: "/admin/room", text: "รายชื่อห้อง" },
@@ -43,7 +43,7 @@ export default function Header() {
     ] : [
         { to: "/teacher", text: "หน้าหลัก" },
         { to: "/teacher/teacher-table", text: "รายการสอน" },
-        { to: "/teacher/teachers", text: "รายชื่ออาจารย์" },
+        { to: "/teacher/teachers", text: "รายชื่อคุณครู" },
         { to: "/teacher/build", text: "รายชื่ออาคาร" },
         { to: "/teacher/report", text: "รายงานระบบ" }
     ];
@@ -62,6 +62,8 @@ export default function Header() {
     const bannerEditPath = /^\/admin\/banner\/edit\/\d+$/;
     const majorAddPath = /^\/admin\/major\/add$/;
     const majorEditPath = /^\/admin\/major\/edit\/\d+$/;
+    const adminViewSchedule = /^\/admin\/teachers\/schedule\/\d+$/;
+    const TeacherViewSchedule = /^\/teacher\/teachers\/schedule\/\d+$/;
     const acText = location === "profile" ? "โปรไฟล์" :
         location === "/teacher" + ("/profile") ? "โปรไฟล์" :
             location === "/admin" + ("/profile") ? "โปรไฟล์" :
@@ -78,8 +80,10 @@ export default function Header() {
                                                         : buildEditPath.test(location) ? "แก้ไขอาคาร"
                                                             : subAddPath.test(location) ? "เพิ่มวิชา"
                                                                 : subEditPath.test(location) ? "แก้ไขวิชา"
-                                                                    : location === "/teacher/teacher-schedule" ? "ดูตารางสอน"
-                                                                        : liNav.find(link => link.to === location)?.text;
+                                                                    : adminViewSchedule.test(location) ? "ดูตารางสอน"
+                                                                        : TeacherViewSchedule.test(location) ? "ดูตารางสอน"
+                                                                            : location === "/teacher/teacher-schedule" ? "ดูตารางสอน"
+                                                                                : liNav.find(link => link.to === location)?.text;
 
     useEffect(() => {
         const id = user.user_id
@@ -88,7 +92,7 @@ export default function Header() {
             setProfile(rs.data.getUserBid);
         }
         getUserBid();
-    }, [])
+    }, [user.user_id])
 
     const locat = location.split('/')[1]
 

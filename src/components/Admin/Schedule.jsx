@@ -73,7 +73,10 @@ export default function Schedule() {
                     }
                 })
                 if (rs.status === 200) {
-                    alert("ลบข้อมูลเรียบร้อยแล้ว")
+                    Swal.fire({
+                        text:"ลบข้อมูลเรียบร้อยแล้ว",
+                        icon: 'success'
+                    })
                     setRefetch(prev => !prev)
                 }
             }

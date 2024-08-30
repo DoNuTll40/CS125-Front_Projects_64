@@ -16,7 +16,7 @@ export default {
         },
       },
       animation: {
-        slidein: "slidein 1s ease var(--slidein-delay, 0) forwards",
+        slidein: "slidein 0.5s ease var(--slidein-delay, 0) forwards",
       },
       fontFamily: {
         sans: ["Noto Sans Thai", "sans-serif"],
@@ -30,7 +30,10 @@ export default {
       sm: "475px",
       md: "685px",
       lg: "769px",
+      xl: "1024px",
+      '2xl': "1226px",
     },
   },
+  // eslint-disable-next-line no-undef
   plugins: [require("daisyui")],
 };

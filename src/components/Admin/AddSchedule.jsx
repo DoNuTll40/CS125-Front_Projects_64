@@ -1,7 +1,7 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axiosPath from "../../configs/axios-path";
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Swal from "sweetalert2";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -72,7 +72,7 @@ export default function AddSchedule() {
     }
     getUser();
 
-  }, [refetch])
+  }, [refetch, token])
 
   const fetchSchedule = async () => {
     try {
@@ -91,6 +91,7 @@ export default function AddSchedule() {
 
   useEffect(() => {
     fetchSchedule();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input, refetch])
 
   const hdlChange = e => {
@@ -261,8 +262,8 @@ export default function AddSchedule() {
           <p className='font-bold'>เวลา</p>
           <select className={`w-full text-ellipsis appearance-none md:max-w-30 px-2 py-2 hover:font-bold border-2 focus:font-bold rounded-lg bg-transparent focus:outline-none focus:ring-0 focus:border-gray-200 hover:cursor-pointer focus:bg-[#6096B4] hover:bg-[#6096B4] hover:text-white focus:text-white ${input.sched_time !== "" ? "border-[#FF609C]" : ""}`} name="sched_time" onChange={hdlChange}>
             <option hidden>เลือกเวลา</option>
-            {timeOfSchedule.map( el => (
-                <option value={el.value} disabled={el.disabled} >{el.title}</option>
+            {timeOfSchedule.map( (el, index) => (
+                <option key={index + 1} value={el.value} disabled={el.disabled} >{el.title}</option>
             ))}
           </select>
         </div>
