@@ -8,7 +8,7 @@ import SlideDashboard from "./SlideDashboard";
 
 export default function LoginStudent() {
 
-    const { setUser, loading, setLoading, refetchBanner } = useAuth();
+    const { setUser } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
 
     const [input, setInput] = useState({
@@ -21,6 +21,16 @@ export default function LoginStudent() {
     }, [])
 
     const hdlSubmit = async e => {
+
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Please wait while we fetch the data',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading(); // แสดง loading indicator
+            }
+          });
+
         try {
             e.preventDefault()
 

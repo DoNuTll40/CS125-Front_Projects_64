@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import useAuth from "../hooks/UseAuth"
 import Swal from "sweetalert2";
 import axiosPath from "../configs/axios-path";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import SlideDashboard from "./SlideDashboard";
 
 export default function LoginTeacher() {
 
-    const { setUser, loading, setLoading } = useAuth();
+    const { setUser, setLoading } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
 
     const [input, setInput] = useState({
@@ -42,6 +42,16 @@ export default function LoginTeacher() {
     }, [setLoading]);
 
     const hdlSubmit = async e => {
+
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Please wait while we fetch the data',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading(); // แสดง loading indicator
+            }
+          });
+
         try {
             e.preventDefault()
             const rs = await axiosPath.post('/auth/adminLogin', input);
@@ -78,7 +88,7 @@ export default function LoginTeacher() {
             <div className="w-full h-full flex flex-col justify-center items-center backdrop-blur-sm">
                 <div className="bg-gradient-to-r from-[#6096B4] to-[#FF90BC] flex rounded-lg drop-shadow-[5px_5px_3px_rgba(0,0,0,0.25)] scale-95 md:scale-100 w-full md:w-[650px] md:h-[450px]">
                     <SlideDashboard />
-                    <div className="p-4 w-full"s>
+                    <div className="p-4 w-full">
                         <form className="flex flex-col" onSubmit={hdlSubmit}>
                             <div className="flex flex-col gap-2">
                                 <img className='mx-auto rounded-full w-[120px] h-[120px]' src='/Blue and Pink Simple School Logo.png' />

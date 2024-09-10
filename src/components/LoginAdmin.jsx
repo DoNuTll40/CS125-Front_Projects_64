@@ -42,6 +42,16 @@ export default function LoginAdmin() {
     }, [setLoading]);
 
     const hdlSubmit = async e => {
+
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Please wait while we fetch the data',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading(); // แสดง loading indicator
+            }
+          });
+
         try {
             e.preventDefault()
             const rs = await axiosPath.post('/auth/adminLogin', input);
