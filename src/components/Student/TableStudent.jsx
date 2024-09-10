@@ -282,21 +282,32 @@ export default function TableStudent() {
         <div className="collapse collapse-arrow bg-base-200">
           <input type="radio" name="my-accordion-2" defaultChecked />
           <div className="collapse-title flex items-center text-md md:text-lg font-medium">วันจันทร์</div>
-          <div className="collapse-content">
-            <Swiper>
-              <SwiperSlide>
+            <div className="collapse-content">
                 {schedule.filter(el => el.sched_day === "จันทร์").map((el, index) =>
                   <div className='border my-1 rounded-lg shadow-sm p-2' key={index + 1}>
-                    <div className='flex flex-col'>
-                      <p>เวลา</p>
-                      <p>{el.sched_time}</p>
+                    <div className='flex justify-between'>
+                      <div>
+                        <p>เวลา</p>
+                        <p>{el.sched_time}</p>
+                      </div>
+                      <div>
+                        <p>จำนวน {el.sched_count} ชั่วโมง</p>
+                      </div>
                     </div>
+                    <div className='flex justify-between my-2'>
+                      <p className='text-lg font-bold'>วิชา {el.subject.sub_name}</p>
+                      {/* <p className='text-lg font-bold'>{el.subject.sub_name}</p> */}
+                      <p className='text-lg font-bold'>รหัสวิชา {el.subject.sub_code}</p>
+                    </div>
+                    <div className='flex justify-between'>
+                      <p>คุณครู {el.user.user_firstname} {el.user.user_lastname}</p>
+                      <p>{el.user.user_phone}</p>
+                    </div>
+                    <div></div>
                   </div>
                 )}
-              </SwiperSlide>
-            </Swiper>
+            </div>
           </div>
-        </div>
 
         <div className="collapse collapse-arrow bg-base-200">
           <input type="radio" name="my-accordion-2" />
