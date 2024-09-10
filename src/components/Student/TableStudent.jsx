@@ -84,6 +84,38 @@ export default function TableStudent() {
     )
   }
 
+  const days = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
+
+const renderSchedule = (day, number) => (
+  <div className="collapse collapse-arrow bg-base-200" key={number + 1}>
+    <input type="radio" name={`my-accordion`} defaultChecked={day === "จันทร์"} />
+    <div className="collapse-title flex items-center text-lg font-bold md:text-xl">วัน{day}</div>
+    <div className="collapse-content px-6">
+      {schedule.filter(el => el.sched_day === day).map((el, index) => (
+        <div className="border my-2 rounded-lg shadow-md p-2" key={index + 1}>
+          <div className="flex justify-between">
+            <div>
+              <p className="text-sm">เวลา</p>
+              <p className='text-sm'>{el.sched_time}</p>
+            </div>
+            <div className="text-xs">
+              <p>จำนวน {el.sched_count} ชั่วโมง</p>
+            </div>
+          </div>
+          <div className="flex justify-between my-2">
+            <p className="text-md font-bold">วิชา {el.subject.sub_name}</p>
+            <p className="text-md font-bold">รหัสวิชา {el.subject.sub_code}</p>
+          </div>
+          <div className="flex justify-between text-sm">
+            <p>คุณครู {el.user.user_firstname} {el.user.user_lastname}</p>
+            <p>{el.user.user_phone}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
   return (
     <div className='max-w-[80rem] mx-auto select-none'>
       <table className='mt-4 w-full text-black dark:text-white text-center table-spacing font-bold scale-90 hidden 2xl:block' ref={componentRef}>
@@ -275,68 +307,9 @@ export default function TableStudent() {
         </dialog>)}
 
       {/* responsive */}
-      <div data-theme="light" className='2xl:hidden flex gap-2 flex-col bg-transparent mt-20 my-10 px-2'>
-
+      <div data-theme="light" className='2xl:hidden flex gap-2 flex-col bg-transparent mt-20 my-10 px-4'>
         <p className='text-white text-center font-semibold text-md md:text-lg my-2'>ข้อมูลตารางเรียน {user.class.class_name}</p>
-
-        <div className="collapse collapse-arrow bg-base-200">
-          <input type="radio" name="my-accordion-2" defaultChecked />
-          <div className="collapse-title flex items-center text-md md:text-lg font-medium">วันจันทร์</div>
-            <div className="collapse-content">
-                {schedule.filter(el => el.sched_day === "จันทร์").map((el, index) =>
-                  <div className='border my-1 rounded-lg shadow-sm p-2' key={index + 1}>
-                    <div className='flex justify-between'>
-                      <div>
-                        <p>เวลา</p>
-                        <p>{el.sched_time}</p>
-                      </div>
-                      <div>
-                        <p>จำนวน {el.sched_count} ชั่วโมง</p>
-                      </div>
-                    </div>
-                    <div className='flex justify-between my-2'>
-                      <p className='text-lg font-bold'>วิชา {el.subject.sub_name}</p>
-                      {/* <p className='text-lg font-bold'>{el.subject.sub_name}</p> */}
-                      <p className='text-lg font-bold'>รหัสวิชา {el.subject.sub_code}</p>
-                    </div>
-                    <div className='flex justify-between'>
-                      <p>คุณครู {el.user.user_firstname} {el.user.user_lastname}</p>
-                      <p>{el.user.user_phone}</p>
-                    </div>
-                    <div></div>
-                  </div>
-                )}
-            </div>
-          </div>
-
-        <div className="collapse collapse-arrow bg-base-200">
-          <input type="radio" name="my-accordion-2" />
-          <div className="collapse-title text-xl font-medium">วันอังคาร</div>
-          <div className="collapse-content">
-            <p>hello</p>
-          </div>
-        </div>
-        <div className="collapse collapse-arrow bg-base-200">
-          <input type="radio" name="my-accordion-2" />
-          <div className="collapse-title text-xl font-medium">วันพุธ</div>
-          <div className="collapse-content">
-            <p>hello</p>
-          </div>
-        </div>
-        <div className="collapse collapse-arrow bg-base-200">
-          <input type="radio" name="my-accordion-2" />
-          <div className="collapse-title text-xl font-medium">วันพฤหัสบ่ดี</div>
-          <div className="collapse-content">
-            <p>hello</p>
-          </div>
-        </div>
-        <div className="collapse collapse-arrow bg-base-200">
-          <input type="radio" name="my-accordion-2" />
-          <div className="collapse-title text-xl font-medium">วันศุกร์</div>
-          <div className="collapse-content">
-            <p>hello</p>
-          </div>
-        </div>
+        {days.map((day, index) => renderSchedule(day, index))}
       </div>
 
     </div>
