@@ -74,7 +74,7 @@ export default function LoginTeacher() {
             Swal.close(); // ปิดการโหลด
             const message = err.response?.data?.message || err.message;
             Swal.fire({
-                title: "Error",
+                title: "เกิดข้อผิดพลาด",
                 text: message,
                 icon: "error"
             });

@@ -10,6 +10,7 @@ import '../../print.css'
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
+import Swal from 'sweetalert2';
 
 export default function TableStudent() {
 
@@ -50,6 +51,14 @@ export default function TableStudent() {
   }, [])
 
   const hdlClick = (id) => {
+    Swal.fire({
+      title: 'กำลังโหลดข้อมูล...',
+      text: 'ระบบกำลังโหลดข้อมูลโปรดรอสักครู่!',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
     const getTable = async () => {
       let token = localStorage.getItem('token');
       const rs = await axiosPath.get(`/user/table/${id}`, {
@@ -58,6 +67,7 @@ export default function TableStudent() {
         }
       })
       setCView(rs.data.schedule);
+      Swal.close()
       document.getElementById('my_modal_3').showModal()
     }
     getTable();
@@ -67,10 +77,14 @@ export default function TableStudent() {
   window.addEventListener('keydown', e => e.keyCode === 123 ? e.preventDefault() : '');
 
   const componentRef = useRef();
+
   const hdlPrint = useReactToPrint({
-    content: () => componentRef.current,
+    content: () => {
+        console.log('Preparing to print...'); // ตรวจสอบว่าเรียกใช้งาน
+        return componentRef.current;
+    },
     documentTitle: `ตารางเรียนชั้น ${user.class.class_name}`,
-  });
+});
 
   if (loading) {
     return (
@@ -86,45 +100,45 @@ export default function TableStudent() {
 
   const days = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
 
-const renderSchedule = (day, number) => (
-  <div className="collapse collapse-arrow bg-base-200" key={number + 1}>
-    <input type="radio" name={`my-accordion`} defaultChecked={day === "จันทร์"} />
-    <div className="collapse-title flex items-center text-lg font-bold md:text-xl">วัน{day}</div>
-    <div className="collapse-content px-6">
-      {schedule.filter(el => el.sched_day === day).map((el, index) => (
-        <div className="border my-2 rounded-lg shadow-md p-2" key={index + 1}>
-          <div className="flex justify-between">
-            <div>
-              <p className="text-sm">เวลา</p>
-              <p className='text-sm'>{el.sched_time}</p>
+  const renderSchedule = (day, number) => (
+    <div className="collapse collapse-arrow bg-base-200" key={number + 1}>
+      <input type="radio" name={`my-accordion`} defaultChecked={day === "จันทร์"} />
+      <div className="collapse-title flex items-center text-lg font-bold md:text-xl">วัน{day}</div>
+      <div className="collapse-content px-6">
+        {schedule.filter(el => el.sched_day === day).map((el, index) => (
+          <div className="border my-2 rounded-lg shadow-md p-2" key={index + 1}>
+            <div className="flex justify-between">
+              <div>
+                <p className="text-sm">เวลา</p>
+                <p className='text-sm'>{el.sched_time}</p>
+              </div>
+              <div className="text-xs">
+                <p>จำนวน {el.sched_count} ชั่วโมง</p>
+              </div>
             </div>
-            <div className="text-xs">
-              <p>จำนวน {el.sched_count} ชั่วโมง</p>
+            <div className="flex justify-between my-2">
+              <p className="text-md font-bold">วิชา {el.subject.sub_name}</p>
+              <p className="text-md font-bold">รหัสวิชา {el.subject.sub_code}</p>
+            </div>
+            <div className="flex justify-between text-sm">
+              <p>คุณครู {el.user.user_firstname} {el.user.user_lastname}</p>
+              <p>{el.user.user_phone}</p>
             </div>
           </div>
-          <div className="flex justify-between my-2">
-            <p className="text-md font-bold">วิชา {el.subject.sub_name}</p>
-            <p className="text-md font-bold">รหัสวิชา {el.subject.sub_code}</p>
-          </div>
-          <div className="flex justify-between text-sm">
-            <p>คุณครู {el.user.user_firstname} {el.user.user_lastname}</p>
-            <p>{el.user.user_phone}</p>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
 
   return (
-    <div className='max-w-[80rem] mx-auto select-none'>
-      <table className='mt-4 w-full text-black dark:text-white text-center table-spacing font-bold scale-90 hidden 2xl:block' ref={componentRef}>
+    <div data-theme="dark" className='max-w-[80rem] mx-auto select-none'>
+      <table className='mt-4 w-full text-white text-center table-spacing font-bold scale-90 hidden 2xl:block table-class' ref={componentRef}>
         <thead>
           <tr>
             <th colSpan={9} className='text-xl'>ตารางเรียนชั้น {user.class.class_name}</th>
           </tr>
           <tr className='rounded-lg'>
-            <th className='rounded-lg border-2 border-black dark:border-0 dark:bg-slate-600 w-32 text-xl' rowSpan={2}>วัน / เวลา</th>
+            <th id='time' className='rounded-lg border-black border-0 bg-slate-600 w-32 text-xl' rowSpan={2}>วัน / เวลา</th>
             <th>1</th>
             <th>2</th>
             <th>3</th>
@@ -147,7 +161,7 @@ const renderSchedule = (day, number) => (
         </thead>
         <tbody>
           <tr className='h-20'>
-            <td className='rounded-lg border-2 border-black dark:bg-[#FF90BC] dark:border-0 text-xl'>จันทร์</td>
+            <td className='rounded-lg border-black bg-[#FF90BC] border-0 text-xl'>จันทร์</td>
             {["08:30-09:30", "09:30-10:30", "10:30-11:30", "11:30-12:30", "พัก", "13:30-14:30", "14:30-15:30", "15:30-16:30"].map((time, index) => {
               const scheduleItem = schedule.find(el => el.sched_day === "จันทร์" && el.sched_time === time);
               const shouldRemoveBreak1 = time === "09:30-10:30" && schedule.some(el => el.sched_day === "จันทร์" && el.sched_time === "08:30-09:30" && el.sched_count === 2);
@@ -157,7 +171,7 @@ const renderSchedule = (day, number) => (
               const shouldRemoveBreak5 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "จันทร์" && el.sched_time === "14:30-15:30" && el.sched_count === 2);
               if (shouldRemoveBreak1 || shouldRemoveBreak2 || shouldRemoveBreak3 || shouldRemoveBreak4 || shouldRemoveBreak5) return null;
               return (
-                <td key={index} className='rounded-lg border-2 border-black dark:border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
+                <td key={index} className='rounded-lg border-2 border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
                   {scheduleItem && (
                     <>
                       {scheduleItem.subject.sub_code} <br />
@@ -170,7 +184,7 @@ const renderSchedule = (day, number) => (
             })}
           </tr>
           <tr className='h-20'>
-            <td className='rounded-lg border-2 border-black dark:bg-[#FF90BC] dark:border-0 text-xl'>อังคาร</td>
+            <td className='rounded-lg bg-[#FF90BC] border-0 text-xl'>อังคาร</td>
             {["08:30-09:30", "09:30-10:30", "10:30-11:30", "11:30-12:30", "พัก", "13:30-14:30", "14:30-15:30", "15:30-16:30"].map((time, index) => {
               const scheduleItem = schedule.find(el => el.sched_day === "อังคาร" && el.sched_time === time);
               const shouldRemoveBreak1 = time === "09:30-10:30" && schedule.some(el => el.sched_day === "อังคาร" && el.sched_time === "08:30-09:30" && el.sched_count === 2);
@@ -180,7 +194,7 @@ const renderSchedule = (day, number) => (
               const shouldRemoveBreak5 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "อังคาร" && el.sched_time === "14:30-15:30" && el.sched_count === 2);
               if (shouldRemoveBreak1 || shouldRemoveBreak2 || shouldRemoveBreak3 || shouldRemoveBreak4 || shouldRemoveBreak5) return null;
               return (
-                <td key={index} className='rounded-lg border-2 border-black dark:border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
+                <td key={index} className='rounded-lg border-2 border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
                   {scheduleItem && (
                     <>
                       {scheduleItem.subject.sub_code} <br />
@@ -193,7 +207,7 @@ const renderSchedule = (day, number) => (
             })}
           </tr>
           <tr className='h-20'>
-            <td className='rounded-lg border-2 border-black dark:bg-[#FF90BC] dark:border-0 text-xl'>พุธ</td>
+            <td className='rounded-lg bg-[#FF90BC] border-0 text-xl'>พุธ</td>
             {["08:30-09:30", "09:30-10:30", "10:30-11:30", "11:30-12:30", "พัก", "13:30-14:30", "14:30-15:30", "15:30-16:30"].map((time, index) => {
               const scheduleItem = schedule.find(el => el.sched_day === "พุธ" && el.sched_time === time);
               const shouldRemoveBreak1 = time === "09:30-10:30" && schedule.some(el => el.sched_day === "พุธ" && el.sched_time === "08:30-09:30" && el.sched_count === 2);
@@ -203,7 +217,7 @@ const renderSchedule = (day, number) => (
               const shouldRemoveBreak5 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "พุธ" && el.sched_time === "14:30-15:30" && el.sched_count === 2);
               if (shouldRemoveBreak1 || shouldRemoveBreak2 || shouldRemoveBreak3 || shouldRemoveBreak4 || shouldRemoveBreak5) return null;
               return (
-                <td key={index} className='rounded-lg border-2 border-black dark:border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
+                <td key={index} className='rounded-lg border-2 border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
                   {scheduleItem && (
                     <>
                       {scheduleItem.subject.sub_code} <br />
@@ -216,7 +230,7 @@ const renderSchedule = (day, number) => (
             })}
           </tr>
           <tr className='h-20'>
-            <td className='rounded-lg border-2 border-black dark:bg-[#FF90BC] dark:border-0 text-xl'>พฤหัสบดี</td>
+            <td className='rounded-lg bg-[#FF90BC] border-0 text-xl'>พฤหัสบดี</td>
             {["08:30-09:30", "09:30-10:30", "10:30-11:30", "11:30-12:30", "พัก", "13:30-14:30", "14:30-15:30", "15:30-16:30"].map((time, index) => {
               const scheduleItem = schedule.find(el => el.sched_day === "พฤหัสบดี" && el.sched_time === time);
               const shouldRemoveBreak1 = time === "09:30-10:30" && schedule.some(el => el.sched_day === "พฤหัสบดี" && el.sched_time === "08:30-09:30" && el.sched_count === 2);
@@ -226,7 +240,7 @@ const renderSchedule = (day, number) => (
               const shouldRemoveBreak5 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "พฤหัสบดี" && el.sched_time === "14:30-15:30" && el.sched_count === 2);
               if (shouldRemoveBreak1 || shouldRemoveBreak2 || shouldRemoveBreak3 || shouldRemoveBreak4 || shouldRemoveBreak5) return null;
               return (
-                <td key={index} className='rounded-lg border-2 border-black dark:border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
+                <td key={index} className='rounded-lg border-2 border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
                   {scheduleItem && (
                     <>
                       {scheduleItem.subject.sub_code} <br />
@@ -239,7 +253,7 @@ const renderSchedule = (day, number) => (
             })}
           </tr>
           <tr className='h-20'>
-            <td className='rounded-lg border-2 border-black dark:bg-[#FF90BC] dark:border-0 text-xl'>ศุกร์</td>
+            <td className='rounded-lg bg-[#FF90BC] border-0 text-xl'>ศุกร์</td>
             {["08:30-09:30", "09:30-10:30", "10:30-11:30", "11:30-12:30", "พัก", "13:30-14:30", "14:30-15:30", "15:30-16:30"].map((time, index) => {
               const scheduleItem = schedule.find(el => el.sched_day === "ศุกร์" && el.sched_time === time);
               const shouldRemoveBreak1 = time === "09:30-10:30" && schedule.some(el => el.sched_day === "ศุกร์" && el.sched_time === "08:30-09:30" && el.sched_count === 2);
@@ -249,7 +263,7 @@ const renderSchedule = (day, number) => (
               const shouldRemoveBreak5 = time === "15:30-16:30" && schedule.some(el => el.sched_day === "ศุกร์" && el.sched_time === "14:30-15:30" && el.sched_count === 2);
               if (shouldRemoveBreak1 || shouldRemoveBreak2 || shouldRemoveBreak3 || shouldRemoveBreak4 || shouldRemoveBreak5) return null;
               return (
-                <td key={index} className='rounded-lg border-2 border-black dark:border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
+                <td key={index} className='rounded-lg border-2 border-[#6096B4] scale-100 transition ease-in-out hover:cursor-pointer active:scale-95' colSpan={scheduleItem ? scheduleItem.sched_count : 1} onClick={() => scheduleItem && hdlClick(scheduleItem.sched_id)}>
                   {scheduleItem && (
                     <>
                       {scheduleItem.subject.sub_code} <br />

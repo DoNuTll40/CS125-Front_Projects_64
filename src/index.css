@@ -19,3 +19,28 @@
 *::-webkit-scrollbar {
   display: none;
 }
+
+@media print {
+  .table-class {
+    display: block; /* หรือ display: table; ขึ้นอยู่กับลักษณะของตาราง */
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%; /* กำหนดความกว้างให้เหมาะสม */
+    transform: scale(1); /* ปรับขนาดตามที่ต้องการ (0.9 คือ 90%) */
+    transform-origin: top left; /* ตั้งค่าจุดเริ่มต้นสำหรับการ scale */
+    color: black;
+  }
+
+  .table-class tr th#time {
+    border: 2px solid black;
+    background-color: transparent;
+  }
+  
+  .table-class tr td {
+    background-color: transparent;
+    border: 2px solid black;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+
+}
