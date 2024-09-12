@@ -71,11 +71,13 @@ export default function LoginTeacher() {
             }
 
         } catch (err) {
-            if (err.response && err.response.data && err.response.data.message) {
-                alert(err.response.data.message);
-            } else {
-                alert(err.message);
-            }
+            Swal.close(); // ปิดการโหลด
+            const message = err.response?.data?.message || err.message;
+            Swal.fire({
+                title: "Error",
+                text: message,
+                icon: "error"
+            });
         }
     }
 
