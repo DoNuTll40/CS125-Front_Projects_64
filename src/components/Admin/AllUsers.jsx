@@ -21,6 +21,7 @@ export default function AllUsers() {
     const [page, setPage] = useState(1)
     const [totalPage, setTotalPage] = useState("")
     const [loading, setLoading]  =useState(false)
+    const [loadingTable, setLoadingTable]  =useState(false)
     const { setRefetchBanner } = useAuth();
 
     const [input, setInput] = useState({
@@ -51,7 +52,7 @@ export default function AllUsers() {
 
     useEffect(() => {
         document.title = 'Admin | รายชื่อนักเรียน';
-
+        setLoadingTable(true)
         if (savedRole) {
             setSelect(savedRole);
         }
@@ -95,6 +96,7 @@ export default function AllUsers() {
                 if (rs.status === 200) {
                     setStudent(rs?.data)
                     setTotalPage(rs?.data?.totalPages)
+                    setLoadingTable(false)
                 }
             } catch (err) {
                 Swal.fire({
@@ -104,7 +106,9 @@ export default function AllUsers() {
                 }).then(() => {
                     setPage(1)
                     sessionStorage.setItem('page-user', 1)
+                    setLoadingTable(false)
                 })
+
             }
         }
 
@@ -377,7 +381,7 @@ export default function AllUsers() {
                                 onChange={hdlSearchInput} />
                         </div>
                     </div>
-                    <p className='w-full font-bold text-lg text-center my-2'>รายชื่อทั้งหมด</p>
+                    <p className='w-full text-black font-bold text-lg my-2 flex gap-1 items-center justify-center'>{loadingTable ? <span className="loading loading-bars loading-md rotate-180"></span> : ""} รายชื่อทั้งหมด {loadingTable ? <span className="loading loading-bars loading-md"></span> : ""}</p>
                     <div className='flex justify-between items-center'>
                         <div className='flex gap-2'>
                             <div>
