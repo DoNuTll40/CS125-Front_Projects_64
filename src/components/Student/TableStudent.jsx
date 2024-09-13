@@ -93,7 +93,7 @@ export default function TableStudent() {
           <span className=" absolute loading loading-ring loading-lg"></span>
           <span className="loading loading-spinner loading-lg"></span>
         </div>
-        <p className='text-white font-semibold text-lg'>กำลังโหลดข้อมูลตารางเรียน</p>
+        <p className='text-white font-semibold text-lg'>ระบบกำลังโหลดข้อมูลตารางเรียน</p>
       </div>
     )
   }
