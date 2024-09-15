@@ -27,7 +27,7 @@ export default function Printlist() {
     const studentData = fullStudent.concat(emptyRows);
 
     return (
-        <PDFViewer style={{ width: '100%', height: '800px' }}>
+        <PDFViewer style={{ width: '100%', height: '740px' }}>
             <Document title={`ใบรายชื่อนักเรียนชั้น ${classRoom}`} producer='FB : Nuttawut_Chawna' author='โรงเรียน มัธยมรังศรีวิทยาแบ่งปัน สังกัดสํานักงานเขตพื้นที่การมัธยมศึกษา เขตที่ 3'>
                 <Page size="A4" style={styles.page}>
                     <Text style={styles.title}>ใบรายชื่อนักเรียนชั้น {classRoom} ประจำภาคเรียนที่ ... ปีการศึกษา ....</Text>

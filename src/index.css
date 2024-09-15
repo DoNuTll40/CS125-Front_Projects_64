@@ -22,12 +22,12 @@
 
 @media print {
   .table-class {
-    display: block; /* หรือ display: table; ขึ้นอยู่กับลักษณะของตาราง */
+    display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 90%; /* กำหนดความกว้างให้เหมาะสม */
-    transform: scale(1); /* ปรับขนาดตามที่ต้องการ (0.9 คือ 90%) */
-    transform-origin: top left; /* ตั้งค่าจุดเริ่มต้นสำหรับการ scale */
+    width: 90%;
+    transform: scale(1);
+    transform-origin: top left;
     color: black;
   }
 
@@ -42,5 +42,4 @@
     padding-left: 2px;
     padding-right: 2px;
   }
-
 }
