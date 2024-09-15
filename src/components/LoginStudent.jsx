@@ -138,7 +138,7 @@ export default function LoginStudent() {
               </div>
             </form>
             <div className="text-white flex justify-center items-center text-[8px] font-bold h-5 mt-2 rounded-t-lg drop-shadow-[3px_3px_3px_rgba(0,0,0,0.20)]">
-              <p>&copy; CS125 Nuttawoot Chawna SNRU | CodeCamp Academy 01</p>
+              <p>&copy; CS125 Nuttawoot Chawna SNRU | CodeCamp Academy 01 | Version 0.2</p>
             </div>
           </div>
         </div>
