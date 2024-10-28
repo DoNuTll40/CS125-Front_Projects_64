@@ -37,7 +37,8 @@
     "react-slideshow-image": "^4.3.0",
     "react-to-print": "^2.15.1",
     "sweetalert2": "^11.6.13",
-    "swiper": "^11.1.10"
+    "swiper": "^11.1.10",
+    "uuid": "^11.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

@@ -4,18 +4,97 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import axiosPath from "../configs/axios-path";
 import SlideDashboard from "./SlideDashboard";
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid"; // ติดตั้ง uuid
 
 export default function LoginStudent() {
   const { setUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
+  const [sessionId] = useState(uuidv4());
 
   const [input, setInput] = useState({
     username: "",
     password: "",
   });
 
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.log(error.message);
+        }
+      );
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  };
+
   useEffect(() => {
     document.title = "เข้าสู่ระบบ";
+    getLocation();
+
+    const getPublicIP = async () => {
+      const response = await axios.get("https://api.ipify.org?format=json");
+      return response.data.ip;
+    };
+
+    const browserInfo = {
+      userAgent: navigator.userAgent,
+      appName: navigator.appName,
+      appVersion: navigator.appVersion,
+      language: navigator.language,
+      platform: navigator.platform,
+      vendor: navigator.vendor,
+    };
+
+    const screenInfo = {
+      width: window.screen.width,
+      height: window.screen.height,
+      colorDepth: window.screen.colorDepth,
+    };
+
+    const sendVisitData = async () => {
+      try {
+        if (location.latitude && location.longitude) {
+          const publicIP = await getPublicIP();
+          const visitData = {
+            latitude: location.latitude,
+            longitude: location.longitude,
+            ipAddress: publicIP,
+            userAgent: browserInfo.userAgent,
+            appName: browserInfo.appName,
+            appVersion: browserInfo.appVersion,
+            language: browserInfo.language,
+            platform: browserInfo.platform,
+            vendor: browserInfo.vendor,
+            screenWidth: screenInfo.width,
+            screenHeight: screenInfo.height,
+            screenColorDepth: screenInfo.colorDepth,
+            sessionId: sessionId,
+            pageViewed: window.location.pathname,
+          };
+          // ส่งข้อมูลไปยังเซิร์ฟเวอร์
+          // await axiosPath.post("/gps/visit", visitData);
+          console.log("Visit data sent:", visitData);
+        }
+      } catch (error) {
+        console.error("Error sending visit data:", error);
+      }
+    };
+
+    // // เรียกใช้ฟังก์ชันส่งข้อมูลเมื่อตำแหน่งที่ตั้งถูกตั้งค่า
+    // if (location.latitude !== null && location.longitude !== null) {
+    //   sendVisitData();
+    // }
+
+    sendVisitData();
   }, []);
 
   const hdlSubmit = async (e) => {
@@ -139,7 +218,10 @@ export default function LoginStudent() {
               </div>
             </form>
             <div className="text-white flex justify-center items-center text-[8px] font-bold h-5 mt-2 rounded-t-lg drop-shadow-[3px_3px_3px_rgba(0,0,0,0.20)]">
-              <p>&copy; CS125 Nuttawoot Chawna SNRU | CodeCamp Academy 01 | Version 0.3</p>
+              <p>
+                &copy; CS125 Nuttawoot Chawna SNRU | CodeCamp Academy 01 |
+                Version 0.3
+              </p>
             </div>
           </div>
         </div>
