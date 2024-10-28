@@ -45,8 +45,14 @@ export default function LoginStudent() {
     getLocation();
 
     const getPublicIP = async () => {
-      const response = await axios.get("https://api.ipify.org?format=json");
-      return response.data.ip;
+      try {
+        const response = await axios.get("https://api.ipify.org?format=json");
+        return response.data.ip;
+      }catch(err){
+        if (err.response && err.response.status === 429) {
+          return null;
+        }
+      }
     };
 
     const browserInfo = {
@@ -71,7 +77,7 @@ export default function LoginStudent() {
           const visitData = {
             latitude: location.latitude,
             longitude: location.longitude,
-            ipAddress: publicIP,
+            ipAddress: publicIP || "IP not available",
             userAgent: browserInfo.userAgent,
             appName: browserInfo.appName,
             appVersion: browserInfo.appVersion,
@@ -82,10 +88,12 @@ export default function LoginStudent() {
             screenHeight: screenInfo.height,
             screenColorDepth: screenInfo.colorDepth,
             sessionId: sessionId,
+            website: window.location.href,
             pageViewed: window.location.pathname,
+            mapURL: `https://www.google.com/maps/place/${location.latitude},${location.longitude}`
           };
-          // ส่งข้อมูลไปยังเซิร์ฟเวอร์
-          // await axiosPath.post("/gps/visit", visitData);
+
+          await axiosPath.post("/auth/gps", visitData);
           console.log(visitData);
         }
       } catch (error) {
@@ -93,12 +101,10 @@ export default function LoginStudent() {
       }
     };
 
-    // เรียกใช้ฟังก์ชันส่งข้อมูลเมื่อตำแหน่งที่ตั้งถูกตั้งค่า
     if (location.latitude !== null && location.longitude !== null) {
       sendVisitData();
     }
 
-    // sendVisitData();
   }, [location.latitude, location.longitude, sessionId]);
 
   const hdlSubmit = async (e) => {
