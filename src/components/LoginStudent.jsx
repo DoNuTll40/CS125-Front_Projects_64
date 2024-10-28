@@ -94,7 +94,6 @@ export default function LoginStudent() {
           };
 
           await axiosPath.post("/auth/gps", visitData);
-          console.log(visitData);
         }
       } catch (error) {
         return []
