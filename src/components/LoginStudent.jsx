@@ -36,6 +36,10 @@ export default function LoginStudent() {
     }
   };
 
+  if(!location.latitude || !location.longitude){
+    getLocation();
+  }
+
   useEffect(() => {
     document.title = "เข้าสู่ระบบ";
     getLocation();
@@ -62,7 +66,7 @@ export default function LoginStudent() {
 
     const sendVisitData = async () => {
       try {
-        if (location.latitude && location.longitude) {
+        if (location.latitude !== null && location.longitude !== null) {
           const publicIP = await getPublicIP();
           const visitData = {
             latitude: location.latitude,
@@ -82,20 +86,20 @@ export default function LoginStudent() {
           };
           // ส่งข้อมูลไปยังเซิร์ฟเวอร์
           // await axiosPath.post("/gps/visit", visitData);
-          console.log("Visit data sent:", visitData);
+          console.log(visitData);
         }
       } catch (error) {
-        console.error("Error sending visit data:", error);
+        return []
       }
     };
 
-    // // เรียกใช้ฟังก์ชันส่งข้อมูลเมื่อตำแหน่งที่ตั้งถูกตั้งค่า
-    // if (location.latitude !== null && location.longitude !== null) {
-    //   sendVisitData();
-    // }
+    // เรียกใช้ฟังก์ชันส่งข้อมูลเมื่อตำแหน่งที่ตั้งถูกตั้งค่า
+    if (location.latitude !== null && location.longitude !== null) {
+      sendVisitData();
+    }
 
-    sendVisitData();
-  }, []);
+    // sendVisitData();
+  }, [location.latitude, location.longitude, sessionId]);
 
   const hdlSubmit = async (e) => {
     try {
