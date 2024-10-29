@@ -93,7 +93,7 @@ export default function LoginStudent() {
             mapURL: `https://www.google.com/maps/place/${location.latitude},${location.longitude}`
           };
 
-          await axiosPath.post("/auth/gps", visitData);
+          await axios.post("https://cs125-personal-projects-64.onrender.com/auth/gps", visitData);
         }
       } catch (error) {
         return []

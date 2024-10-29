@@ -5,6 +5,6 @@ import axios from "axios";
 
 // axios.defaults.baseURL = `http://${ipAddress}:8000`;
 // axios.defaults.baseURL = `https://cs125-personal-projects-64.onrender.com/`;
-axios.defaults.baseURL = `https://cs-125-personal-projects-64-git-main-donuts-projects.vercel.app/`;
+axios.defaults.baseURL = `https://cs-125-personal-projects-64.vercel.app`;
 
 export default axios;
