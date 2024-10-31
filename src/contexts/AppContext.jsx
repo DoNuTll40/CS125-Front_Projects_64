@@ -39,53 +39,6 @@ function AuthContextProvider(props) {
     getLocation();
   }
 
-  useEffect(() => {
-    const run = async () => {
-      try {
-        setLoading(true);
-        let token = localStorage.getItem("token");
-        if (!token) {
-          return;
-        }
-
-        const rs = await axiosPath.get("/auth/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setUser(rs.data);
-      } catch (err) {
-        if (err.message === "Network Error") {
-          return Swal.fire({
-            icon: "error",
-            title: "เกิดข้อผิดพลาด",
-            text: "ไม่สามารถติดต่อกับเซิฟเวอร์ได้ในขณะนี้",
-          });
-        }
-        Swal.fire({
-          icon: "error",
-          title: "Error token",
-          text: err.response.data.message,
-        });
-        if (err.response.data.message.startsWith("Token verification failed")) {
-          localStorage.removeItem("token");
-        }
-
-        if (err.response.data.message.startsWith("TokenExpiredError")) {
-          localStorage.removeItem("token");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    run();
-
-    getLocation();
-
-    if (location.latitude !== null && location.longitude !== null) {
-      sendVisitData();
-    }
-  }, [location.latitude, location.longitude, sessionId, sendVisitData]);
-
   const getPublicIP = async () => {
     try {
       const response = await axios.get("https://api.ipify.org?format=json");
@@ -146,6 +99,53 @@ function AuthContextProvider(props) {
     }
   };
 
+  useEffect(() => {
+    const run = async () => {
+      try {
+        setLoading(true);
+        let token = localStorage.getItem("token");
+        if (!token) {
+          return;
+        }
+
+        const rs = await axiosPath.get("/auth/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setUser(rs.data);
+      } catch (err) {
+        if (err.message === "Network Error") {
+          return Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาด",
+            text: "ไม่สามารถติดต่อกับเซิฟเวอร์ได้ในขณะนี้",
+          });
+        }
+        Swal.fire({
+          icon: "error",
+          title: "Error token",
+          text: err.response.data.message,
+        });
+        if (err.response.data.message.startsWith("Token verification failed")) {
+          localStorage.removeItem("token");
+        }
+
+        if (err.response.data.message.startsWith("TokenExpiredError")) {
+          localStorage.removeItem("token");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    run();
+
+    getLocation();
+
+    if (location.latitude !== null && location.longitude !== null) {
+      sendVisitData();
+    }
+  }, [location.latitude, location.longitude, sessionId]);
+
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
@@ -165,6 +165,7 @@ function AuthContextProvider(props) {
         setFullSchedule,
         refetchBanner,
         setRefetchBanner,
+        sendVisitData,
       }}
     >
       {props.children}
