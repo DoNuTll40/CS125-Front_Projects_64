@@ -8,7 +8,7 @@ import SlideDashboard from "./SlideDashboard";
 
 export default function LoginAdmin() {
 
-    const { setUser, setLoading } = useAuth();
+    const { setUser, setLoading, sendVisitData } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
 
     const [input, setInput] = useState({
@@ -18,7 +18,7 @@ export default function LoginAdmin() {
 
     
     useEffect(() => {
-        
+        sendVisitData()
         document.title = "เข้าสู่ระบบ | Admin";
 
         const loadImage = async () => {
@@ -39,7 +39,7 @@ export default function LoginAdmin() {
             }
         };
         loadImage();
-    }, [setLoading]);
+    }, [setLoading, sendVisitData]);
 
     const hdlSubmit = async e => {
 

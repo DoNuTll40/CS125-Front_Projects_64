@@ -4,107 +4,21 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import axiosPath from "../configs/axios-path";
 import SlideDashboard from "./SlideDashboard";
-import axios from "axios";
-import { v4 as uuidv4 } from "uuid"; // ติดตั้ง uuid
 
 export default function LoginStudent() {
-  const { setUser } = useAuth();
+  const { setUser, sendVisitData } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [location, setLocation] = useState({ latitude: null, longitude: null });
-  const [sessionId] = useState(uuidv4());
 
   const [input, setInput] = useState({
     username: "",
     password: "",
   });
 
-  const getLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.log(error.message);
-        }
-      );
-    } else {
-      console.log("Geolocation is not supported by this browser.");
-    }
-  };
-
-  if(!location.latitude || !location.longitude){
-    getLocation();
-  }
 
   useEffect(() => {
     document.title = "เข้าสู่ระบบ";
-    getLocation();
-
-    const getPublicIP = async () => {
-      try {
-        const response = await axios.get("https://api.ipify.org?format=json");
-        return response.data.ip;
-      }catch(err){
-        if (err.response && err.response.status === 429) {
-          return null;
-        }
-      }
-    };
-
-    const browserInfo = {
-      userAgent: navigator.userAgent,
-      appName: navigator.appName,
-      appVersion: navigator.appVersion,
-      language: navigator.language,
-      platform: navigator.platform,
-      vendor: navigator.vendor,
-    };
-
-    const screenInfo = {
-      width: window.screen.width,
-      height: window.screen.height,
-      colorDepth: window.screen.colorDepth,
-    };
-
-    const sendVisitData = async () => {
-      try {
-        if (location.latitude !== null && location.longitude !== null) {
-          const publicIP = await getPublicIP();
-          const visitData = {
-            latitude: location.latitude,
-            longitude: location.longitude,
-            ipAddress: publicIP || "IP not available",
-            userAgent: browserInfo.userAgent,
-            appName: browserInfo.appName,
-            appVersion: browserInfo.appVersion,
-            language: browserInfo.language,
-            platform: browserInfo.platform,
-            vendor: browserInfo.vendor,
-            screenWidth: screenInfo.width,
-            screenHeight: screenInfo.height,
-            screenColorDepth: screenInfo.colorDepth,
-            sessionId: sessionId,
-            website: window.location.href,
-            pageViewed: window.location.pathname,
-            mapURL: `https://www.google.com/maps/place/${location.latitude},${location.longitude}`
-          };
-
-          await axios.post("https://cs125-personal-projects-64.onrender.com/auth/gps", visitData);
-        }
-      } catch (error) {
-        return []
-      }
-    };
-
-    if (location.latitude !== null && location.longitude !== null) {
-      sendVisitData();
-    }
-
-  }, [location.latitude, location.longitude, sessionId]);
+    sendVisitData()
+  }, [sendVisitData]);
 
   const hdlSubmit = async (e) => {
     try {

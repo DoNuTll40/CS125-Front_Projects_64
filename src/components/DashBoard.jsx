@@ -9,11 +9,12 @@ import CountUp from "react-countup";
 
 export default function DashBoard() {
 
-    const { user, refetchBanner } = useAuth();
+    const { user, refetchBanner, sendVisitData } = useAuth();
     const [allUser, setAllUser] = useState([]);
     const [allSub, setAllSub] = useState([]);
 
     useEffect(() => {
+        sendVisitData()
         const getAll = async () => {
             let token = localStorage.getItem('token')
             const rs = await axiosPath.get('/admin/users', {
@@ -36,7 +37,7 @@ export default function DashBoard() {
         }
         getSub();
 
-    }, [refetchBanner])
+    }, [refetchBanner, sendVisitData])
 
     const numberOFuser = (allUser.filter(users => users.user_role === "USER").length / allUser.filter(users => users.user_role !== "ADMIN").length) * 100
     const numberOFteacher = (allUser.filter(users => users.user_role === "TEACHER").length / allUser.filter(users => users.user_role !== "ADMIN").length) * 100
