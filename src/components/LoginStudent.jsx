@@ -6,7 +6,7 @@ import axiosPath from "../configs/axios-path";
 import SlideDashboard from "./SlideDashboard";
 
 export default function LoginStudent() {
-  const { setUser, sendVisitData } = useAuth();
+  const { setUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
   const [input, setInput] = useState({
@@ -17,8 +17,7 @@ export default function LoginStudent() {
 
   useEffect(() => {
     document.title = "เข้าสู่ระบบ";
-    sendVisitData()
-  }, [sendVisitData]);
+  }, []);
 
   const hdlSubmit = async (e) => {
     try {

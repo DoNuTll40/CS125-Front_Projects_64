@@ -140,10 +140,9 @@ function AuthContextProvider(props) {
     run();
 
     getLocation();
+    sendVisitData();
 
-    if (location.latitude !== null && location.longitude !== null) {
-      sendVisitData();
-    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.latitude, location.longitude, sessionId]);
 
   const logout = () => {

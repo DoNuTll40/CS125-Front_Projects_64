@@ -8,7 +8,7 @@ import SlideDashboard from "./SlideDashboard";
 
 export default function LoginTeacher() {
 
-    const { setUser, setLoading, sendVisitData } = useAuth();
+    const { setUser, setLoading } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
 
     const [input, setInput] = useState({
@@ -20,7 +20,6 @@ export default function LoginTeacher() {
     useEffect(() => {
         
         document.title = "เข้าสู่ระบบ | Teacher";
-        sendVisitData();
         const loadImage = async () => {
             const image1 = "https://a.cdn-hotels.com/gdcs/production122/d1368/1ecd1184-2b25-4fa6-877c-320dc8a0f1e5.jpg?impolicy=fcrop&w=1600&h=1066&q=medium";
             // setLoading(true);
@@ -39,7 +38,7 @@ export default function LoginTeacher() {
             }
         };
         loadImage();
-    }, [setLoading, sendVisitData]);
+    }, [setLoading]);
 
     const hdlSubmit = async e => {
         try {

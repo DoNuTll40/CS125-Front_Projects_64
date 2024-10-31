@@ -7,14 +7,13 @@ import { useEffect } from "react";
 
 export default function PageFound() {
 
-    const { user, sendVisitData } =  useAuth()
+    const { user } =  useAuth()
 
     const navigate = useNavigate();
     
     useEffect( () => {
-        sendVisitData();
         document.title = "ระบบตารางเรียน | 404 ไม่พบหน้าที่ต้องการ"
-    }, [sendVisitData])
+    }, [])
 
     const hdlBack = () => {
         if(user?.user_id !== ""){
